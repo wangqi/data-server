@@ -35,8 +35,8 @@ create table ad_param_map (
 
 replace into ad_param_map (source, param_name, std_name)
 values 
-    	(null, 'stat_id', 'stat_id'),
-    	(null, 'app_key', 'app_key'),
+  (null, 'stat_id', 'stat_id'),
+  (null, 'app_key', 'app_key'),
 	(null, 'os_version', 'os_version'),
 	(null, 'device_id', 'device_id'),
 	(null, 'device_type', 'device_type'),

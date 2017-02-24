@@ -5,7 +5,7 @@ package jp.coolfactory.data;
  */
 public class Version {
 
-    public static final String VERSION = "master.1.0d7e5e3";
-    public static final String BUILD_DATE = "2017-02-22 17:16:31:031 CST";
+    public static final String VERSION = "master.2.f2616a1";
+    public static final String BUILD_DATE = "2017-02-24 12:14:32:032 CST";
 
 }
