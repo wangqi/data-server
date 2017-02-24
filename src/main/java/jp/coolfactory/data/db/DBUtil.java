@@ -20,22 +20,71 @@ public class DBUtil {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(DBUtil.class.getName());
 
-    public static final DBUtil instance = new DBUtil();
+    private static HikariDataSource db = null;
 
-    private HikariDataSource db = null;
+    private static String databaseSchemaName = null;
 
-    private DBUtil() {
+    static {
         Properties configProps = ConfigUtil.getHikariConfig();
         if (configProps == null) {
             configProps = new Properties();
             configProps.setProperty("dataSourceClassName", "db.qiku.mobi");
             configProps.setProperty("dataSource.user", "root");
             configProps.setProperty("dataSource.password", "r00t1234");
-            configProps.setProperty("dataSource.databaseName", "anti_fraud");
+            configProps.setProperty("dataSource.databaseName", "app_data");
             LOGGER.info("DBUtil uses default hard code db connection config. Please check the config file");
         }
+        databaseSchemaName = configProps.getProperty("dataSource.databaseName");
         HikariConfig config = new HikariConfig(configProps);
         db = new HikariDataSource(config);
+    }
+
+    /**
+     * Get the database schema name.
+     * @return
+     */
+    public static final String getDatabaseSchema() {
+        return databaseSchemaName;
+    }
+
+    /**
+     * Execute a SQL in database
+     * @param sql
+     * @param processor
+     * @param params
+     */
+    public static void select(String sql,
+                              ResultSetProcessor processor,
+                              Object... params) {
+        try (PreparedStatement ps = db.getConnection().prepareStatement(sql)) {
+            int cnt = 0;
+            for (Object param : params) {
+                ps.setObject(++cnt, param);
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                processor.process(rs);
+            } catch (SQLException e) {
+                LOGGER.error("Failed to execute sql: " + sql, e);
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Failed to execute sql: " + sql, e);
+        }
+    }
+
+    public static <T> void insertBatch(String sql, PreparedStatementProcessor<T> process, ArrayList<T> list) {
+        try (PreparedStatement ps = db.getConnection().prepareStatement(sql)) {
+            try {
+                for ( T t : list ) {
+                    process.process(ps, t);
+                    ps.addBatch();
+                }
+                ps.executeBatch();
+            } catch (SQLException e) {
+                LOGGER.error("Failed to execute sql: " + sql, e);
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Failed to execute sql: " + sql, e);
+        }
     }
 
     /**
@@ -68,7 +117,7 @@ public class DBUtil {
 
      * @param record
      */
-    public final void saveLog(HashMap<String, String> record) {
+    public static final void saveLog(HashMap<String, String> record) {
         String sql = "insert into af_log_install (action,site_id,camp_id,site_name,country_code,region_name, " +
                 "device_brand,device_carrier,device_model,language,device_ip,status,click_date,install_date,ios_ifa, " +
                 "ios_ifv,os_version,publisher_id,publisher_name,user_agent,status_code,status_desc,eval_prop,tracking_id," +
