@@ -10,6 +10,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import jp.coolfactory.data.util.ConfigUtil;
 import jp.coolfactory.data.util.DateUtil;
+import jp.coolfactory.data.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,6 +85,30 @@ public class DBUtil {
             }
         } catch (SQLException e) {
             LOGGER.error("Failed to execute sql: " + sql, e);
+        }
+    }
+
+    /**
+     * Execute the SQL in batch for Statement.
+     * @param process
+     * @param list
+     * @param <T>
+     */
+    public static <T> void sqlBatch(StatementProcessor<T> process, ArrayList<T> list) {
+        try (Statement ps = db.getConnection().createStatement()) {
+            try {
+                for ( T t : list ) {
+                    String sql = process.process(t);
+                    if (StringUtil.isNotEmptyString(sql) ) {
+                        ps.addBatch(sql);
+                    }
+                }
+                ps.executeBatch();
+            } catch (SQLException e) {
+                LOGGER.error("Failed to execute sql", e);
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Failed to execute sql", e);
         }
     }
 

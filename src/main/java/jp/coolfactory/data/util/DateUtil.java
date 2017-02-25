@@ -4,7 +4,10 @@ import org.apache.log4j.Logger;
 
 import java.text.SimpleDateFormat;
 import java.time.*;
+import java.time.chrono.IsoChronology;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.ResolverStyle;
 
 /**
  * Created by wangqi on 1/12/2016.
@@ -157,7 +160,7 @@ public class DateUtil {
      */
     public static final String formatDateTime(ZonedDateTime date) {
         try {
-            return DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(date);
+            return IOS_LOCAL_DATETIME_FMT.format(date);
         } catch ( Exception e ) {
             LOGGER.warn("Failed to format the IOS format data: " + date);
             return null;

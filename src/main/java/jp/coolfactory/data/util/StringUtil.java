@@ -1,5 +1,7 @@
 package jp.coolfactory.data.util;
 
+import org.owasp.esapi.ESAPI;
+import org.owasp.esapi.codecs.MySQLCodec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,5 +121,14 @@ public class StringUtil {
             }
         }
         return buf.toString();
+    }
+
+    /**
+     * To prevent the SQL injection happens.
+     * @param sql
+     * @return
+     */
+    public static String validSQLInput(String sql) {
+        return ESAPI.encoder().encodeForSQL(new MySQLCodec(MySQLCodec.Mode.ANSI), sql);
     }
 }

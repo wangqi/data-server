@@ -14,15 +14,32 @@
         <param name="append" value="false" />
         <param name="maxFileSize" value="10MB" />
         <param name="maxBackupIndex" value="10" />
-        <param name="file" value="/var/log/tomcat8/anti_fraud.log" />
+        <param name="file" value="/var/log/tomcat8/data_server.log" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern"
                    value="%d{yyyy-MM-dd HH:mm:ss} %-5p [%t] %c{2} - %m%n" />
         </layout>
     </appender>
 
+    <appender name="access_file" class="org.apache.log4j.RollingFileAppender">
+        <param name="append" value="false" />
+        <param name="maxFileSize" value="10MB" />
+        <param name="maxBackupIndex" value="10" />
+        <param name="file" value="/var/log/tomcat8/data_server_access.log" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d{yyyy-MM-dd HH:mm:ss}\t%m%n" />
+        </layout>
+    </appender>
+
+    <logger name="access_log">
+        <level value="info" />
+        <appender-ref ref="console" />
+        <appender-ref ref="access_file" />
+    </logger>
+
     <root>
-        <level value="WARN" />
+        <level value="warn" />
         <appender-ref ref="console" />
         <appender-ref ref="file" />
     </root>

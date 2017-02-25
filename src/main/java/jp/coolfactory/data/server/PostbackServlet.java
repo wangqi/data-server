@@ -40,6 +40,7 @@ import java.util.concurrent.Executors;
 public class PostbackServlet extends HttpServlet {
 
     private final static Logger LOGGER = Logger.getLogger(PostbackServlet.class.getName());
+    private final static Logger ACCESS_LOGGER = Logger.getLogger("access_log");
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doRequest(request, response);
@@ -51,6 +52,10 @@ public class PostbackServlet extends HttpServlet {
 
     protected void doRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
+
+        //Print the access log.
+        printAccessLog(request);
+
         HashMap<String, String> params = new HashMap<String, String>();
         String action = request.getParameter("action");
         String source = request.getParameter("source");
@@ -149,46 +154,42 @@ public class PostbackServlet extends HttpServlet {
     }
 
     /**
-     * Send back the postback URL
-     * @param postback
-     * @param params
+     * Print the detail information about this access.
+     * @param request
      */
-    private void sendPostback(String postback, HashMap<String, String> params ) {
-        Executors.newCachedThreadPool().submit(() -> {
+    private void printAccessLog(HttpServletRequest request) {
+        String method = request.getMethod();
+        String scheme = request.getScheme();
+        String serverName = request.getServerName();
+        String port = String.valueOf(request.getServerPort());
+        String uri = request.getRequestURI();
+        String queryString = request.getQueryString();
+        String postData = null;
+        if ( "post".equalsIgnoreCase(method) ) {
+            StringBuilder buf = null;
             try {
-                if ( postback != null && postback != "" ) {
-                    LOGGER.info("Resend to postback to " + postback);
-                    String postbackEncoded = URLUtil.encodeURL(postback);
-                    LOGGER.info("Encode postback to " + postbackEncoded);
-                    URL url = new URL(postbackEncoded);
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setRequestMethod("GET");
-                    conn.setRequestProperty("User-Agent", "antifraud/1.0");
-                    int responseCode = conn.getResponseCode();
-                    StringBuffer response = new StringBuffer();
-                    if ( responseCode > 200 ) {
-                        LOGGER.warn("Failed to send postback. Response code: " + responseCode);
-                    } else {
-                        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                        String inputLine;
-                        while ((inputLine = in.readLine()) != null) {
-                            response.append(inputLine);
-                        }
-                        in.close();
-                    }
-                    params.put("postback_code", String.valueOf(responseCode));
-                    params.put("postback_desc", response.toString());
-                } else {
-                    LOGGER.warn("postback param does not exist");
+                BufferedReader reader = new BufferedReader(request.getReader());
+                buf = new StringBuilder(500);
+                String line = reader.readLine();
+                while ( line != null ) {
+                    buf.append(line).append(' ');
+                    line = reader.readLine();
                 }
-            } catch (MalformedURLException e) {
-                LOGGER.warn("Malformed postback url: " + postback);
             } catch (IOException e) {
-                LOGGER.warn("Failed to connect to postback url: " + postback, e);
-            } finally {
-                DBUtil.saveLog(params);
+                LOGGER.warn("Failed to read post data", e);
             }
-        });
+            postData = buf.toString();
+        }
+        String forwardIp = request.getHeader("X-Forwarded-For");
+        String ip = request.getRemoteAddr();
+        String userAgent = request.getHeader("User-Agent");
+        StringBuilder buf = new StringBuilder(200);
+        buf.append(method).append('\t').append(scheme).append('\t').append(serverName)
+                .append('\t').append(port).append('\t').append(uri)
+                .append('\t').append(queryString==null?"":queryString).append('\t').append(forwardIp==null?"":forwardIp)
+                .append('\t').append(ip).append('\t').append(postData)
+                .append('\t').append(userAgent);
+        ACCESS_LOGGER.info(buf.toString());
     }
 
     /**
