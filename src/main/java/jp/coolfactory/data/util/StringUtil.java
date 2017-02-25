@@ -1,11 +1,19 @@
 package jp.coolfactory.data.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 /**
  * Created by wangqi on 22/2/2017.
  */
 public class StringUtil {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(StringUtil.class);
 
     public static final boolean isNotEmptyString(String str) {
         if(str != null && !str.isEmpty()) {
@@ -22,9 +30,29 @@ public class StringUtil {
     }
 
     /**
+     * Generate a Base64 of SHA-256 string
+     * @param string
+     * @return
+     */
+    public static String generateHashBase64(String string) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md.update(string.getBytes("UTF-8"));
+            byte[] digest = md.digest();
+            String base64 = new String(Base64.getEncoder().encode(digest));
+            return base64;
+        } catch (NoSuchAlgorithmException e) {
+            LOGGER.warn("No SHA-256 algorithm", e);
+        } catch (UnsupportedEncodingException e) {
+            LOGGER.warn("UTF-8 is not supported", e);
+        }
+        return null;
+    }
+
+    /**
      * Replace the string with given {name} variables
      * O. If escaping '{', you can use '{{'. For example, 'param={{data}}' will be replaced as 'param={data}'.
-     *    Note the encoding curly '}', you need to put double curly too.
+     *    Note the encoding curly '}', you need to put double curly '}}' too.
      * O. If key is not found, for example, 'param={no_such_key}' with be replaced to 'param='
      * O. If the '{' is the last char, it will be removed. For example 'https://www.coolfactory.jp/test{' will be 'https://www.coolfactory.jp/test'
      * O. Empty key will be removed. For example, 'test={}' will be 'test='
@@ -32,7 +60,7 @@ public class StringUtil {
      *
      *
      * @param string
-     * @param valuesconvFormat.toString()
+     * @param map
      * @return
      */
     public static String replaceKey(String string, Map<String, String> map) {

@@ -1,5 +1,6 @@
 package jp.coolfactory.data.server;
 
+import jp.coolfactory.data.Constants;
 import jp.coolfactory.data.controller.AdAppController;
 import jp.coolfactory.data.controller.AdCommandController;
 import jp.coolfactory.data.controller.AdParamMapController;
@@ -7,6 +8,7 @@ import jp.coolfactory.data.db.DBUtil;
 import jp.coolfactory.data.module.AdApp;
 import jp.coolfactory.data.module.AdRequest;
 import jp.coolfactory.data.util.DateUtil;
+import jp.coolfactory.data.util.StringUtil;
 import jp.coolfactory.data.util.URLUtil;
 import org.apache.log4j.Logger;
 
@@ -52,6 +54,11 @@ public class PostbackServlet extends HttpServlet {
         HashMap<String, String> params = new HashMap<String, String>();
         String action = request.getParameter("action");
         String source = request.getParameter("source");
+        if ( source == null ) {
+            source = Constants.SOURCE_UNKNOWN;
+        } else {
+            source = source.toLowerCase();
+        }
         String app_key = request.getParameter("app_key");
 
         AdRequest req = new AdRequest();
@@ -94,7 +101,7 @@ public class PostbackServlet extends HttpServlet {
         req.setReferral_source(getParamValue(request,source, "referral_source"));
         req.setReferral_url(getParamValue(request,source, "referral_url"));
         req.setRevenue(getParamValueAsDouble(request,source, "revenue"));
-        req.setRevenue_usd(getParamValue(request,source, "revenue_usd"));
+        req.setRevenue_usd(getParamValueAsDouble(request,source, "revenue_usd"));
         req.setStatus(getParamValue(request,source, "status"));
         req.setStatus_code(getParamValue(request,source, "status_code"));
         req.setTracking_id(getParamValue(request,source, "tracking_id"));
@@ -185,7 +192,7 @@ public class PostbackServlet extends HttpServlet {
     }
 
     /**
-     * Get param value as string
+     * Get param value as string. Note it will lowercase the value.
      * @param request
      * @param source
      * @param stdParamName
@@ -193,6 +200,9 @@ public class PostbackServlet extends HttpServlet {
      */
     private String getParamValue(HttpServletRequest request, String source, String stdParamName) {
         String value = request.getParameter(AdParamMapController.getInstance().translateStdName(source, stdParamName));
+        if (StringUtil.isNotEmptyString(value) ) {
+            value = value.toLowerCase();
+        }
         return value;
     }
 
@@ -261,6 +271,9 @@ public class PostbackServlet extends HttpServlet {
         boolean value = false;
         String temp = request.getParameter(AdParamMapController.getInstance().translateStdName(source, stdParamName));
         try {
+            if ( StringUtil.isNotEmptyString(temp) ) {
+                temp = temp.toLowerCase();
+            }
             if ("1".equalsIgnoreCase(temp) || "yes".equalsIgnoreCase(temp) ||
                     "true".equalsIgnoreCase(temp) || "on".equalsIgnoreCase(temp))
                 value = true;

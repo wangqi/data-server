@@ -1,12 +1,18 @@
 package jp.coolfactory.data.module;
 
+import jp.coolfactory.data.db.DBUtil;
+import jp.coolfactory.data.util.DateUtil;
+import jp.coolfactory.data.util.StringUtil;
+
 import java.time.ZonedDateTime;
+import java.util.HashMap;
 
 /**
  * Created by wangqi on 22/2/2017.
  */
 public class AdRequest {
 
+    private String account_key;
     private String action;
     private String appKey;
     private String source;
@@ -46,7 +52,7 @@ public class AdRequest {
     private String referral_source;
     private String referral_url;
     private double revenue;
-    private String revenue_usd;
+    private double revenue_usd;
     private String status;
     private String status_code;
     private String tracking_id;
@@ -79,12 +85,22 @@ public class AdRequest {
     private String pub_sub1;
     private String pub_sub2;
     private String pub_sub3;
+    private String pub_sub4;
+    private String pub_sub5;
     private String cost_model;
     private double cost;
     private long ip_from;
     private long ip_to;
     private String city_code;
     private String metro_code;
+
+    public String getAccount_key() {
+        return account_key;
+    }
+
+    public void setAccount_key(String account_key) {
+        this.account_key = account_key;
+    }
 
     public String getStat_id() {
         return stat_id;
@@ -374,11 +390,11 @@ public class AdRequest {
         this.revenue = revenue;
     }
 
-    public String getRevenue_usd() {
+    public double getRevenue_usd() {
         return revenue_usd;
     }
 
-    public void setRevenue_usd(String revenue_usd) {
+    public void setRevenue_usd(double revenue_usd) {
         this.revenue_usd = revenue_usd;
     }
 
@@ -710,6 +726,22 @@ public class AdRequest {
         this.source = source;
     }
 
+    public String getPub_sub4() {
+        return pub_sub4;
+    }
+
+    public void setPub_sub4(String pub_sub4) {
+        this.pub_sub4 = pub_sub4;
+    }
+
+    public String getPub_sub5() {
+        return pub_sub5;
+    }
+
+    public void setPub_sub5(String pub_sub5) {
+        this.pub_sub5 = pub_sub5;
+    }
+
     @Override
     public String toString() {
         return "AdRequest{" +
@@ -792,5 +824,443 @@ public class AdRequest {
                 ", city_code='" + city_code + '\'' +
                 ", metro_code='" + metro_code + '\'' +
                 '}';
+    }
+
+    /**
+     * Convert this request into a SQL insert
+     * @return
+     */
+    public String toSQL() {
+        if ( StringUtil.isEmptyString(action) ) {
+            //Action is null. Ignore it.
+            return null;
+        } else {
+            StringBuilder buf = new StringBuilder(200);
+            StringBuilder valueBuf = new StringBuilder(200);
+            HashMap<String,String> map = new HashMap<>();
+            valueBuf.append("(");
+            if ( "install".equals(action) ) {
+                buf.append("insert into " + DBUtil.getDatabaseSchema() + ".ad_install (");
+            } else if ( "click".equals(action) ) {
+                buf.append("insert into " + DBUtil.getDatabaseSchema() + ".ad_click (");
+            } else if ( "purchase".equals(action) ) {
+                buf.append("insert into " + DBUtil.getDatabaseSchema() + ".ad_purchase (");
+            } else {
+                buf.append("insert into " + DBUtil.getDatabaseSchema() + ".ad_event (");
+            }
+            buf.append("action,");
+            valueBuf.append("'{action}',");
+            map.put("action", action);
+
+            if (StringUtil.isNotEmptyString(account_key) ) {
+                buf.append("account_key,");
+                valueBuf.append("'{account_key}',");
+                map.put("account_key", account_key);
+            }
+            if (StringUtil.isNotEmptyString(source) ) {
+                buf.append("source,");
+                valueBuf.append("'{source}',");
+                map.put("source", source);
+            }
+            if (StringUtil.isNotEmptyString(stat_id) ) {
+                buf.append("stat_id,");
+                valueBuf.append("'{stat_id}',");
+                map.put("stat_id", stat_id);
+            }
+            if (StringUtil.isNotEmptyString(appKey) ) {
+                buf.append("appKey,");
+                valueBuf.append("'{appKey}',");
+                map.put("appKey", appKey);
+            }
+            if (StringUtil.isNotEmptyString(os_version) ) {
+                buf.append("os_version,");
+                valueBuf.append("'{os_version}',");
+                map.put("os_version", os_version);
+            }
+            if (StringUtil.isNotEmptyString(device_id) ) {
+                buf.append("device_id,");
+                valueBuf.append("'{device_id}',");
+                map.put("device_id", device_id);
+            }
+            if (StringUtil.isNotEmptyString(device_type) ) {
+                buf.append("device_type,");
+                valueBuf.append("'{device_type}',");
+                map.put("device_type", device_type);
+            }
+            if (StringUtil.isNotEmptyString(device_brand) ) {
+                buf.append("device_brand,");
+                valueBuf.append("'{device_brand}',");
+                map.put("device_brand", device_brand);
+            }
+            if (StringUtil.isNotEmptyString(device_carrier) ) {
+                buf.append("device_carrier,");
+                valueBuf.append("'{device_carrier}',");
+                map.put("device_carrier", device_carrier);
+            }
+            if (StringUtil.isNotEmptyString(device_model) ) {
+                buf.append("device_model,");
+                valueBuf.append("'{device_model}',");
+                map.put("device_model", device_model);
+            }
+            if (StringUtil.isNotEmptyString(lang) ) {
+                buf.append("lang,");
+                valueBuf.append("'{lang}',");
+                map.put("lang", lang);
+            }
+            if (StringUtil.isNotEmptyString(plat_id) ) {
+                buf.append("plat_id,");
+                valueBuf.append("'{plat_id}',");
+                map.put("plat_id", plat_id);
+            }
+            if (StringUtil.isNotEmptyString(user_agent) ) {
+                buf.append("user_agent,");
+                valueBuf.append("'{user_agent}',");
+                map.put("user_agent", user_agent);
+            }
+            if (StringUtil.isNotEmptyString(publisher_id) ) {
+                buf.append("publisher_id,");
+                valueBuf.append("'{publisher_id}',");
+                map.put("publisher_id", publisher_id);
+            }
+            if (StringUtil.isNotEmptyString(publisher_name) ) {
+                buf.append("publisher_name,");
+                valueBuf.append("'{publisher_name}',");
+                map.put("publisher_name", publisher_name);
+            }
+            if (StringUtil.isNotEmptyString(click_ip) ) {
+                buf.append("click_ip,");
+                valueBuf.append("'{click_ip}',");
+                map.put("click_ip", click_ip);
+            }
+            if (click_time!=null ) {
+                String value = DateUtil.formatDateTime(click_time);
+                buf.append("click_time,");
+                valueBuf.append("'{click_time}',");
+                map.put("click_time", value);
+            }
+            if (StringUtil.isNotEmptyString(bundle_id) ) {
+                buf.append("bundle_id,");
+                valueBuf.append("'{bundle_id}',");
+                map.put("bundle_id", bundle_id);
+            }
+            if (StringUtil.isNotEmptyString(install_ip) ) {
+                buf.append("install_ip,");
+                valueBuf.append("'{install_ip}',");
+                map.put("install_ip", install_ip);
+            }
+            if (install_time!=null ) {
+                String value = DateUtil.formatDateTime(install_time);
+                buf.append("install_time,");
+                valueBuf.append("'{install_time}',");
+                map.put("install_time", value);
+            }
+            if (StringUtil.isNotEmptyString(agency_name) ) {
+                buf.append("agency_name,");
+                valueBuf.append("'{agency_name}',");
+                map.put("agency_name", agency_name);
+            }
+            if (StringUtil.isNotEmptyString(site_id) ) {
+                buf.append("site_id,");
+                valueBuf.append("'{site_id}',");
+                map.put("site_id", site_id);
+            }
+            if (StringUtil.isNotEmptyString(site_name) ) {
+                buf.append("site_name,");
+                valueBuf.append("'{site_name}',");
+                map.put("site_name", site_name);
+            }
+            if (StringUtil.isNotEmptyString(match_type) ) {
+                buf.append("match_type,");
+                valueBuf.append("'{match_type}',");
+                map.put("match_type", match_type);
+            }
+            if (StringUtil.isNotEmptyString(campaign_id) ) {
+                buf.append("campaign_id,");
+                valueBuf.append("'{campaign_id}',");
+                map.put("campaign_id", campaign_id);
+            }
+            if (StringUtil.isNotEmptyString(campaign_name) ) {
+                buf.append("campaign_name,");
+                valueBuf.append("'{campaign_name}',");
+                map.put("campaign_name", campaign_name);
+            }
+            if (StringUtil.isNotEmptyString(ad_url) ) {
+                buf.append("ad_url,");
+                valueBuf.append("'{ad_url}',");
+                map.put("ad_url", ad_url);
+            }
+            if (StringUtil.isNotEmptyString(ad_name) ) {
+                buf.append("ad_name,");
+                valueBuf.append("'{ad_name}',");
+                map.put("ad_name", ad_name);
+            }
+            if (StringUtil.isNotEmptyString(region_name) ) {
+                buf.append("region_name,");
+                valueBuf.append("'{region_name}',");
+                map.put("region_name", region_name);
+            }
+            if (StringUtil.isNotEmptyString(country_code) ) {
+                buf.append("country_code,");
+                valueBuf.append("'{country_code}',");
+                map.put("country_code", country_code);
+            }
+            if (StringUtil.isNotEmptyString(currency_code) ) {
+                buf.append("currency_code,");
+                valueBuf.append("'{currency_code}',");
+                map.put("currency_code", currency_code);
+            }
+            if (StringUtil.isNotEmptyString(existing_user) ) {
+                buf.append("existing_user,");
+                valueBuf.append("'{existing_user}',");
+                map.put("existing_user", existing_user);
+            }
+            if (imp_time!=null ) {
+                String value = DateUtil.formatDateTime(imp_time);
+                buf.append("imp_time,");
+                valueBuf.append("'{imp_time}',");
+                map.put("imp_time", value);
+            }
+            if (StringUtil.isNotEmptyString(stat_click_id) ) {
+                buf.append("stat_click_id,");
+                valueBuf.append("'{stat_click_id}',");
+                map.put("stat_click_id", stat_click_id);
+            }
+            if (StringUtil.isNotEmptyString(stat_impression_id) ) {
+                buf.append("stat_impression_id,");
+                valueBuf.append("'{stat_impression_id}',");
+                map.put("stat_impression_id", stat_impression_id);
+            }
+            if (payout>0 ) {
+                buf.append("payout,");
+                valueBuf.append("{payout},");
+                map.put("payout", String.valueOf(payout));
+            }
+            if (StringUtil.isNotEmptyString(referral_source) ) {
+                buf.append("referral_source,");
+                valueBuf.append("'{referral_source}',");
+                map.put("referral_source", referral_source);
+            }
+            if (StringUtil.isNotEmptyString(referral_url) ) {
+                buf.append("referral_url,");
+                valueBuf.append("'{referral_url}',");
+                map.put("referral_url", referral_url);
+            }
+            if (revenue>0 ) {
+                buf.append("revenue,");
+                valueBuf.append("{revenue},");
+                map.put("revenue", String.valueOf(revenue));
+            }
+            if (revenue_usd>0 ) {
+                buf.append("revenue_usd,");
+                valueBuf.append("{revenue_usd},");
+                map.put("revenue_usd", String.valueOf(revenue_usd));
+            }
+            if (StringUtil.isNotEmptyString(status) ) {
+                buf.append("status,");
+                valueBuf.append("'{status}',");
+                map.put("status", status);
+            }
+            if (StringUtil.isNotEmptyString(status_code) ) {
+                buf.append("status_code,");
+                valueBuf.append("'{status_code}',");
+                map.put("status_code", status_code);
+            }
+            if (StringUtil.isNotEmptyString(tracking_id) ) {
+                buf.append("tracking_id,");
+                valueBuf.append("'{tracking_id}',");
+                map.put("tracking_id", tracking_id);
+            }
+            if (StringUtil.isNotEmptyString(ios_ifa) ) {
+                buf.append("ios_ifa,");
+                valueBuf.append("'{ios_ifa}',");
+                map.put("ios_ifa", ios_ifa);
+            }
+            if (StringUtil.isNotEmptyString(ios_ifv) ) {
+                buf.append("ios_ifv,");
+                valueBuf.append("'{ios_ifv}',");
+                map.put("ios_ifv", ios_ifv);
+            }
+            if (StringUtil.isNotEmptyString(google_aid) ) {
+                buf.append("google_aid,");
+                valueBuf.append("'{google_aid}',");
+                map.put("google_aid", google_aid);
+            }
+            if (StringUtil.isNotEmptyString(pub_camp_id) ) {
+                buf.append("pub_camp_id,");
+                valueBuf.append("'{pub_camp_id}',");
+                map.put("pub_camp_id", pub_camp_id);
+            }
+            if (StringUtil.isNotEmptyString(pub_camp_name) ) {
+                buf.append("pub_camp_name,");
+                valueBuf.append("'{pub_camp_name}',");
+                map.put("pub_camp_name", pub_camp_name);
+            }
+            if (StringUtil.isNotEmptyString(pub_camp_ref) ) {
+                buf.append("pub_camp_ref,");
+                valueBuf.append("'{pub_camp_ref}',");
+                map.put("pub_camp_ref", pub_camp_ref);
+            }
+            if (StringUtil.isNotEmptyString(pub_adset) ) {
+                buf.append("pub_adset,");
+                valueBuf.append("'{pub_adset}',");
+                map.put("pub_adset", pub_adset);
+            }
+            if (StringUtil.isNotEmptyString(pub_ad) ) {
+                buf.append("pub_ad,");
+                valueBuf.append("'{pub_ad}',");
+                map.put("pub_ad", pub_ad);
+            }
+            if (StringUtil.isNotEmptyString(pub_keyword) ) {
+                buf.append("pub_keyword,");
+                valueBuf.append("'{pub_keyword}',");
+                map.put("pub_keyword", pub_keyword);
+            }
+            if (StringUtil.isNotEmptyString(pub_place) ) {
+                buf.append("pub_place,");
+                valueBuf.append("'{pub_place}',");
+                map.put("pub_place", pub_place);
+            }
+            if (StringUtil.isNotEmptyString(pub_sub_id) ) {
+                buf.append("pub_sub_id,");
+                valueBuf.append("'{pub_sub_id}',");
+                map.put("pub_sub_id", pub_sub_id);
+            }
+            if (StringUtil.isNotEmptyString(pub_sub_name) ) {
+                buf.append("pub_sub_name,");
+                valueBuf.append("'{pub_sub_name}',");
+                map.put("pub_sub_name", pub_sub_name);
+            }
+            if (StringUtil.isNotEmptyString(adv_camp_id) ) {
+                buf.append("adv_camp_id,");
+                valueBuf.append("'{adv_camp_id}',");
+                map.put("adv_camp_id", adv_camp_id);
+            }
+            if (StringUtil.isNotEmptyString(adv_camp_name) ) {
+                buf.append("adv_camp_name,");
+                valueBuf.append("'{adv_camp_name}',");
+                map.put("adv_camp_name", adv_camp_name);
+            }
+            if (StringUtil.isNotEmptyString(adv_camp_ref) ) {
+                buf.append("adv_camp_ref,");
+                valueBuf.append("'{adv_camp_ref}',");
+                map.put("adv_camp_ref", adv_camp_ref);
+            }
+            if (StringUtil.isNotEmptyString(adv_adset) ) {
+                buf.append("adv_adset,");
+                valueBuf.append("'{adv_adset}',");
+                map.put("adv_adset", adv_adset);
+            }
+            if (StringUtil.isNotEmptyString(adv_ad) ) {
+                buf.append("adv_ad,");
+                valueBuf.append("'{adv_ad}',");
+                map.put("adv_ad", adv_ad);
+            }
+            if (StringUtil.isNotEmptyString(adv_keyword) ) {
+                buf.append("adv_keyword,");
+                valueBuf.append("'{adv_keyword}',");
+                map.put("adv_keyword", adv_keyword);
+            }
+            if (StringUtil.isNotEmptyString(adv_place) ) {
+                buf.append("adv_place,");
+                valueBuf.append("'{adv_place}',");
+                map.put("adv_place", adv_place);
+            }
+            if (StringUtil.isNotEmptyString(adv_sub_id) ) {
+                buf.append("adv_sub_id,");
+                valueBuf.append("'{adv_sub_id}',");
+                map.put("adv_sub_id", adv_sub_id);
+            }
+            if (StringUtil.isNotEmptyString(adv_sub_name) ) {
+                buf.append("adv_sub_name,");
+                valueBuf.append("'{adv_sub_name}',");
+                map.put("adv_sub_name", adv_sub_name);
+            }
+            if (StringUtil.isNotEmptyString(sdk) ) {
+                buf.append("sdk,");
+                valueBuf.append("'{sdk}',");
+                map.put("sdk", sdk);
+            }
+            if (StringUtil.isNotEmptyString(sdk_version) ) {
+                buf.append("sdk_version,");
+                valueBuf.append("'{sdk_version}',");
+                map.put("sdk_version", sdk_version);
+            }
+            if (StringUtil.isNotEmptyString(game_user_id) ) {
+                buf.append("game_user_id,");
+                valueBuf.append("'{game_user_id}',");
+                map.put("game_user_id", game_user_id);
+            }
+            if (os_jailbroke ) {
+                buf.append("os_jailbroke,");
+                valueBuf.append("{os_jailbroke},");
+                map.put("os_jailbroke", "1");
+            }
+            if (StringUtil.isNotEmptyString(pub_pref_id) ) {
+                buf.append("pub_pref_id,");
+                valueBuf.append("'{pub_pref_id}',");
+                map.put("pub_pref_id", pub_pref_id);
+            }
+            if (StringUtil.isNotEmptyString(pub_sub1) ) {
+                buf.append("pub_sub1,");
+                valueBuf.append("'{pub_sub1}',");
+                map.put("pub_sub1", pub_sub1);
+            }
+            if (StringUtil.isNotEmptyString(pub_sub2) ) {
+                buf.append("pub_sub2,");
+                valueBuf.append("'{pub_sub2}',");
+                map.put("pub_sub2", pub_sub2);
+            }
+            if (StringUtil.isNotEmptyString(pub_sub3) ) {
+                buf.append("pub_sub3,");
+                valueBuf.append("'{pub_sub3}',");
+                map.put("pub_sub3", pub_sub3);
+            }
+            if (StringUtil.isNotEmptyString(pub_sub4) ) {
+                buf.append("pub_sub4,");
+                valueBuf.append("'{pub_sub4}',");
+                map.put("pub_sub4", pub_sub4);
+            }
+            if (StringUtil.isNotEmptyString(pub_sub5) ) {
+                buf.append("pub_sub5,");
+                valueBuf.append("'{pub_sub5}',");
+                map.put("pub_sub5", pub_sub5);
+            }
+            if (StringUtil.isNotEmptyString(cost_model) ) {
+                buf.append("cost_model,");
+                valueBuf.append("'{cost_model}',");
+                map.put("cost_model", cost_model);
+            }
+            if (cost>0 ) {
+                buf.append("cost,");
+                valueBuf.append("{cost},");
+                map.put("cost", String.valueOf(cost));
+            }
+            if (ip_from!=0 ) {
+                buf.append("ip_from,");
+                valueBuf.append("{ip_from},");
+                map.put("ip_from", String.valueOf(ip_from));
+            }
+            if (ip_to != 0) {
+                buf.append("ip_to,");
+                valueBuf.append("{ip_to},");
+                map.put("ip_to", String.valueOf(ip_to));
+            }
+            if (StringUtil.isNotEmptyString(city_code) ) {
+                buf.append("city_code,");
+                valueBuf.append("'{city_code}',");
+                map.put("city_code", city_code);
+            }
+            if (StringUtil.isNotEmptyString(metro_code) ) {
+                buf.append("metro_code,");
+                valueBuf.append("'{metro_code}',");
+                map.put("metro_code", metro_code);
+            }
+            buf.deleteCharAt(buf.length()-1);
+            buf.append(") values ");
+            valueBuf.deleteCharAt(valueBuf.length()-1);
+            valueBuf.append(')');
+            String sql = StringUtil.replaceKey(buf.append('\n').append(valueBuf.toString()).toString(), map);
+            return sql;
+        }
     }
 }

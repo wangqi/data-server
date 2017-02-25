@@ -112,4 +112,21 @@ public class StringUtilTest {
         String expect = "https://www.coolfactory.jp/test?param=}";
         assertEquals(expect, actual);
     }
+
+    @Test
+    public void generateHashBase64() throws Exception {
+        String ios_ifa = "7d9af3fa-7326-49c9-8173-0b39e9496772";
+        String google_aid = "fca5ba73-27b8-4066-8fd8-60f0d79f6778";
+        String ua_devicemodel_lang_os_ip = "Mozilla/5.0 (iPhone; CPU iPhone OS 8_2 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12D508" +
+                "iPhone4,1" + "ja" + "4.0.10" + "126.210.48.225";
+        String base64_ifa = StringUtil.generateHashBase64(ios_ifa);
+        System.out.println("base64_idfa: " + base64_ifa + ", len: " + base64_ifa.length());
+        String base64_aid = StringUtil.generateHashBase64(google_aid);
+        System.out.println("base64_aid: " + base64_aid + ", len: " + base64_aid.length());
+        String base64_ua_devicemodel_lang_os_ip = StringUtil.generateHashBase64(ua_devicemodel_lang_os_ip);
+        System.out.println("base64_ua_devicemodel_lang_os_ip: " + base64_ua_devicemodel_lang_os_ip + ", len: " + base64_ua_devicemodel_lang_os_ip.length());
+
+        assertEquals(base64_aid.length(), base64_ifa.length());
+        assertEquals(base64_aid.length(), base64_ua_devicemodel_lang_os_ip.length());
+    }
 }

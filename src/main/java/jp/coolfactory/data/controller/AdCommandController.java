@@ -1,6 +1,7 @@
 package jp.coolfactory.data.controller;
 
 import jp.coolfactory.data.common.AdRequestDBCommand;
+import jp.coolfactory.data.common.AdRequestIDCommand;
 import jp.coolfactory.data.common.Chain;
 import jp.coolfactory.data.common.ChainBuilder;
 import jp.coolfactory.data.module.AdRequest;
@@ -24,9 +25,12 @@ public class AdCommandController implements Controller{
     @Override
     public void init() {
         ChainBuilder builder = ChainBuilder.chainBuilder();
-        AdRequestDBCommand command = new AdRequestDBCommand();
-        command.runWorker();
-        chain = builder.first(command).build();
+        AdRequestIDCommand idCommand = new AdRequestIDCommand();
+        AdRequestDBCommand dbCommand = new AdRequestDBCommand();
+        dbCommand.runWorker();
+        chain = builder
+                .first(idCommand)
+                .successor(dbCommand).build();
     }
 
     /**

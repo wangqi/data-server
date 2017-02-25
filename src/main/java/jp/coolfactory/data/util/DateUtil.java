@@ -151,6 +151,20 @@ public class DateUtil {
     }
 
     /**
+     * Convert Date object to 'yyyy-MM-dd HH:mm:ss'
+     * @param date
+     * @return
+     */
+    public static final String formatDateTime(ZonedDateTime date) {
+        try {
+            return DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(date);
+        } catch ( Exception e ) {
+            LOGGER.warn("Failed to format the IOS format data: " + date);
+            return null;
+        }
+    }
+
+    /**
      * It parse a string in 'yyyy-MM-dd HH:mm:ss' format, which will be treated as UTC, to given timezone
      * and formated as 'yyyy-MM-ddTHH:mm:ssZ'
      *
