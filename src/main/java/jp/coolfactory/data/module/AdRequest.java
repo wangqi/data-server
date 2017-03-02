@@ -946,13 +946,15 @@ public class AdRequest {
                 map.put("bundle_id", StringUtil.validSQLInput(bundle_id));
             }
             if (StringUtil.isNotEmptyString(install_ip) ) {
-                buf.append("install_ip,");
+                //Rename 'install_ip' to 'ip'
+                buf.append("ip,");
                 valueBuf.append("'{install_ip}',");
                 map.put("install_ip", StringUtil.validSQLInput(install_ip));
             }
             if (install_time!=null ) {
+                //Rename 'install_time' to 'created'
                 String value = DateUtil.formatDateTime(install_time);
-                buf.append("install_time,");
+                buf.append("created,");
                 valueBuf.append("'{install_time}',");
                 map.put("install_time", value);
             }

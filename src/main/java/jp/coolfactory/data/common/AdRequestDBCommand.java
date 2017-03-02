@@ -41,7 +41,7 @@ public class AdRequestDBCommand implements Handler<AdRequest> {
      */
     public final void runWorker() {
         LOGGER.info("ScheduleWorker is activated.");
-        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
+        Executors.newSingleThreadScheduledExecutor().scheduleWithFixedDelay(new Runnable() {
             @Override
             public void run() {
                 try {

@@ -17,16 +17,15 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Writer;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.Executors;
 
@@ -67,6 +66,11 @@ public class PostbackServlet extends HttpServlet {
         String app_key = request.getParameter("app_key");
 
         AdRequest req = new AdRequest();
+        ZonedDateTime created = getParamValueAsDate(request,source, "install_time");
+        if ( created == null ) {
+            created = ZonedDateTime.now();
+            req.setInstall_time(created);
+        }
         req.setAction(action);
         req.setSource(source);
         req.setAppKey(app_key);
@@ -86,7 +90,6 @@ public class PostbackServlet extends HttpServlet {
         req.setClick_time(getParamValueAsDate(request,source, "click_time"));
         req.setBundle_id(getParamValue(request,source, "bundle_id"));
         req.setInstall_ip(getParamValue(request,source, "install_ip"));
-        req.setInstall_time(getParamValueAsDate(request,source, "install_time"));
         req.setAgency_name(getParamValue(request,source, "agency_name"));
         req.setSite_id(getParamValue(request,source, "site_id"));
         req.setSite_name(getParamValue(request,source, "site_name"));
@@ -165,25 +168,19 @@ public class PostbackServlet extends HttpServlet {
         String uri = request.getRequestURI();
         String queryString = request.getQueryString();
         String postData = null;
-        if ( "post".equalsIgnoreCase(method) ) {
-            StringBuilder buf = null;
-            try {
-                BufferedReader reader = new BufferedReader(request.getReader());
-                buf = new StringBuilder(500);
-                String line = reader.readLine();
-                while ( line != null ) {
-                    buf.append(line).append(' ');
-                    line = reader.readLine();
-                }
-            } catch (IOException e) {
-                LOGGER.warn("Failed to read post data", e);
+        Map<String, String[]> map = request.getParameterMap();
+        StringBuilder buf = new StringBuilder(200);
+        for ( String name : map.keySet() ) {
+            String[] values = map.get(name);
+            for ( String value : values ) {
+                buf.append(name).append("=").append(value).append("&");
             }
-            postData = buf.toString();
         }
+        postData = buf.toString();
         String forwardIp = request.getHeader("X-Forwarded-For");
         String ip = request.getRemoteAddr();
         String userAgent = request.getHeader("User-Agent");
-        StringBuilder buf = new StringBuilder(200);
+        buf = new StringBuilder(200);
         buf.append(method).append('\t').append(scheme).append('\t').append(serverName)
                 .append('\t').append(port).append('\t').append(uri)
                 .append('\t').append(queryString==null?"":queryString).append('\t').append(forwardIp==null?"":forwardIp)
@@ -201,6 +198,11 @@ public class PostbackServlet extends HttpServlet {
      */
     private String getParamValue(HttpServletRequest request, String source, String stdParamName) {
         String value = request.getParameter(AdParamMapController.getInstance().translateStdName(source, stdParamName));
+        try {
+            if ( value !=null )
+                value = URLDecoder.decode(value, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+        }
         if (StringUtil.isNotEmptyString(value) ) {
             value = value.toLowerCase();
         }
