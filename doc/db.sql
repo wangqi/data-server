@@ -113,7 +113,7 @@ values
   (null, 'ip_to', 'ip_to'),
   (null, 'city_code', 'city_code'),
   (null, 'metro_code', 'metro_code'),
-  ('test', 'created', 'install_time');
+  (null, 'install_time', 'install_time');
 
 
 drop table ad_install;

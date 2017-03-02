@@ -69,8 +69,8 @@ public class PostbackServlet extends HttpServlet {
         ZonedDateTime created = getParamValueAsDate(request,source, "install_time");
         if ( created == null ) {
             created = ZonedDateTime.now();
-            req.setInstall_time(created);
         }
+        req.setInstall_time(created);
         req.setAction(action);
         req.setSource(source);
         req.setAppKey(app_key);
@@ -89,7 +89,7 @@ public class PostbackServlet extends HttpServlet {
         req.setClick_ip(getParamValue(request,source, "click_ip"));
         req.setClick_time(getParamValueAsDate(request,source, "click_time"));
         req.setBundle_id(getParamValue(request,source, "bundle_id"));
-        req.setInstall_ip(getParamValue(request,source, "install_ip"));
+        req.setInstall_ip(getParamValue(request,source, "ip"));
         req.setAgency_name(getParamValue(request,source, "agency_name"));
         req.setSite_id(getParamValue(request,source, "site_id"));
         req.setSite_name(getParamValue(request,source, "site_name"));

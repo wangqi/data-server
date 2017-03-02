@@ -5,11 +5,13 @@ import jp.coolfactory.data.db.DBUtil;
 import jp.coolfactory.data.module.AdApp;
 import jp.coolfactory.data.module.AdParamMap;
 import jp.coolfactory.data.util.DateUtil;
+import jp.coolfactory.data.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -110,10 +112,18 @@ public class AdAppController implements Controller {
         ZoneId srcZoneId = getSrcZoneId(appKey);
         ZoneId dstZoneId = getDstZoneId(appKey);
         try {
-            LocalDateTime dateTime = DateUtil.convertIOS2Date(value);
-            if ( srcZoneId != dstZoneId ) {
-                //Change the date to dst timezone
-                zonedDateTime = DateUtil.changeTimeZone(dateTime, srcZoneId, dstZoneId);
+            if (StringUtil.isNotEmptyString(value) ) {
+                if ( value.indexOf('-') < 0 ) {
+                    long timeInMillis = Long.parseLong(value);
+                    Instant instant = Instant.ofEpochMilli(timeInMillis);
+                    zonedDateTime = instant.atZone(dstZoneId);
+                } else {
+                    LocalDateTime dateTime = DateUtil.convertIOS2Date(value);
+                    if ( srcZoneId != dstZoneId ) {
+                        //Change the date to dst timezone
+                        zonedDateTime = DateUtil.changeTimeZone(dateTime, srcZoneId, dstZoneId);
+                    }
+                }
             }
         } catch (Exception e) {
             LOGGER.warn("Failed to parse date string: "+value + ", appkey:"+appKey, e);
