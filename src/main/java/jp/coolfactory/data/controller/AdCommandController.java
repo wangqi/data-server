@@ -29,7 +29,6 @@ public class AdCommandController implements Controller{
         AdRequestCountryCommand countryCommand = new AdRequestCountryCommand();
         AdRequestUSDCommand usdCommand = new AdRequestUSDCommand();
         AdRequestDBCommand dbCommand = new AdRequestDBCommand();
-        dbCommand.runWorker();
 
         commandChain.add(idCommand);
         commandChain.add(countryCommand);

@@ -114,6 +114,7 @@ values
   (null, 'city_code', 'city_code'),
   (null, 'metro_code', 'metro_code'),
   (null, 'install_time', 'install_time');
+  (null, 'order_id', 'order_id');
 
 
 drop table ad_install;
@@ -194,6 +195,7 @@ create table ad_install (
   pub_sub4 varchar(50) DEFAULT NULL,
   pub_sub5 varchar(50) DEFAULT NULL,
   cost_model varchar(50) DEFAULT NULL,
+  order_id varchar(200) DEFAULT NULL,
   cost double,
   ip_from int(11),
   ip_to  int(11),
@@ -281,6 +283,7 @@ create table ad_purchase(
   pub_sub3 varchar(50) DEFAULT NULL,
   pub_sub4 varchar(50) DEFAULT NULL,
   pub_sub5 varchar(50) DEFAULT NULL,
+  order_id varchar(200) DEFAULT NULL,
   cost_model varchar(50) DEFAULT NULL,
   cost double,
   ip_from int(11),
@@ -369,6 +372,7 @@ create table ad_click (
   pub_sub3 varchar(50) DEFAULT NULL,
   pub_sub4 varchar(50) DEFAULT NULL,
   pub_sub5 varchar(50) DEFAULT NULL,
+  order_id varchar(200) DEFAULT NULL,
   cost_model varchar(50) DEFAULT NULL,
   cost double,
   ip_from int(11),
@@ -457,6 +461,7 @@ create table ad_event (
   pub_sub3 varchar(50) DEFAULT NULL,
   pub_sub4 varchar(50) DEFAULT NULL,
   pub_sub5 varchar(50) DEFAULT NULL,
+  order_id varchar(200) DEFAULT NULL,
   cost_model varchar(50) DEFAULT NULL,
   cost double,
   ip_from int(11),

@@ -25,6 +25,10 @@ public class AdRequestDBCommand implements Handler<AdRequest> {
 
     private BlockingQueue<AdRequest> queue = new LinkedBlockingQueue<>();
 
+    public AdRequestDBCommand() {
+        runWorker();
+    }
+
     @Override
     public CommandStatus handle(AdRequest adRequest) {
         try {
