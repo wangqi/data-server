@@ -10,7 +10,7 @@ import java.util.HashMap;
 /**
  * Created by wangqi on 22/2/2017.
  */
-public class AdRequest {
+public class AdRequest implements SQLRequest {
 
     private String account_key;
     private String action;

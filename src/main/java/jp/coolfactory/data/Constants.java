@@ -10,4 +10,6 @@ public interface Constants {
     String SOURCE_TalkingData = "talkingdata";
     String SOURCE_UNKNOWN = "na";
 
+    String DB_JOB_MANAGER = "DB_JOB_MANAGER";
+
 }

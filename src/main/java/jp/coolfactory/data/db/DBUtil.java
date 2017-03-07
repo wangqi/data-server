@@ -73,7 +73,8 @@ public class DBUtil {
     }
 
     public static <T> void insertBatch(String sql, PreparedStatementProcessor<T> process, ArrayList<T> list) {
-        try (PreparedStatement ps = db.getConnection().prepareStatement(sql)) {
+        try (Connection conn = db.getConnection() ) {
+            PreparedStatement ps = conn.prepareStatement(sql);
             try {
                 for ( T t : list ) {
                     process.process(ps, t);
@@ -95,7 +96,8 @@ public class DBUtil {
      * @param <T>
      */
     public static <T> void sqlBatch(StatementProcessor<T> process, ArrayList<T> list) {
-        try (Statement ps = db.getConnection().createStatement()) {
+        try (Connection conn = db.getConnection() ) {
+            Statement ps =  conn.createStatement();
             try {
                 for ( T t : list ) {
                     String sql = process.process(t);

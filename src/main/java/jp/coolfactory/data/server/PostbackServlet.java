@@ -184,7 +184,8 @@ public class PostbackServlet extends HttpServlet {
         buf = new StringBuilder(200);
         buf.append(method).append('\t').append(scheme).append('\t').append(serverName)
                 .append('\t').append(port).append('\t').append(uri)
-                .append('\t').append(queryString==null?"":queryString).append('\t').append(forwardIp==null?"":forwardIp)
+//                .append('\t').append(queryString==null?"":queryString)
+                .append('\t').append(forwardIp==null?"":forwardIp)
                 .append('\t').append(ip).append('\t').append(postData)
                 .append('\t').append(userAgent);
         ACCESS_LOGGER.info(buf.toString());

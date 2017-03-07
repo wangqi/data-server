@@ -1,5 +1,6 @@
 package jp.coolfactory.data.common;
 
+import jp.coolfactory.data.Constants;
 import jp.coolfactory.data.db.DBUtil;
 import jp.coolfactory.data.module.AdRequest;
 import org.slf4j.Logger;
@@ -52,6 +53,10 @@ public class AdRequestUSDCommand implements Handler<AdRequest> {
                 if ( rateDouble != null ) {
                     double rate = rateDouble.doubleValue();
                     double revenue = adRequest.getRevenue();
+                    if (Constants.SOURCE_TalkingData.equals(adRequest.getSource())) {
+                        revenue = revenue / 100;
+                        adRequest.setRevenue(revenue);
+                    }
                     adRequest.setRevenue_usd(revenue/rate);
                 } else {
                     LOGGER.warn("Currency Code: " + currency_code + " is not found");

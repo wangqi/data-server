@@ -201,7 +201,7 @@ create table ad_install (
   ip_to  int(11),
   city_code varchar(20) DEFAULT NULL,
   metro_code varchar(20) DEFAULT NULL,
-  unique key id (action, source, stat_id, created, app_key),
+  key id (stat_id),
   key install_time (created),
   key aid ( ios_ifa, google_aid )
 ) default character set=utf8mb4 collate utf8mb4_general_ci;
@@ -290,7 +290,7 @@ create table ad_purchase(
   ip_to  int(11),
   city_code varchar(20) DEFAULT NULL,
   metro_code varchar(20) DEFAULT NULL,
-  unique key id (action, source, stat_id, created, app_key),
+  KEY `id` (`stat_id`),
   key install_time (created),
   key aid ( ios_ifa, google_aid )
 ) default character set=utf8mb4 collate utf8mb4_general_ci;
@@ -379,7 +379,7 @@ create table ad_click (
   ip_to  int(11),
   city_code varchar(20) DEFAULT NULL,
   metro_code varchar(20) DEFAULT NULL,
-  unique key id (action, source, stat_id, created, app_key),
+  KEY `id` (`stat_id`),
   key install_time (created),
   key aid ( ios_ifa, google_aid )
 ) default character set=utf8mb4 collate utf8mb4_general_ci;
@@ -468,7 +468,7 @@ create table ad_event (
   ip_to  int(11),
   city_code varchar(20) DEFAULT NULL,
   metro_code varchar(20) DEFAULT NULL,
-  unique key id (action, source, stat_id, created, app_key),
+  KEY `id` (`stat_id`),
   key install_time (created),
   key aid ( ios_ifa, google_aid )
 ) default character set=utf8mb4 collate utf8mb4_general_ci;
