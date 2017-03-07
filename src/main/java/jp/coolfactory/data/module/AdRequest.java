@@ -1,5 +1,6 @@
 package jp.coolfactory.data.module;
 
+import jp.coolfactory.data.Constants;
 import jp.coolfactory.data.db.DBUtil;
 import jp.coolfactory.data.util.DateUtil;
 import jp.coolfactory.data.util.StringUtil;
@@ -1108,14 +1109,14 @@ public class AdRequest implements SQLRequest {
             StringBuilder valueBuf = new StringBuilder(200);
             HashMap<String,String> map = new HashMap<>();
             valueBuf.append("(");
-            if ( "install".equals(action) ) {
-                buf.append("replace into " + DBUtil.getDatabaseSchema() + ".ad_install (");
-            } else if ( "click".equals(action) ) {
-                buf.append("replace into " + DBUtil.getDatabaseSchema() + ".ad_click (");
-            } else if ( "purchase".equals(action) ) {
-                buf.append("replace into " + DBUtil.getDatabaseSchema() + ".ad_purchase (");
+            if (Constants.ACTION_INSTALL.equals(action) ) {
+                buf.append("replace into ").append(DBUtil.getDatabaseSchema()).append(".ad_install (");
+            } else if ( Constants.ACTION_CLICK.equals(action) ) {
+                buf.append("replace into ").append(DBUtil.getDatabaseSchema()).append(".ad_click (");
+            } else if ( Constants.ACTION_PURCHASE.equals(action) ) {
+                buf.append("replace into ").append(DBUtil.getDatabaseSchema()).append(".ad_purchase (");
             } else {
-                buf.append("replace into " + DBUtil.getDatabaseSchema() + ".ad_event (");
+                buf.append("replace into ").append(DBUtil.getDatabaseSchema()).append(".ad_event (");
             }
             buf.append("action,");
             valueBuf.append("'{action}',");

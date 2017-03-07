@@ -116,6 +116,48 @@ values
   (null, 'install_time', 'install_time');
   (null, 'order_id', 'order_id');
 
+drop table ad_register;
+create table ad_register (
+  account_key varchar(50) DEFAULT NULL,
+  source varchar(50) DEFAULT NULL,
+  stat_id varchar(100) DEFAULT NULL,
+  app_key varchar(100) DEFAULT NULL,
+  site_id varchar(50) DEFAULT NULL,
+  site_name varchar(100) DEFAULT NULL,
+  ios_ifa varchar(100) DEFAULT NULL,
+  google_aid varchar(100) DEFAULT NULL,
+  publisher_id varchar(50) DEFAULT NULL,
+  publisher_name varchar(50) DEFAULT NULL,
+  campaign_id varchar(50) DEFAULT NULL,
+  campaign_name varchar(100) DEFAULT NULL,
+  is_paid bool DEFAULT False,
+  total_paid double DEFAULT 0,
+  created datetime DEFAULT NULL,
+  last_date datetime DEFAULT NULL,
+  region_name varchar(50) DEFAULT NULL,
+  country_code varchar(20) DEFAULT NULL,
+  ip varchar(50) DEFAULT NULL,
+  unique key id (account_key, source, stat_id, app_key),
+  key ios_ifa (ios_ifa, google_aid),
+  key created (created)
+) default character set=utf8mb4 collate utf8mb4_general_ci;
+
+drop table ad_gameuser;
+create table ad_gameuser (
+  account_key varchar(50) DEFAULT NULL,
+  source varchar(50) DEFAULT NULL,
+  app_key varchar(100) DEFAULT NULL,
+  stat_id varchar(100) DEFAULT NULL,
+  device_id varchar(100) DEFAULT NULL,
+  game_user_id varchar(100) DEFAULT NULL,
+  created datetime DEFAULT NULL,
+  revenue double,
+  revenue_usd double,
+  unique key id (account_key, source, app_key, device_id, game_user_id),
+  key device_id (device_id),
+  key game_user_id (game_user_id),
+  key stat_id (stat_id)
+) default character set=utf8mb4 collate utf8mb4_general_ci;
 
 drop table ad_install;
 create table ad_install (

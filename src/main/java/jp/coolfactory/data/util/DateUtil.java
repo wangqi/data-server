@@ -159,6 +159,9 @@ public class DateUtil {
      * @return
      */
     public static final String formatDateTime(ZonedDateTime date) {
+        if ( date == null ) {
+            return null;
+        }
         try {
             return IOS_LOCAL_DATETIME_FMT.format(date);
         } catch ( Exception e ) {

@@ -38,6 +38,8 @@ public class DBUtil {
         databaseSchemaName = configProps.getProperty("dataSource.databaseName");
         HikariConfig config = new HikariConfig(configProps);
         db = new HikariDataSource(config);
+        db.setInitializationFailFast(true);
+        LOGGER.info(configProps.toString());
     }
 
     /**

@@ -28,11 +28,15 @@ public class AdCommandController implements Controller{
         AdRequestIDCommand idCommand = new AdRequestIDCommand();
         AdRequestCountryCommand countryCommand = new AdRequestCountryCommand();
         AdRequestUSDCommand usdCommand = new AdRequestUSDCommand();
+        AdRequestUserCommand userCommand = new AdRequestUserCommand();
+        AdRequestUIDCommand uidCommand = new AdRequestUIDCommand();
         AdRequestDBCommand dbCommand = new AdRequestDBCommand();
 
         commandChain.add(idCommand);
         commandChain.add(countryCommand);
         commandChain.add(usdCommand);
+        commandChain.add(userCommand);
+        commandChain.add(uidCommand);
         commandChain.add(dbCommand);
 
 //        chain = builder

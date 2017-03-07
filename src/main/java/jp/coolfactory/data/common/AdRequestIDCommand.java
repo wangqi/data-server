@@ -1,19 +1,9 @@
 package jp.coolfactory.data.common;
 
-import jp.coolfactory.data.Constants;
-import jp.coolfactory.data.db.DBUtil;
 import jp.coolfactory.data.module.AdRequest;
 import jp.coolfactory.data.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Generate an unique ID for the request. The proirity is as follows:
@@ -36,14 +26,23 @@ public class AdRequestIDCommand implements Handler<AdRequest> {
                 boolean is_Android = false;
                 String stat_id = null;
                 String deviceType = adRequest.getDevice_type();
-                if (StringUtil.isNotEmptyString(deviceType)) {
-                    if ( deviceType.indexOf("ios")>=0 ) {
-                        is_iOS = true;
-                    } else if ( deviceType.indexOf("android")>=0 ) {
-                        is_Android = true;
-                    }
+                if (StringUtil.isNotEmptyString(adRequest.getIos_ifa())) {
+                    is_iOS = true;
+                } else if (StringUtil.isNotEmptyString(adRequest.getGoogle_aid())) {
+                    is_Android = true;
                 } else {
-                    LOGGER.debug("deviceType is null, install_time: " + adRequest.getInstall_time());
+                    //Try to guess
+                    if ( StringUtil.isNotEmptyString(deviceType) ) {
+                        deviceType = deviceType.toLowerCase();
+                        if ( deviceType.indexOf("ios")>=0 || deviceType.indexOf("iphone")>=0 || deviceType.indexOf("ipad")>=0 || deviceType.indexOf("ipod")>=0 ) {
+                            is_iOS = true;
+                        } else {
+                            is_Android = true;
+                        }
+                        LOGGER.debug("Both ios_ifa and Android is null, Try to guess via device_type: "
+                                + adRequest.getDevice_type()
+                                + ", result is: " + (is_iOS?"ios":"android"));
+                    }
                 }
 
                 //1st, check the ios_ifa and google_aid
@@ -54,6 +53,9 @@ public class AdRequestIDCommand implements Handler<AdRequest> {
                     stat_id = adRequest.getGoogle_aid();
                 }
 
+                /**
+                 * If there is no idfa / aid, it's better to caculate
+                 */
                 //2nd, check the source specific ID.
                 if ( stat_id == null ) {
                     stat_id = adRequest.getPlat_id();

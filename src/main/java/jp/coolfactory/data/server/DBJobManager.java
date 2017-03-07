@@ -56,7 +56,8 @@ public class DBJobManager implements ServletContextListener {
      */
     public void submitRequest(SQLRequest req) {
         try {
-            queue.put(req);
+            if ( req != null )
+                queue.put(req);
         } catch (InterruptedException e) {
             LOGGER.warn("submitRequest is interrupted.");
         }
