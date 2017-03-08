@@ -64,13 +64,14 @@ public class PostbackServlet extends HttpServlet {
             source = source.toLowerCase();
         }
         String app_key = request.getParameter("app_key");
-        String account_key = request.getParameter("account_key");
 
         AdRequest req = new AdRequest();
         ZonedDateTime created = getParamValueAsDate(request,source, "install_time");
         if ( created == null ) {
             created = ZonedDateTime.now();
         }
+
+        String account_key = request.getParameter("account_key");
         if ( StringUtil.isEmptyString(account_key) ) {
             account_key = Constants.DEFAULT_ACCOUNT;
             req.setAccount_key(account_key);
