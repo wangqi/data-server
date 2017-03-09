@@ -37,8 +37,8 @@ backup() {
     echo "backup file is: $filename. backup table is: $table from last_hour: $last_hour. this hour: $this_hour"
 
     mkdir $month
-    #mysqldump -u $mysqluser -p$mysqlpass -h $mysqlhost -P $mysqlport --compact --no-create-db --no-create-info --insert-ignore --compress --force "$database" "$table" --where "created >= '$last_hour' and created<'$this_hour'" | gzip -c > "$tmpfile"
-    mysqldump -u $mysqluser -p$mysqlpass -h $mysqlhost -P $mysqlport --compact --no-create-db --no-create-info --insert-ignore --compress --force "$database" $table --where "created >= ""'""$last_hour""'"" and created < ""'""$this_hour""'" > "$tmpfile"
+    echo "#"mysqldump -u $mysqluser -p$mysqlpass -h $mysqlhost -P $mysqlport --compact --no-create-db --no-create-info --insert-ignore --compress --force "$database" "$table" --where "created >= '$last_hour' and created<'$this_hour'" > "$tmpfile"
+    mysqldump -u $mysqluser -p$mysqlpass -h $mysqlhost -P $mysqlport --compact --no-create-db --no-create-info --insert-ignore --compress --force "$database" $table --where "created >= ""'""$last_hour""'"" and created < ""'""$this_hour""'" >> "$tmpfile"
     if [ -s "$tmpfile" ]
     then
         echo "$tmpfile is not empty"
