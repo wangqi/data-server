@@ -17,14 +17,14 @@ access_key="AKIAPKZGEVPJ5JS3KXRA"
 secret_key="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"
 bucket="qiku-db-sync"
 database="apidb"
-table="$2"
+table="ad_install ad_purchase ad_event ad_gameuser ad_register"
 
 # Timestamp (sortable AND readable)
 month=`date +"%Y_%m"`
 last_hour=`date +"%Y-%m-%d %H:00:00" -d  "1 hour ago"`
 this_hour=`date +"%Y-%m-%d %H:00:00"`
-last_hour="2017-03-06 00:00:00"
-this_hour="2017-03-09 00:00:00"
+#last_hour="2017-03-06 00:00:00"
+#this_hour="2017-03-09 00:00:00"
 stamp=`date +"%Y_%m_%d_%H"`
 
 backup() {
@@ -38,9 +38,9 @@ backup() {
 
     mkdir $month
     #mysqldump -u $mysqluser -p$mysqlpass -h $mysqlhost -P $mysqlport --compact --no-create-db --no-create-info --insert-ignore --compress --force "$database" "$table" --where "created >= '$last_hour' and created<'$this_hour'" | gzip -c > "$tmpfile"
-    mysqldump -u $mysqluser -p$mysqlpass -h $mysqlhost -P $mysqlport --compact --no-create-db --no-create-info --insert-ignore --compress --force "$database" "$table" --where "created >= ""'""$last_hour""'"" and created < ""'""$this_hour""'"  | gzip -c > "$tmpfile"
+    mysqldump -u $mysqluser -p$mysqlpass -h $mysqlhost -P $mysqlport --compact --no-create-db --no-create-info --insert-ignore --compress --force "$database" $table --where "created >= ""'""$last_hour""'"" and created < ""'""$this_hour""'"  | gzip -c > "$tmpfile"
 
-    s3put --access_key $access_key --secret_key $secret_key --bucket $bucket --prefix ./ --region $region "$month/$filename".gz
+    s3put --access_key $access_key --secret_key $secret_key --bucket $bucket --prefix ./ --region $region "$month/$filename"
 }
 
 restore() {
