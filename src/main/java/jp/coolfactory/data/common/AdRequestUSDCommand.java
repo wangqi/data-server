@@ -3,6 +3,7 @@ package jp.coolfactory.data.common;
 import jp.coolfactory.data.Constants;
 import jp.coolfactory.data.db.DBUtil;
 import jp.coolfactory.data.module.AdRequest;
+import jp.coolfactory.data.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import us.monoid.json.JSONObject;
@@ -49,17 +50,19 @@ public class AdRequestUSDCommand implements Handler<AdRequest> {
         try {
             if ( adRequest != null ) {
                 String currency_code = adRequest.getCurrency_code();
-                Double rateDouble = currencyMap.get(currency_code);
-                if ( rateDouble != null ) {
-                    double rate = rateDouble.doubleValue();
-                    double revenue = adRequest.getRevenue();
-                    if (Constants.SOURCE_TalkingData.equals(adRequest.getSource())) {
-                        revenue = revenue / 100;
-                        adRequest.setRevenue(revenue);
+                if (StringUtil.isNotEmptyString(currency_code) ) {
+                    Double rateDouble = currencyMap.get(currency_code);
+                    if ( rateDouble != null ) {
+                        double rate = rateDouble.doubleValue();
+                        double revenue = adRequest.getRevenue();
+                        if (Constants.SOURCE_TalkingData.equals(adRequest.getSource())) {
+                            revenue = revenue / 100;
+                            adRequest.setRevenue(revenue);
+                        }
+                        adRequest.setRevenue_usd(revenue/rate);
+                    } else {
+                        LOGGER.debug("Currency rate: " + currency_code + " is not found");
                     }
-                    adRequest.setRevenue_usd(revenue/rate);
-                } else {
-                    LOGGER.warn("Currency Code: " + currency_code + " is not found");
                 }
 
             } else {

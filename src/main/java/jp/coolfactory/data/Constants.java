@@ -14,7 +14,7 @@ public interface Constants {
 
     String DB_JOB_MANAGER = "DB_JOB_MANAGER";
 
-    String ACTION_CLICK = "install";
+    String ACTION_CLICK = "click";
     String ACTION_INSTALL = "install";
     String ACTION_PURCHASE = "purchase";
     String ACTION_LOGIN = "login";

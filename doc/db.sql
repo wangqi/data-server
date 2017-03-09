@@ -118,6 +118,7 @@ values
 
 drop table ad_register;
 create table ad_register (
+  id bigint auto_increment primary key,
   account_key varchar(50) DEFAULT NULL,
   source varchar(50) DEFAULT NULL,
   stat_id varchar(100) DEFAULT NULL,
@@ -144,6 +145,7 @@ create table ad_register (
 
 drop table ad_gameuser;
 create table ad_gameuser (
+  id bigint auto_increment primary key,
   account_key varchar(50) DEFAULT NULL,
   source varchar(50) DEFAULT NULL,
   app_key varchar(100) DEFAULT NULL,
@@ -161,6 +163,7 @@ create table ad_gameuser (
 
 drop table ad_install;
 create table ad_install (
+  id bigint auto_increment primary key,
   action varchar(50) DEFAULT 'install',
   account_key varchar(50) DEFAULT NULL,
   ip varchar(50) DEFAULT NULL,
@@ -250,6 +253,7 @@ create table ad_install (
 
 drop table ad_purchase;
 create table ad_purchase(
+  id bigint auto_increment primary key,
   action varchar(50) DEFAULT 'install',
   account_key varchar(50) DEFAULT NULL,
   ip varchar(50) DEFAULT NULL,
@@ -339,6 +343,7 @@ create table ad_purchase(
 
 drop table ad_click;
 create table ad_click (
+  id bigint auto_increment primary key,
   action varchar(50) DEFAULT 'install',
   account_key varchar(50) DEFAULT NULL,
   ip varchar(50) DEFAULT NULL,
@@ -428,6 +433,7 @@ create table ad_click (
 
 drop table ad_event;
 create table ad_event (
+  id bigint auto_increment primary key,
   action varchar(50) DEFAULT 'install',
   account_key varchar(50) DEFAULT NULL,
   ip varchar(50) DEFAULT NULL,
