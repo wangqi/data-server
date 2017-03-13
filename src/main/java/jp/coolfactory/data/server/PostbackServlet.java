@@ -71,11 +71,12 @@ public class PostbackServlet extends HttpServlet {
             created = ZonedDateTime.now();
         }
 
-        String account_key = request.getParameter("account_key");
+        String account_key = getParamValue(request,source, "account_key");
         if ( StringUtil.isEmptyString(account_key) ) {
             account_key = Constants.DEFAULT_ACCOUNT;
-            req.setAccount_key(account_key);
         }
+        req.setAccount_key(account_key);
+
         req.setInstall_time(created);
         req.setAction(action);
         req.setSource(source);
