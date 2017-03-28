@@ -23,6 +23,14 @@ public class ConfigUtil {
     private static final String MODE = System.getProperty("mode", MODE_PROD);
 
     /**
+     * Get the database name for anti_fraud system
+     * @return
+     */
+    public static final String getAntiFraudDatabaseSchema() {
+        return "anti_fraud";
+    }
+
+    /**
      * Get the datasource Hikari
      * @return
      */
@@ -32,10 +40,10 @@ public class ConfigUtil {
             InputStream is ;
             if (MODE_TEST.equals(MODE)) {
                 is = ConfigUtil.class.getResourceAsStream("/hikari_test.properties");
-                LOGGER.info("DBUtil uses test db connection");
+                LOGGER.info("AntiFraudController uses test db connection");
             } else {
                 is = ConfigUtil.class.getResourceAsStream("/hikari_prod.properties");
-                LOGGER.info("DBUtil uses prod db connection");
+                LOGGER.info("AntiFraudController uses prod db connection");
             }
             if (is != null) {
                 configProps.load(is);

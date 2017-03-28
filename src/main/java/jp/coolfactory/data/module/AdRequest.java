@@ -95,6 +95,11 @@ public class AdRequest implements SQLRequest {
     private String city_code;
     private String metro_code;
     private String order_id;
+    //For anti_fraud system
+    private int postback_code;
+    private String postback_desc;
+    // 0-1 probability of true positive judgement
+    private float eval_prop;
 
     public String getAccount_key() {
         return account_key;
@@ -752,6 +757,31 @@ public class AdRequest implements SQLRequest {
         this.order_id = order_id;
     }
 
+
+    public int getPostback_code() {
+        return postback_code;
+    }
+
+    public void setPostback_code(int postback_code) {
+        this.postback_code = postback_code;
+    }
+
+    public String getPostback_desc() {
+        return postback_desc;
+    }
+
+    public void setPostback_desc(String postback_desc) {
+        this.postback_desc = postback_desc;
+    }
+
+    public float getEval_prop() {
+        return eval_prop;
+    }
+
+    public void setEval_prop(float eval_prop) {
+        this.eval_prop = eval_prop;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -766,6 +796,9 @@ public class AdRequest implements SQLRequest {
         if (Double.compare(adRequest.getCost(), getCost()) != 0) return false;
         if (getIp_from() != adRequest.getIp_from()) return false;
         if (getIp_to() != adRequest.getIp_to()) return false;
+        if (getStatus_code() != adRequest.getStatus_code()) return false;
+        if (getPostback_code() != adRequest.getPostback_code()) return false;
+        if (Float.compare(adRequest.getEval_prop(), getEval_prop()) != 0) return false;
         if (getAccount_key() != null ? !getAccount_key().equals(adRequest.getAccount_key()) : adRequest.getAccount_key() != null)
             return false;
         if (getAction() != null ? !getAction().equals(adRequest.getAction()) : adRequest.getAction() != null)
@@ -912,7 +945,9 @@ public class AdRequest implements SQLRequest {
             return false;
         if (getMetro_code() != null ? !getMetro_code().equals(adRequest.getMetro_code()) : adRequest.getMetro_code() != null)
             return false;
-        return getOrder_id() != null ? getOrder_id().equals(adRequest.getOrder_id()) : adRequest.getOrder_id() == null;
+        if (getOrder_id() != null ? !getOrder_id().equals(adRequest.getOrder_id()) : adRequest.getOrder_id() != null)
+            return false;
+        return getPostback_desc() != null ? getPostback_desc().equals(adRequest.getPostback_desc()) : adRequest.getPostback_desc() == null;
     }
 
     @Override
@@ -1005,6 +1040,9 @@ public class AdRequest implements SQLRequest {
         result = 31 * result + (getCity_code() != null ? getCity_code().hashCode() : 0);
         result = 31 * result + (getMetro_code() != null ? getMetro_code().hashCode() : 0);
         result = 31 * result + (getOrder_id() != null ? getOrder_id().hashCode() : 0);
+        result = 31 * result + getPostback_code();
+        result = 31 * result + (getPostback_desc() != null ? getPostback_desc().hashCode() : 0);
+        result = 31 * result + (getEval_prop() != +0.0f ? Float.floatToIntBits(getEval_prop()) : 0);
         return result;
     }
 
@@ -1531,6 +1569,21 @@ public class AdRequest implements SQLRequest {
                 buf.append("order_id,");
                 valueBuf.append("'{order_id}',");
                 map.put("order_id", StringUtil.validSQLInput(order_id));
+            }
+            if (postback_code != 0 ) {
+                buf.append("postback_code,");
+                valueBuf.append("{postback_code},");
+                map.put("postback_code", String.valueOf(postback_code));
+            }
+            if (StringUtil.isNotEmptyString(postback_desc) ) {
+                buf.append("postback_desc,");
+                valueBuf.append("'{postback_desc}',");
+                map.put("postback_desc", StringUtil.validSQLInput(postback_desc));
+            }
+            if (eval_prop > 0 ) {
+                buf.append("eval_prop,");
+                valueBuf.append("{eval_prop},");
+                map.put("eval_prop", String.valueOf(eval_prop));
             }
             buf.deleteCharAt(buf.length()-1);
             buf.append(") values ");

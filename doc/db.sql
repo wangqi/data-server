@@ -521,6 +521,46 @@ create table ad_event (
   key aid ( ios_ifa, google_aid )
 ) default character set=utf8mb4 collate utf8mb4_general_ci;
 
+drop table ad_flow;
+CREATE TABLE `ad_flow` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `account_key` varchar(50) DEFAULT NULL,
+  `source` varchar(50) DEFAULT NULL,
+  `stat_id` varchar(100) DEFAULT NULL,
+  `app_key` varchar(100) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `site_id` varchar(50) DEFAULT NULL,
+  `site_name` varchar(100) DEFAULT NULL,
+  `country_code` varchar(20) DEFAULT NULL,
+  `region_name` varchar(50) DEFAULT NULL,
+  `game_user_id` varchar(100) DEFAULT NULL,
+  `uid` varchar(100) DEFAULT NULL,
+  `plat_id` varchar(100) DEFAULT NULL,
+  `publisher_id` varchar(50) DEFAULT NULL,
+  `publisher_name` varchar(50) DEFAULT NULL,
+  `device_type` varchar(50) DEFAULT NULL,
+  `device_model` varchar(50) DEFAULT NULL,
+  `install_time` datetime DEFAULT NULL,
+  `ip` varchar(50) DEFAULT NULL,
+  `os_version` varchar(100) DEFAULT NULL,
+  `logins` int(11) DEFAULT '0',
+  `step1` varchar(30) DEFAULT NULL,
+  `step1_interval` int(11) DEFAULT '0',
+  `step2` varchar(30) DEFAULT NULL,
+  `step2_interval` int(11) DEFAULT '0',
+  `step3` varchar(30) DEFAULT NULL,
+  `step3_interval` int(11) DEFAULT '0',
+  `step4` varchar(30) DEFAULT NULL,
+  `step4_interval` int(11) DEFAULT '0',
+  `step5` varchar(30) DEFAULT NULL,
+  `step5_interval` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ukey` (`account_key`,`source`,`site_name`,`created`,`uid`),
+  KEY `stat_id` (`stat_id`),
+  KEY `created` (`created`),
+  KEY `install_time` (`install_time`),
+  KEY `uid` (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 drop table ad_currency;
 create table ad_currency (

@@ -82,7 +82,11 @@ public class PostbackServlet extends HttpServlet {
         req.setSource(source);
         req.setAppKey(app_key);
         req.setStat_id(getParamValue(request,source, "stat_id"));
-        req.setOs_version(getParamValue(request,source, "os_version"));
+        req.setOs_version(
+                StringUtil.compactOsVersion(
+                        getParamValue(request,source, "os_version")
+                )
+        );
         req.setDevice_id(getParamValue(request,source, "device_id"));
         req.setDevice_type(getParamValue(request,source, "device_type"));
         req.setDevice_brand(getParamValue(request,source, "device_brand"));

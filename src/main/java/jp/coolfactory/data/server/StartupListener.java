@@ -1,5 +1,6 @@
 package jp.coolfactory.data.server;
 
+import jp.coolfactory.anti_fraud.db.AntiFraudController;
 import jp.coolfactory.data.Version;
 import jp.coolfactory.data.controller.AdAppController;
 import jp.coolfactory.data.controller.AdCommandController;
@@ -24,7 +25,7 @@ public class StartupListener implements ServletContextListener {
         String log4jFile = sce.getServletContext().getInitParameter("log4jConfiguration");
         DOMConfigurator.configure(sce.getServletContext().getRealPath(log4jFile));
         System.out.println("================================================================================");
-        System.out.println("    Data Server ("+ Version.VERSION+") builds at: " + Version.BUILD_DATE);
+        System.out.println("    DataServer & AntiFraud ("+ Version.VERSION+") builds at: " + Version.BUILD_DATE);
         System.out.println("================================================================================");
 
         //Initialize the controller here.
@@ -34,6 +35,8 @@ public class StartupListener implements ServletContextListener {
         System.out.println("AdAppControler initialize.");
         AdCommandController.getInstance().init();
         System.out.println("AdCommandController initialize.");
+        AntiFraudController.getInstance().init();
+        System.out.println("AntiFraudController initialize.");
     }
 
     @Override

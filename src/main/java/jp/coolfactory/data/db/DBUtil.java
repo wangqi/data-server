@@ -33,7 +33,7 @@ public class DBUtil {
             configProps.setProperty("dataSource.user", "root");
             configProps.setProperty("dataSource.password", "r00t1234");
             configProps.setProperty("dataSource.databaseName", "app_data");
-            LOGGER.info("DBUtil uses default hard code db connection config. Please check the config file");
+            LOGGER.info("AntiFraudController uses default hard code db connection config. Please check the config file");
         }
         databaseSchemaName = configProps.getProperty("dataSource.databaseName");
         HikariConfig config = new HikariConfig(configProps);

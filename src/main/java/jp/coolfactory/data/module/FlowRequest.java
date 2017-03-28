@@ -2,6 +2,7 @@ package jp.coolfactory.data.module;
 
 import jp.coolfactory.data.Constants;
 import jp.coolfactory.data.db.DBUtil;
+import jp.coolfactory.data.util.DateUtil;
 import jp.coolfactory.data.util.StringUtil;
 
 import java.time.ZonedDateTime;
@@ -31,10 +32,12 @@ public class FlowRequest implements SQLRequest {
     private String uid = null;
     //It's the platform unique id
     private String plat_id = null;
+    private String ip = null;
     private String publisher_id = null;
     private String publisher_name = null;
     private String device_model = null;
     private String device_type = null;
+    private String os_version = null;
     private ZonedDateTime install_time = null;
     private Set<String> steps = new HashSet<>();
     private ArrayList<String> step_names = new ArrayList<>();
@@ -59,6 +62,22 @@ public class FlowRequest implements SQLRequest {
             int seconds = (int)ChronoUnit.SECONDS.between(install_time, created);
             step_interval.add(seconds);
         }
+    }
+
+    public String getOs_version() {
+        return os_version;
+    }
+
+    public void setOs_version(String os_version) {
+        this.os_version = os_version;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 
     public ZonedDateTime getInstall_time() {
@@ -230,13 +249,22 @@ public class FlowRequest implements SQLRequest {
             return false;
         if (getUid() != null ? !getUid().equals(that.getUid()) : that.getUid() != null) return false;
         if (getPlat_id() != null ? !getPlat_id().equals(that.getPlat_id()) : that.getPlat_id() != null) return false;
+        if (getIp() != null ? !getIp().equals(that.getIp()) : that.getIp() != null) return false;
         if (getPublisher_id() != null ? !getPublisher_id().equals(that.getPublisher_id()) : that.getPublisher_id() != null)
             return false;
         if (getPublisher_name() != null ? !getPublisher_name().equals(that.getPublisher_name()) : that.getPublisher_name() != null)
             return false;
         if (getDevice_model() != null ? !getDevice_model().equals(that.getDevice_model()) : that.getDevice_model() != null)
             return false;
-        return getDevice_type() != null ? getDevice_type().equals(that.getDevice_type()) : that.getDevice_type() == null;
+        if (getDevice_type() != null ? !getDevice_type().equals(that.getDevice_type()) : that.getDevice_type() != null)
+            return false;
+        if (getOs_version() != null ? !getOs_version().equals(that.getOs_version()) : that.getOs_version() != null)
+            return false;
+        if (getInstall_time() != null ? !getInstall_time().equals(that.getInstall_time()) : that.getInstall_time() != null)
+            return false;
+        if (steps != null ? !steps.equals(that.steps) : that.steps != null) return false;
+        if (step_names != null ? !step_names.equals(that.step_names) : that.step_names != null) return false;
+        return step_interval != null ? step_interval.equals(that.step_interval) : that.step_interval == null;
     }
 
     @Override
@@ -254,10 +282,16 @@ public class FlowRequest implements SQLRequest {
         result = 31 * result + (getGame_user_id() != null ? getGame_user_id().hashCode() : 0);
         result = 31 * result + (getUid() != null ? getUid().hashCode() : 0);
         result = 31 * result + (getPlat_id() != null ? getPlat_id().hashCode() : 0);
+        result = 31 * result + (getIp() != null ? getIp().hashCode() : 0);
         result = 31 * result + (getPublisher_id() != null ? getPublisher_id().hashCode() : 0);
         result = 31 * result + (getPublisher_name() != null ? getPublisher_name().hashCode() : 0);
         result = 31 * result + (getDevice_model() != null ? getDevice_model().hashCode() : 0);
         result = 31 * result + (getDevice_type() != null ? getDevice_type().hashCode() : 0);
+        result = 31 * result + (getOs_version() != null ? getOs_version().hashCode() : 0);
+        result = 31 * result + (getInstall_time() != null ? getInstall_time().hashCode() : 0);
+        result = 31 * result + (steps != null ? steps.hashCode() : 0);
+        result = 31 * result + (step_names != null ? step_names.hashCode() : 0);
+        result = 31 * result + (step_interval != null ? step_interval.hashCode() : 0);
         return result;
     }
 
@@ -290,14 +324,9 @@ public class FlowRequest implements SQLRequest {
             map.put("app_key", StringUtil.validSQLInput(app_key));
         }
         if (StringUtil.isNotEmptyString(publisher_id)) {
-            buf.append("publisher_id,");
-            valueBuf.append("'{publisher_id}',");
-            map.put("publisher_id", StringUtil.validSQLInput(publisher_id));
-        }
-        if (StringUtil.isNotEmptyString(publisher_name)) {
-            buf.append("publisher_name,");
-            valueBuf.append("'{publisher_name}',");
-            map.put("publisher_name", StringUtil.validSQLInput(publisher_name));
+            buf.append("created,");
+            valueBuf.append("'{created}',");
+            map.put("created", StringUtil.validSQLInput(created));
         }
         if (StringUtil.isNotEmptyString(site_id)) {
             buf.append("site_id,");
@@ -309,45 +338,65 @@ public class FlowRequest implements SQLRequest {
             valueBuf.append("'{site_name}',");
             map.put("site_name", StringUtil.validSQLInput(site_name));
         }
-        if (StringUtil.isNotEmptyString(campaign_id)) {
-            buf.append("campaign_id,");
-            valueBuf.append("'{campaign_id}',");
-            map.put("campaign_id", StringUtil.validSQLInput(campaign_id));
-        }
-        if (StringUtil.isNotEmptyString(campaign_name)) {
-            buf.append("campaign_name,");
-            valueBuf.append("'{campaign_name}',");
-            map.put("campaign_name", StringUtil.validSQLInput(campaign_name));
+        if (StringUtil.isNotEmptyString(country_code)) {
+            buf.append("country_code,");
+            valueBuf.append("'{country_code}',");
+            map.put("country_code", StringUtil.validSQLInput(country_code));
         }
         if (StringUtil.isNotEmptyString(region_name)) {
             buf.append("region_name,");
             valueBuf.append("'{region_name}',");
             map.put("region_name", StringUtil.validSQLInput(region_name));
         }
-        if (StringUtil.isNotEmptyString(country_code)) {
-            buf.append("country_code,");
-            valueBuf.append("'{country_code}',");
-            map.put("country_code", StringUtil.validSQLInput(country_code));
+        if (StringUtil.isNotEmptyString(game_user_id)) {
+            buf.append("game_user_id,");
+            valueBuf.append("'{game_user_id}',");
+            map.put("game_user_id", StringUtil.validSQLInput(game_user_id));
         }
-        if (StringUtil.isNotEmptyString(ios_ifa)) {
-            buf.append("ios_ifa,");
-            valueBuf.append("'{ios_ifa}',");
-            map.put("ios_ifa", StringUtil.validSQLInput(ios_ifa));
+        if (StringUtil.isNotEmptyString(plat_id)) {
+            buf.append("plat_id,");
+            valueBuf.append("'{plat_id}',");
+            map.put("plat_id", StringUtil.validSQLInput(plat_id));
         }
-        if (StringUtil.isNotEmptyString(google_aid)) {
-            buf.append("google_aid,");
-            valueBuf.append("'{google_aid}',");
-            map.put("google_aid", StringUtil.validSQLInput(google_aid));
+        if (StringUtil.isNotEmptyString(uid)) {
+            buf.append("uid,");
+            valueBuf.append("'{uid}',");
+            map.put("uid", StringUtil.validSQLInput(uid));
+        }
+        if (StringUtil.isNotEmptyString(publisher_id)) {
+            buf.append("publisher_id,");
+            valueBuf.append("'{publisher_id}',");
+            map.put("publisher_id", StringUtil.validSQLInput(publisher_id));
+        }
+        if (StringUtil.isNotEmptyString(publisher_name)) {
+            buf.append("publisher_name,");
+            valueBuf.append("'{publisher_name}',");
+            map.put("publisher_name", StringUtil.validSQLInput(publisher_name));
+        }
+        if (StringUtil.isNotEmptyString(device_model)) {
+            buf.append("device_model,");
+            valueBuf.append("'{device_model}',");
+            map.put("device_model", StringUtil.validSQLInput(device_model));
+        }
+        if (StringUtil.isNotEmptyString(device_type)) {
+            buf.append("device_type,");
+            valueBuf.append("'{device_type}',");
+            map.put("device_type", StringUtil.validSQLInput(device_type));
         }
         if (StringUtil.isNotEmptyString(ip)) {
             buf.append("ip,");
             valueBuf.append("'{ip}',");
             map.put("ip", StringUtil.validSQLInput(ip));
         }
-        if (StringUtil.isNotEmptyString(created)) {
-            buf.append("created,");
-            valueBuf.append("'{created}',");
-            map.put("created", StringUtil.validSQLInput(created));
+        if (StringUtil.isNotEmptyString(os_version)) {
+            buf.append("os_version,");
+            valueBuf.append("'{os_version}',");
+            map.put("os_version", StringUtil.validSQLInput(os_version));
+        }
+        if ( install_time != null ) {
+            buf.append("install_time,");
+            valueBuf.append("'{install_time}',");
+            map.put("install_time", DateUtil.formatDateTime(install_time));
         }
         buf.deleteCharAt(buf.length() - 1);
         buf.append(") values ");

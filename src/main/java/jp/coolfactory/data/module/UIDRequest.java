@@ -180,7 +180,7 @@ public class UIDRequest implements SQLRequest {
 
 //            if (revenue > 0) {
 //                StringBuilder updateBuf = new StringBuilder(100);
-//                updateBuf.append("update ").append(DBUtil.getDatabaseSchema()).append(".ad_gameuser ");
+//                updateBuf.append("update ").append(AFDBManager.getDatabaseSchema()).append(".ad_gameuser ");
 //                updateBuf.append("set revenue=revenue+{revenue}, revenue_usd=revenue_usd+{revenue_usd} ");
 //                updateBuf.append("where account_key='{account_key}' and app_key='{app_key}' and source='{source}' and game_user_id='{game_user_id}' and device_id='{device_id}'");
 //                map.put("revenue", "revenue");

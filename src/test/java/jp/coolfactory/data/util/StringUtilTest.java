@@ -114,6 +114,46 @@ public class StringUtilTest {
     }
 
     @Test
+    public void compactOsVersion() throws Exception {
+        String os_version = "10.2";
+        String expected = "10.2";
+        String actual = StringUtil.compactOsVersion(os_version);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void compactOsVersion1() throws Exception {
+        String os_version = "10.2.1";
+        String expected = "10.2";
+        String actual = StringUtil.compactOsVersion(os_version);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void compactOsVersion2() throws Exception {
+        String os_version = "10.2.1.0";
+        String expected = "10.2.1";
+        String actual = StringUtil.compactOsVersion(os_version);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void compactOsVersion3() throws Exception {
+        String os_version = null;
+        String expected = null;
+        String actual = StringUtil.compactOsVersion(os_version);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void compactOsVersion4() throws Exception {
+        String os_version = "";
+        String expected = "";
+        String actual = StringUtil.compactOsVersion(os_version);
+        assertEquals(expected, actual);
+    }
+
+    @Test
     public void generateHashBase64() throws Exception {
         String ios_ifa = "7d9af3fa-7326-49c9-8173-0b39e9496772";
         String google_aid = "fca5ba73-27b8-4066-8fd8-60f0d79f6778";

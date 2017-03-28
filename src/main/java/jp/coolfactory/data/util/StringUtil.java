@@ -52,6 +52,35 @@ public class StringUtil {
     }
 
     /**
+     * If the os_version has more than one dot, for example 10.2.1, then compact it to 10.2
+     *
+     * @param os_version
+     * @return
+     */
+    public static String compactOsVersion(String os_version) {
+        if ( StringUtil.isNotEmptyString(os_version))  {
+            int lastIndex = -1;
+            boolean moreThanOne = false;
+            for ( int i=os_version.length()-1; i>0; i-- ) {
+                char ch = os_version.charAt(i);
+                if ( ch == '.' ) {
+                    if ( lastIndex<0 ) {
+                        lastIndex = i;
+                    } else {
+                        moreThanOne = true;
+                        break;
+                    }
+                }
+            }
+            if ( moreThanOne && lastIndex > 0 ) {
+                os_version = os_version.substring(0, lastIndex);
+                return os_version;
+            }
+        }
+        return os_version;
+    }
+
+    /**
      * Replace the string with given {name} variables
      * O. If escaping '{', you can use '{{'. For example, 'param={{data}}' will be replaced as 'param={data}'.
      *    Note the encoding curly '}', you need to put double curly '}}' too.

@@ -20,6 +20,16 @@
         </layout>
     </appender>
 
+    <appender name="af_file" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="append" value="true" />
+		<param name="datePattern" value="_yyyy-MM-dd" />
+        <param name="file" value="/var/log/tomcat8/anti_fraud.log" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d{yyyy-MM-dd HH:mm:ss} %-5p [%t] %c{2} - %m%n" />
+        </layout>
+    </appender>
+
     <appender name="access_file" class="org.apache.log4j.DailyRollingFileAppender">
         <param name="append" value="true" />
         <param name="datePattern" value="_yyyy-MM-dd" />
