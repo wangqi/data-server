@@ -1,5 +1,6 @@
 package jp.coolfactory.data.controller;
 
+import jp.coolfactory.anti_fraud.command.*;
 import jp.coolfactory.data.common.*;
 import jp.coolfactory.data.module.AdRequest;
 import org.slf4j.Logger;
@@ -24,7 +25,7 @@ public class AdCommandController implements Controller{
      */
     @Override
     public void init() {
-//        ChainBuilder builder = ChainBuilder.chainBuilder();
+        //DataServer
         AdRequestIDCommand idCommand = new AdRequestIDCommand();
         AdRequestCountryCommand countryCommand = new AdRequestCountryCommand();
         AdRequestUSDCommand usdCommand = new AdRequestUSDCommand();
@@ -32,12 +33,28 @@ public class AdCommandController implements Controller{
         AdRequestUIDCommand uidCommand = new AdRequestUIDCommand();
         AdRequestDBCommand dbCommand = new AdRequestDBCommand();
 
+        //AntiFraud
+        AfMATCommand afMatCommand = new AfMATCommand();
+        AfClickInstallIntervalCommand afClickInstallIntervalCommand = new AfClickInstallIntervalCommand();
+        AfIPFilterCommand afIPFilterCommand = new AfIPFilterCommand();
+        AfCampaignCommand afCampaignCommand = new AfCampaignCommand();
+        AfPostbackCommand afPostbackCommand = new AfPostbackCommand();
+
         commandChain.add(idCommand);
         commandChain.add(countryCommand);
         commandChain.add(usdCommand);
         commandChain.add(userCommand);
         commandChain.add(uidCommand);
+
+        commandChain.add(afMatCommand);
+        commandChain.add(afClickInstallIntervalCommand);
+        commandChain.add(afIPFilterCommand);
+        commandChain.add(afCampaignCommand);
+        commandChain.add(afPostbackCommand);
+
+        //Finally save the request to database.
         commandChain.add(dbCommand);
+
 
 //        chain = builder
 //                .first(idCommand)

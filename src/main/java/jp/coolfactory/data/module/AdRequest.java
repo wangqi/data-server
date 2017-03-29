@@ -1,5 +1,6 @@
 package jp.coolfactory.data.module;
 
+import jp.coolfactory.anti_fraud.module.Status;
 import jp.coolfactory.data.Constants;
 import jp.coolfactory.data.db.DBUtil;
 import jp.coolfactory.data.util.DateUtil;
@@ -100,6 +101,10 @@ public class AdRequest implements SQLRequest {
     private String postback_desc;
     // 0-1 probability of true positive judgement
     private float eval_prop;
+    private String af_site_id;
+    private String af_camp_id;
+    private Status af_status;
+    private String postback;
 
     public String getAccount_key() {
         return account_key;
@@ -757,6 +762,21 @@ public class AdRequest implements SQLRequest {
         this.order_id = order_id;
     }
 
+    public String getAf_site_id() {
+        return af_site_id;
+    }
+
+    public void setAf_site_id(String af_site_id) {
+        this.af_site_id = af_site_id;
+    }
+
+    public String getAf_camp_id() {
+        return af_camp_id;
+    }
+
+    public void setAf_camp_id(String af_camp_id) {
+        this.af_camp_id = af_camp_id;
+    }
 
     public int getPostback_code() {
         return postback_code;
@@ -780,6 +800,26 @@ public class AdRequest implements SQLRequest {
 
     public void setEval_prop(float eval_prop) {
         this.eval_prop = eval_prop;
+    }
+
+    public Status getAf_status() {
+        return af_status;
+    }
+
+    public void setAf_status(Status af_status) {
+        if ( af_status != null ) {
+            this.af_status = af_status;
+            this.status = af_status.getDesc();
+            this.status_code = String.valueOf(af_status.getStatus());
+        }
+    }
+
+    public String getPostback() {
+        return postback;
+    }
+
+    public void setPostback(String postback) {
+        this.postback = postback;
     }
 
     @Override

@@ -1,9 +1,10 @@
-package jp.coolfactory.anti_fraud.db;
+package jp.coolfactory.anti_fraud.controller;
 
 import java.sql.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import jp.coolfactory.anti_fraud.db.CheckType;
 import jp.coolfactory.anti_fraud.module.AfAccount;
 import jp.coolfactory.anti_fraud.module.AfCampaign;
 import jp.coolfactory.anti_fraud.module.AfIPFilter;
@@ -12,6 +13,7 @@ import jp.coolfactory.data.controller.Controller;
 import jp.coolfactory.data.db.DBUtil;
 import jp.coolfactory.data.db.ResultSetProcessor;
 import jp.coolfactory.data.util.ConfigUtil;
+import jp.coolfactory.data.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -201,7 +203,11 @@ public class AntiFraudController implements Controller {
      * @return
      */
     public final AfSite getSite(String externalId) {
-        return _sites.get(externalId);
+        if (StringUtil.isNotEmptyString(externalId)) {
+            return _sites.get(externalId);
+        } else {
+            return null;
+        }
     }
 
     /**

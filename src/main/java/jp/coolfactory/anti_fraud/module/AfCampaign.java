@@ -2,6 +2,7 @@ package jp.coolfactory.anti_fraud.module;
 
 import jp.coolfactory.anti_fraud.db.CheckType;
 import jp.coolfactory.anti_fraud.db.Checker;
+import jp.coolfactory.data.util.PolicyCheckUtil;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -13,7 +14,7 @@ import java.util.logging.Logger;
  * or partners in third parties.
  * Created by wangqi on 28/11/2016.
  */
-public class AfCampaign implements Checker {
+public class AfCampaign {
 
     private final static Logger LOGGER = Logger.getLogger(AfCampaign.class.getName());
 
@@ -183,82 +184,10 @@ public class AfCampaign implements Checker {
      * @param type TYPE object that indicate the detail type.
      * @return
      */
-    @Override
     public Status check(CheckType type, String paramValue) {
-        return check(type, paramValue, true);
-    }
-
-    /**
-     * If the 'quick' is false, it will use prefix-matching to compare the paramValue and pattern in database.
-     *
-     * @param type
-     * @param paramValue If the paramValue is null or empty string, it will pass the test.
-     * @param quick
-     * @return
-     */
-    @Override
-    public Status check(CheckType type, String paramValue, boolean quick) {
-        Status status = Status.OK;
-        /**
-         * If the given paramValue is empty, it will pass the test.
-         */
-        if (paramValue == null || paramValue == "") {
-            return status;
-        }
-        String value = paramValue.toLowerCase();
         Set<String> includes = this.getIncludePolicy(type);
         Set<String> excludes = this.getExcludePolicy(type);
-        if (quick) {
-            if (includes.contains(value)) {
-                status = Status.OK;
-                if (LOGGER.isLoggable(Level.FINE))
-                    LOGGER.fine("Value " + value + " is in include policy for type: " + type);
-            } else if (excludes.contains(value)) {
-                status = this.getDeniedStatus(type);
-                if (LOGGER.isLoggable(Level.FINE))
-                    LOGGER.fine("Value " + value + " is in exclude policy for type: " + type);
-            } else {
-                if (includes.size() > 0) {
-                    if (LOGGER.isLoggable(Level.FINE))
-                        LOGGER.fine("Value " + value + " is not in either include or exclude policy for type: " + type);
-                    status = this.getDeniedStatus(type);
-                }
-            }
-        } else {
-            //Slow methods use the prefix matching
-            boolean found = false;
-            for (String pattern : includes) {
-                if (value.startsWith(pattern)) {
-                    found = true;
-                    break;
-                }
-            }
-            if (found) {
-                status = Status.OK;
-                if (LOGGER.isLoggable(Level.FINE))
-                    LOGGER.fine("Value " + value + " is in prefix matching include policy for type: " + type);
-            } else {
-                for (String pattern : excludes) {
-                    if (value.startsWith(pattern)) {
-                        found = true;
-                        break;
-                    }
-                }
-                if (found) {
-                    status = this.getDeniedStatus(type);
-                    if (LOGGER.isLoggable(Level.FINE))
-                        LOGGER.fine("Value " + value + " is in prefix matching exclude policy for type: " + type);
-                }
-            }
-            if (!found && includes.size() > 0) {
-                if (LOGGER.isLoggable(Level.FINE))
-                    LOGGER.fine("Value " + value + " is not in either prefix matching include or prefix matching " +
-                            "exclude policy for type: " + type);
-                status = this.getDeniedStatus(type);
-            }
-        }
-
-        return status;
+        return PolicyCheckUtil.check(type, paramValue, true, includes, excludes);
     }
 
     @Override
@@ -441,20 +370,5 @@ public class AfCampaign implements Checker {
         }
     }
 
-    private Status getDeniedStatus(CheckType type) {
-        switch (type) {
-            case COUNTRY:
-                return Status.FORBIDDEN_COUNTRY;
-            case DEVICE:
-                return Status.FORBIDDEN_DEVICE;
-            case LANG:
-                return Status.FORBIDDEN_LANG;
-            case OS:
-                return Status.FORBIDDEN_OS;
-            case CARRIER:
-                return Status.FORBIDDEN_CARRIER;
-            default:
-                return null;
-        }
-    }
+
 }

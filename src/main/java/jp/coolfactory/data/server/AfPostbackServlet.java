@@ -1,6 +1,5 @@
-package jp.coolfactory.anti_fraud.server;
+package jp.coolfactory.data.server;
 
-import jp.coolfactory.anti_fraud.db.AntiFraudController;
 import jp.coolfactory.anti_fraud.module.Status;
 import jp.coolfactory.anti_fraud.module.FraudDetectionFactory;
 import jp.coolfactory.data.util.URLUtil;
@@ -30,10 +29,10 @@ import java.util.concurrent.Executors;
  *
  * Created by wangqi on 23/11/2016.
  */
-@WebServlet(name = "PostbackServlet", urlPatterns = {"/postback"})
-public class PostbackServlet extends HttpServlet {
+@WebServlet(name = "AfPostbackServlet", urlPatterns = {"/postback"})
+public class AfPostbackServlet extends HttpServlet {
 
-    private final static Logger LOGGER = Logger.getLogger(PostbackServlet.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(AfPostbackServlet.class.getName());
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doRequest(request, response);

@@ -16,7 +16,7 @@
     </listener>
 
     <description>
-        High Performance Anti-Fraud System
+       It's used to collect third-party install/events and do anti-fraud analysis.
     </description>
 
 </web-app>

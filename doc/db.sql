@@ -246,10 +246,17 @@ create table ad_install (
   ip_to  int(11),
   city_code varchar(20) DEFAULT NULL,
   metro_code varchar(20) DEFAULT NULL,
+  eval_prop float DEFAULT 0,
+  postback_code int(11) DEFAULT 0,
+  postback_desc varchar(100),
   key id (stat_id),
   key install_time (created),
   key aid ( ios_ifa, google_aid )
 ) default character set=utf8mb4 collate utf8mb4_general_ci;
+
+alter table ad_install add column eval_prop float default 0;
+alter table ad_install add column postback_code int(11) default 0;
+alter table ad_install add column postback_desc varchar(100) default null;
 
 drop table ad_purchase;
 create table ad_purchase(

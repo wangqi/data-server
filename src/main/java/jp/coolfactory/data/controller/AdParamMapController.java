@@ -60,7 +60,11 @@ public class AdParamMapController implements Controller {
      * @return
      */
     public String translateStdName(String source, String stdParamName) {
-        return AD_PARAM_MAP.getParamName(source, stdParamName);
+        String paramName = AD_PARAM_MAP.getParamName(source, stdParamName);
+        if ( paramName != null ) {
+            return paramName;
+        }
+        return stdParamName;
     }
 
 

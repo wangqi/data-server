@@ -160,6 +160,9 @@ public class PostbackServlet extends HttpServlet {
         req.setCity_code(getParamValue(request,source, "city_code"));
         req.setMetro_code(getParamValue(request,source, "metro_code"));
         req.setOrder_id(getParamValue(request,source, "order_id"));
+        req.setAf_site_id(getParamValue(request,source, "af_site_id"));
+        req.setAf_camp_id(getParamValue(request,source, "af_camp_id"));
+        req.setPostback(getParamValue(request,source, "postback"));
 
         //Call the chain to process the request.
         AdCommandController.getInstance().handle(req);

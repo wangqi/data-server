@@ -13,6 +13,7 @@ public interface Constants {
     String SOURCE_UNKNOWN = "na";
 
     String DB_JOB_MANAGER = "DB_JOB_MANAGER";
+    String URL_JOB_MANAGER = "URL_JOB_MANAGER";
 
     String ACTION_CLICK = "click";
     String ACTION_INSTALL = "install";

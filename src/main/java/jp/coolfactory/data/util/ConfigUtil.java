@@ -1,5 +1,6 @@
 package jp.coolfactory.data.util;
 
+import jp.coolfactory.data.db.DBUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +28,8 @@ public class ConfigUtil {
      * @return
      */
     public static final String getAntiFraudDatabaseSchema() {
-        return "anti_fraud";
+//        return "anti_fraud";
+        return DBUtil.getDatabaseSchema();
     }
 
     /**
@@ -42,8 +44,12 @@ public class ConfigUtil {
                 is = ConfigUtil.class.getResourceAsStream("/hikari_test.properties");
                 LOGGER.info("AntiFraudController uses test db connection");
             } else {
-                is = ConfigUtil.class.getResourceAsStream("/hikari_prod.properties");
-                LOGGER.info("AntiFraudController uses prod db connection");
+                is = ConfigUtil.class.getResourceAsStream("/hikari_"+MODE+".properties");
+                LOGGER.info("AntiFraudController uses "+MODE+" db connection");
+                if ( is == null ) {
+                    is = ConfigUtil.class.getResourceAsStream("/hikari_prod.properties");
+                    LOGGER.info("AntiFraudController uses prod db connection");
+                }
             }
             if (is != null) {
                 configProps.load(is);

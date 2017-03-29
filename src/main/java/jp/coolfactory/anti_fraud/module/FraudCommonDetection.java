@@ -1,5 +1,6 @@
 package jp.coolfactory.anti_fraud.module;
 
+import jp.coolfactory.anti_fraud.controller.AntiFraudController;
 import jp.coolfactory.anti_fraud.db.*;
 import jp.coolfactory.anti_fraud.frequency.*;
 
@@ -135,6 +136,7 @@ public class FraudCommonDetection implements FraudDetection {
                             status = Status.FORBIDDEN_JAILBROKE;
                         }
                     }
+                    /*
                     if ( status == Status.OK ) {
                         status = campaign.check(CheckType.COUNTRY, country_code);
                         if ( status == Status.OK ) {
@@ -162,6 +164,7 @@ public class FraudCommonDetection implements FraudDetection {
                             }
                         }
                     }
+                    */
                     LOGGER.info("After checking, the status is: " + status);
                 }
             }
