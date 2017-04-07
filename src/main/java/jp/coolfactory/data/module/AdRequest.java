@@ -1,5 +1,6 @@
 package jp.coolfactory.data.module;
 
+import com.google.common.base.MoreObjects;
 import jp.coolfactory.anti_fraud.module.Status;
 import jp.coolfactory.data.Constants;
 import jp.coolfactory.data.db.DBUtil;
@@ -829,16 +830,6 @@ public class AdRequest implements SQLRequest {
 
         AdRequest adRequest = (AdRequest) o;
 
-        if (Double.compare(adRequest.getPayout(), getPayout()) != 0) return false;
-        if (Double.compare(adRequest.getRevenue(), getRevenue()) != 0) return false;
-        if (Double.compare(adRequest.getRevenue_usd(), getRevenue_usd()) != 0) return false;
-        if (isOs_jailbroke() != adRequest.isOs_jailbroke()) return false;
-        if (Double.compare(adRequest.getCost(), getCost()) != 0) return false;
-        if (getIp_from() != adRequest.getIp_from()) return false;
-        if (getIp_to() != adRequest.getIp_to()) return false;
-        if (getStatus_code() != adRequest.getStatus_code()) return false;
-        if (getPostback_code() != adRequest.getPostback_code()) return false;
-        if (Float.compare(adRequest.getEval_prop(), getEval_prop()) != 0) return false;
         if (getAccount_key() != null ? !getAccount_key().equals(adRequest.getAccount_key()) : adRequest.getAccount_key() != null)
             return false;
         if (getAction() != null ? !getAction().equals(adRequest.getAction()) : adRequest.getAction() != null)
@@ -849,329 +840,135 @@ public class AdRequest implements SQLRequest {
             return false;
         if (getStat_id() != null ? !getStat_id().equals(adRequest.getStat_id()) : adRequest.getStat_id() != null)
             return false;
-        if (getOs_version() != null ? !getOs_version().equals(adRequest.getOs_version()) : adRequest.getOs_version() != null)
-            return false;
-        if (getDevice_id() != null ? !getDevice_id().equals(adRequest.getDevice_id()) : adRequest.getDevice_id() != null)
-            return false;
-        if (getDevice_type() != null ? !getDevice_type().equals(adRequest.getDevice_type()) : adRequest.getDevice_type() != null)
-            return false;
-        if (getDevice_brand() != null ? !getDevice_brand().equals(adRequest.getDevice_brand()) : adRequest.getDevice_brand() != null)
-            return false;
-        if (getDevice_carrier() != null ? !getDevice_carrier().equals(adRequest.getDevice_carrier()) : adRequest.getDevice_carrier() != null)
-            return false;
-        if (getDevice_model() != null ? !getDevice_model().equals(adRequest.getDevice_model()) : adRequest.getDevice_model() != null)
-            return false;
-        if (getLang() != null ? !getLang().equals(adRequest.getLang()) : adRequest.getLang() != null) return false;
         if (getPlat_id() != null ? !getPlat_id().equals(adRequest.getPlat_id()) : adRequest.getPlat_id() != null)
-            return false;
-        if (getUser_agent() != null ? !getUser_agent().equals(adRequest.getUser_agent()) : adRequest.getUser_agent() != null)
-            return false;
-        if (getPublisher_id() != null ? !getPublisher_id().equals(adRequest.getPublisher_id()) : adRequest.getPublisher_id() != null)
-            return false;
-        if (getPublisher_name() != null ? !getPublisher_name().equals(adRequest.getPublisher_name()) : adRequest.getPublisher_name() != null)
-            return false;
-        if (getClick_ip() != null ? !getClick_ip().equals(adRequest.getClick_ip()) : adRequest.getClick_ip() != null)
-            return false;
-        if (getClick_time() != null ? !getClick_time().equals(adRequest.getClick_time()) : adRequest.getClick_time() != null)
-            return false;
-        if (getBundle_id() != null ? !getBundle_id().equals(adRequest.getBundle_id()) : adRequest.getBundle_id() != null)
             return false;
         if (getInstall_ip() != null ? !getInstall_ip().equals(adRequest.getInstall_ip()) : adRequest.getInstall_ip() != null)
             return false;
         if (getInstall_time() != null ? !getInstall_time().equals(adRequest.getInstall_time()) : adRequest.getInstall_time() != null)
             return false;
-        if (getAgency_name() != null ? !getAgency_name().equals(adRequest.getAgency_name()) : adRequest.getAgency_name() != null)
-            return false;
         if (getSite_id() != null ? !getSite_id().equals(adRequest.getSite_id()) : adRequest.getSite_id() != null)
             return false;
         if (getSite_name() != null ? !getSite_name().equals(adRequest.getSite_name()) : adRequest.getSite_name() != null)
-            return false;
-        if (getMatch_type() != null ? !getMatch_type().equals(adRequest.getMatch_type()) : adRequest.getMatch_type() != null)
-            return false;
-        if (getCampaign_id() != null ? !getCampaign_id().equals(adRequest.getCampaign_id()) : adRequest.getCampaign_id() != null)
-            return false;
-        if (getCampaign_name() != null ? !getCampaign_name().equals(adRequest.getCampaign_name()) : adRequest.getCampaign_name() != null)
-            return false;
-        if (getAd_url() != null ? !getAd_url().equals(adRequest.getAd_url()) : adRequest.getAd_url() != null)
-            return false;
-        if (getAd_name() != null ? !getAd_name().equals(adRequest.getAd_name()) : adRequest.getAd_name() != null)
-            return false;
-        if (getRegion_name() != null ? !getRegion_name().equals(adRequest.getRegion_name()) : adRequest.getRegion_name() != null)
-            return false;
-        if (getCountry_code() != null ? !getCountry_code().equals(adRequest.getCountry_code()) : adRequest.getCountry_code() != null)
-            return false;
-        if (getCurrency_code() != null ? !getCurrency_code().equals(adRequest.getCurrency_code()) : adRequest.getCurrency_code() != null)
-            return false;
-        if (getExisting_user() != null ? !getExisting_user().equals(adRequest.getExisting_user()) : adRequest.getExisting_user() != null)
-            return false;
-        if (getImp_time() != null ? !getImp_time().equals(adRequest.getImp_time()) : adRequest.getImp_time() != null)
-            return false;
-        if (getStat_click_id() != null ? !getStat_click_id().equals(adRequest.getStat_click_id()) : adRequest.getStat_click_id() != null)
-            return false;
-        if (getStat_impression_id() != null ? !getStat_impression_id().equals(adRequest.getStat_impression_id()) : adRequest.getStat_impression_id() != null)
-            return false;
-        if (getReferral_source() != null ? !getReferral_source().equals(adRequest.getReferral_source()) : adRequest.getReferral_source() != null)
-            return false;
-        if (getReferral_url() != null ? !getReferral_url().equals(adRequest.getReferral_url()) : adRequest.getReferral_url() != null)
-            return false;
-        if (getStatus() != null ? !getStatus().equals(adRequest.getStatus()) : adRequest.getStatus() != null)
-            return false;
-        if (getStatus_code() != null ? !getStatus_code().equals(adRequest.getStatus_code()) : adRequest.getStatus_code() != null)
-            return false;
-        if (getTracking_id() != null ? !getTracking_id().equals(adRequest.getTracking_id()) : adRequest.getTracking_id() != null)
             return false;
         if (getIos_ifa() != null ? !getIos_ifa().equals(adRequest.getIos_ifa()) : adRequest.getIos_ifa() != null)
             return false;
         if (getIos_ifv() != null ? !getIos_ifv().equals(adRequest.getIos_ifv()) : adRequest.getIos_ifv() != null)
             return false;
-        if (getGoogle_aid() != null ? !getGoogle_aid().equals(adRequest.getGoogle_aid()) : adRequest.getGoogle_aid() != null)
-            return false;
-        if (getPub_camp_id() != null ? !getPub_camp_id().equals(adRequest.getPub_camp_id()) : adRequest.getPub_camp_id() != null)
-            return false;
-        if (getPub_camp_name() != null ? !getPub_camp_name().equals(adRequest.getPub_camp_name()) : adRequest.getPub_camp_name() != null)
-            return false;
-        if (getPub_camp_ref() != null ? !getPub_camp_ref().equals(adRequest.getPub_camp_ref()) : adRequest.getPub_camp_ref() != null)
-            return false;
-        if (getPub_adset() != null ? !getPub_adset().equals(adRequest.getPub_adset()) : adRequest.getPub_adset() != null)
-            return false;
-        if (getPub_ad() != null ? !getPub_ad().equals(adRequest.getPub_ad()) : adRequest.getPub_ad() != null)
-            return false;
-        if (getPub_keyword() != null ? !getPub_keyword().equals(adRequest.getPub_keyword()) : adRequest.getPub_keyword() != null)
-            return false;
-        if (getPub_place() != null ? !getPub_place().equals(adRequest.getPub_place()) : adRequest.getPub_place() != null)
-            return false;
-        if (getPub_sub_id() != null ? !getPub_sub_id().equals(adRequest.getPub_sub_id()) : adRequest.getPub_sub_id() != null)
-            return false;
-        if (getPub_sub_name() != null ? !getPub_sub_name().equals(adRequest.getPub_sub_name()) : adRequest.getPub_sub_name() != null)
-            return false;
-        if (getAdv_camp_id() != null ? !getAdv_camp_id().equals(adRequest.getAdv_camp_id()) : adRequest.getAdv_camp_id() != null)
-            return false;
-        if (getAdv_camp_name() != null ? !getAdv_camp_name().equals(adRequest.getAdv_camp_name()) : adRequest.getAdv_camp_name() != null)
-            return false;
-        if (getAdv_camp_ref() != null ? !getAdv_camp_ref().equals(adRequest.getAdv_camp_ref()) : adRequest.getAdv_camp_ref() != null)
-            return false;
-        if (getAdv_adset() != null ? !getAdv_adset().equals(adRequest.getAdv_adset()) : adRequest.getAdv_adset() != null)
-            return false;
-        if (getAdv_ad() != null ? !getAdv_ad().equals(adRequest.getAdv_ad()) : adRequest.getAdv_ad() != null)
-            return false;
-        if (getAdv_keyword() != null ? !getAdv_keyword().equals(adRequest.getAdv_keyword()) : adRequest.getAdv_keyword() != null)
-            return false;
-        if (getAdv_place() != null ? !getAdv_place().equals(adRequest.getAdv_place()) : adRequest.getAdv_place() != null)
-            return false;
-        if (getAdv_sub_id() != null ? !getAdv_sub_id().equals(adRequest.getAdv_sub_id()) : adRequest.getAdv_sub_id() != null)
-            return false;
-        if (getAdv_sub_name() != null ? !getAdv_sub_name().equals(adRequest.getAdv_sub_name()) : adRequest.getAdv_sub_name() != null)
-            return false;
-        if (getSdk() != null ? !getSdk().equals(adRequest.getSdk()) : adRequest.getSdk() != null) return false;
-        if (getSdk_version() != null ? !getSdk_version().equals(adRequest.getSdk_version()) : adRequest.getSdk_version() != null)
-            return false;
-        if (getGame_user_id() != null ? !getGame_user_id().equals(adRequest.getGame_user_id()) : adRequest.getGame_user_id() != null)
-            return false;
-        if (getPub_pref_id() != null ? !getPub_pref_id().equals(adRequest.getPub_pref_id()) : adRequest.getPub_pref_id() != null)
-            return false;
-        if (getPub_sub1() != null ? !getPub_sub1().equals(adRequest.getPub_sub1()) : adRequest.getPub_sub1() != null)
-            return false;
-        if (getPub_sub2() != null ? !getPub_sub2().equals(adRequest.getPub_sub2()) : adRequest.getPub_sub2() != null)
-            return false;
-        if (getPub_sub3() != null ? !getPub_sub3().equals(adRequest.getPub_sub3()) : adRequest.getPub_sub3() != null)
-            return false;
-        if (getPub_sub4() != null ? !getPub_sub4().equals(adRequest.getPub_sub4()) : adRequest.getPub_sub4() != null)
-            return false;
-        if (getPub_sub5() != null ? !getPub_sub5().equals(adRequest.getPub_sub5()) : adRequest.getPub_sub5() != null)
-            return false;
-        if (getCost_model() != null ? !getCost_model().equals(adRequest.getCost_model()) : adRequest.getCost_model() != null)
-            return false;
-        if (getCity_code() != null ? !getCity_code().equals(adRequest.getCity_code()) : adRequest.getCity_code() != null)
-            return false;
-        if (getMetro_code() != null ? !getMetro_code().equals(adRequest.getMetro_code()) : adRequest.getMetro_code() != null)
-            return false;
-        if (getOrder_id() != null ? !getOrder_id().equals(adRequest.getOrder_id()) : adRequest.getOrder_id() != null)
-            return false;
-        return getPostback_desc() != null ? getPostback_desc().equals(adRequest.getPostback_desc()) : adRequest.getPostback_desc() == null;
+        return getGoogle_aid() != null ? getGoogle_aid().equals(adRequest.getGoogle_aid()) : adRequest.getGoogle_aid() == null;
     }
 
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        result = getAccount_key() != null ? getAccount_key().hashCode() : 0;
+        int result = getAccount_key() != null ? getAccount_key().hashCode() : 0;
         result = 31 * result + (getAction() != null ? getAction().hashCode() : 0);
         result = 31 * result + (getAppKey() != null ? getAppKey().hashCode() : 0);
         result = 31 * result + (getSource() != null ? getSource().hashCode() : 0);
         result = 31 * result + (getStat_id() != null ? getStat_id().hashCode() : 0);
-        result = 31 * result + (getOs_version() != null ? getOs_version().hashCode() : 0);
-        result = 31 * result + (getDevice_id() != null ? getDevice_id().hashCode() : 0);
-        result = 31 * result + (getDevice_type() != null ? getDevice_type().hashCode() : 0);
-        result = 31 * result + (getDevice_brand() != null ? getDevice_brand().hashCode() : 0);
-        result = 31 * result + (getDevice_carrier() != null ? getDevice_carrier().hashCode() : 0);
-        result = 31 * result + (getDevice_model() != null ? getDevice_model().hashCode() : 0);
-        result = 31 * result + (getLang() != null ? getLang().hashCode() : 0);
         result = 31 * result + (getPlat_id() != null ? getPlat_id().hashCode() : 0);
-        result = 31 * result + (getUser_agent() != null ? getUser_agent().hashCode() : 0);
-        result = 31 * result + (getPublisher_id() != null ? getPublisher_id().hashCode() : 0);
-        result = 31 * result + (getPublisher_name() != null ? getPublisher_name().hashCode() : 0);
-        result = 31 * result + (getClick_ip() != null ? getClick_ip().hashCode() : 0);
-        result = 31 * result + (getClick_time() != null ? getClick_time().hashCode() : 0);
-        result = 31 * result + (getBundle_id() != null ? getBundle_id().hashCode() : 0);
         result = 31 * result + (getInstall_ip() != null ? getInstall_ip().hashCode() : 0);
         result = 31 * result + (getInstall_time() != null ? getInstall_time().hashCode() : 0);
-        result = 31 * result + (getAgency_name() != null ? getAgency_name().hashCode() : 0);
         result = 31 * result + (getSite_id() != null ? getSite_id().hashCode() : 0);
         result = 31 * result + (getSite_name() != null ? getSite_name().hashCode() : 0);
-        result = 31 * result + (getMatch_type() != null ? getMatch_type().hashCode() : 0);
-        result = 31 * result + (getCampaign_id() != null ? getCampaign_id().hashCode() : 0);
-        result = 31 * result + (getCampaign_name() != null ? getCampaign_name().hashCode() : 0);
-        result = 31 * result + (getAd_url() != null ? getAd_url().hashCode() : 0);
-        result = 31 * result + (getAd_name() != null ? getAd_name().hashCode() : 0);
-        result = 31 * result + (getRegion_name() != null ? getRegion_name().hashCode() : 0);
-        result = 31 * result + (getCountry_code() != null ? getCountry_code().hashCode() : 0);
-        result = 31 * result + (getCurrency_code() != null ? getCurrency_code().hashCode() : 0);
-        result = 31 * result + (getExisting_user() != null ? getExisting_user().hashCode() : 0);
-        result = 31 * result + (getImp_time() != null ? getImp_time().hashCode() : 0);
-        result = 31 * result + (getStat_click_id() != null ? getStat_click_id().hashCode() : 0);
-        result = 31 * result + (getStat_impression_id() != null ? getStat_impression_id().hashCode() : 0);
-        temp = Double.doubleToLongBits(getPayout());
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (getReferral_source() != null ? getReferral_source().hashCode() : 0);
-        result = 31 * result + (getReferral_url() != null ? getReferral_url().hashCode() : 0);
-        temp = Double.doubleToLongBits(getRevenue());
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(getRevenue_usd());
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (getStatus() != null ? getStatus().hashCode() : 0);
-        result = 31 * result + (getStatus_code() != null ? getStatus_code().hashCode() : 0);
-        result = 31 * result + (getTracking_id() != null ? getTracking_id().hashCode() : 0);
         result = 31 * result + (getIos_ifa() != null ? getIos_ifa().hashCode() : 0);
         result = 31 * result + (getIos_ifv() != null ? getIos_ifv().hashCode() : 0);
         result = 31 * result + (getGoogle_aid() != null ? getGoogle_aid().hashCode() : 0);
-        result = 31 * result + (getPub_camp_id() != null ? getPub_camp_id().hashCode() : 0);
-        result = 31 * result + (getPub_camp_name() != null ? getPub_camp_name().hashCode() : 0);
-        result = 31 * result + (getPub_camp_ref() != null ? getPub_camp_ref().hashCode() : 0);
-        result = 31 * result + (getPub_adset() != null ? getPub_adset().hashCode() : 0);
-        result = 31 * result + (getPub_ad() != null ? getPub_ad().hashCode() : 0);
-        result = 31 * result + (getPub_keyword() != null ? getPub_keyword().hashCode() : 0);
-        result = 31 * result + (getPub_place() != null ? getPub_place().hashCode() : 0);
-        result = 31 * result + (getPub_sub_id() != null ? getPub_sub_id().hashCode() : 0);
-        result = 31 * result + (getPub_sub_name() != null ? getPub_sub_name().hashCode() : 0);
-        result = 31 * result + (getAdv_camp_id() != null ? getAdv_camp_id().hashCode() : 0);
-        result = 31 * result + (getAdv_camp_name() != null ? getAdv_camp_name().hashCode() : 0);
-        result = 31 * result + (getAdv_camp_ref() != null ? getAdv_camp_ref().hashCode() : 0);
-        result = 31 * result + (getAdv_adset() != null ? getAdv_adset().hashCode() : 0);
-        result = 31 * result + (getAdv_ad() != null ? getAdv_ad().hashCode() : 0);
-        result = 31 * result + (getAdv_keyword() != null ? getAdv_keyword().hashCode() : 0);
-        result = 31 * result + (getAdv_place() != null ? getAdv_place().hashCode() : 0);
-        result = 31 * result + (getAdv_sub_id() != null ? getAdv_sub_id().hashCode() : 0);
-        result = 31 * result + (getAdv_sub_name() != null ? getAdv_sub_name().hashCode() : 0);
-        result = 31 * result + (getSdk() != null ? getSdk().hashCode() : 0);
-        result = 31 * result + (getSdk_version() != null ? getSdk_version().hashCode() : 0);
-        result = 31 * result + (getGame_user_id() != null ? getGame_user_id().hashCode() : 0);
-        result = 31 * result + (isOs_jailbroke() ? 1 : 0);
-        result = 31 * result + (getPub_pref_id() != null ? getPub_pref_id().hashCode() : 0);
-        result = 31 * result + (getPub_sub1() != null ? getPub_sub1().hashCode() : 0);
-        result = 31 * result + (getPub_sub2() != null ? getPub_sub2().hashCode() : 0);
-        result = 31 * result + (getPub_sub3() != null ? getPub_sub3().hashCode() : 0);
-        result = 31 * result + (getPub_sub4() != null ? getPub_sub4().hashCode() : 0);
-        result = 31 * result + (getPub_sub5() != null ? getPub_sub5().hashCode() : 0);
-        result = 31 * result + (getCost_model() != null ? getCost_model().hashCode() : 0);
-        temp = Double.doubleToLongBits(getCost());
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (int) (getIp_from() ^ (getIp_from() >>> 32));
-        result = 31 * result + (int) (getIp_to() ^ (getIp_to() >>> 32));
-        result = 31 * result + (getCity_code() != null ? getCity_code().hashCode() : 0);
-        result = 31 * result + (getMetro_code() != null ? getMetro_code().hashCode() : 0);
-        result = 31 * result + (getOrder_id() != null ? getOrder_id().hashCode() : 0);
-        result = 31 * result + getPostback_code();
-        result = 31 * result + (getPostback_desc() != null ? getPostback_desc().hashCode() : 0);
-        result = 31 * result + (getEval_prop() != +0.0f ? Float.floatToIntBits(getEval_prop()) : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        return "AdRequest{" +
-                "account_key='" + account_key + '\'' +
-                ", action='" + action + '\'' +
-                ", appKey='" + appKey + '\'' +
-                ", source='" + source + '\'' +
-                ", stat_id='" + stat_id + '\'' +
-                ", os_version='" + os_version + '\'' +
-                ", device_id='" + device_id + '\'' +
-                ", device_type='" + device_type + '\'' +
-                ", device_brand='" + device_brand + '\'' +
-                ", device_carrier='" + device_carrier + '\'' +
-                ", device_model='" + device_model + '\'' +
-                ", lang='" + lang + '\'' +
-                ", plat_id='" + plat_id + '\'' +
-                ", user_agent='" + user_agent + '\'' +
-                ", publisher_id='" + publisher_id + '\'' +
-                ", publisher_name='" + publisher_name + '\'' +
-                ", click_ip='" + click_ip + '\'' +
-                ", click_time=" + click_time +
-                ", bundle_id='" + bundle_id + '\'' +
-                ", install_ip='" + install_ip + '\'' +
-                ", install_time=" + install_time +
-                ", agency_name='" + agency_name + '\'' +
-                ", site_id='" + site_id + '\'' +
-                ", site_name='" + site_name + '\'' +
-                ", match_type='" + match_type + '\'' +
-                ", campaign_id='" + campaign_id + '\'' +
-                ", campaign_name='" + campaign_name + '\'' +
-                ", ad_url='" + ad_url + '\'' +
-                ", ad_name='" + ad_name + '\'' +
-                ", region_name='" + region_name + '\'' +
-                ", country_code='" + country_code + '\'' +
-                ", currency_code='" + currency_code + '\'' +
-                ", existing_user='" + existing_user + '\'' +
-                ", imp_time=" + imp_time +
-                ", stat_click_id='" + stat_click_id + '\'' +
-                ", stat_impression_id='" + stat_impression_id + '\'' +
-                ", payout=" + payout +
-                ", referral_source='" + referral_source + '\'' +
-                ", referral_url='" + referral_url + '\'' +
-                ", revenue=" + revenue +
-                ", revenue_usd=" + revenue_usd +
-                ", status='" + status + '\'' +
-                ", status_code='" + status_code + '\'' +
-                ", tracking_id='" + tracking_id + '\'' +
-                ", ios_ifa='" + ios_ifa + '\'' +
-                ", ios_ifv='" + ios_ifv + '\'' +
-                ", google_aid='" + google_aid + '\'' +
-                ", pub_camp_id='" + pub_camp_id + '\'' +
-                ", pub_camp_name='" + pub_camp_name + '\'' +
-                ", pub_camp_ref='" + pub_camp_ref + '\'' +
-                ", pub_adset='" + pub_adset + '\'' +
-                ", pub_ad='" + pub_ad + '\'' +
-                ", pub_keyword='" + pub_keyword + '\'' +
-                ", pub_place='" + pub_place + '\'' +
-                ", pub_sub_id='" + pub_sub_id + '\'' +
-                ", pub_sub_name='" + pub_sub_name + '\'' +
-                ", adv_camp_id='" + adv_camp_id + '\'' +
-                ", adv_camp_name='" + adv_camp_name + '\'' +
-                ", adv_camp_ref='" + adv_camp_ref + '\'' +
-                ", adv_adset='" + adv_adset + '\'' +
-                ", adv_ad='" + adv_ad + '\'' +
-                ", adv_keyword='" + adv_keyword + '\'' +
-                ", adv_place='" + adv_place + '\'' +
-                ", adv_sub_id='" + adv_sub_id + '\'' +
-                ", adv_sub_name='" + adv_sub_name + '\'' +
-                ", sdk='" + sdk + '\'' +
-                ", sdk_version='" + sdk_version + '\'' +
-                ", game_user_id='" + game_user_id + '\'' +
-                ", os_jailbroke=" + os_jailbroke +
-                ", pub_pref_id='" + pub_pref_id + '\'' +
-                ", pub_sub1='" + pub_sub1 + '\'' +
-                ", pub_sub2='" + pub_sub2 + '\'' +
-                ", pub_sub3='" + pub_sub3 + '\'' +
-                ", pub_sub4='" + pub_sub4 + '\'' +
-                ", pub_sub5='" + pub_sub5 + '\'' +
-                ", cost_model='" + cost_model + '\'' +
-                ", cost=" + cost +
-                ", ip_from=" + ip_from +
-                ", ip_to=" + ip_to +
-                ", city_code='" + city_code + '\'' +
-                ", metro_code='" + metro_code + '\'' +
-                ", order_id='" + order_id + '\'' +
-                '}';
+        final StringBuilder sb = new StringBuilder(200);
+        sb.append("").append('"').append(account_key).append('"');
+        sb.append("\t").append('"').append(action).append('"');
+        sb.append("\t").append('"').append(appKey).append('"');
+        sb.append("\t").append('"').append(source).append('"');
+        sb.append("\t").append('"').append(stat_id).append('"');
+        sb.append("\t").append('"').append(os_version).append('"');
+        sb.append("\t").append('"').append(device_id).append('"');
+        sb.append("\t").append('"').append(device_type).append('"');
+        sb.append("\t").append('"').append(device_brand).append('"');
+        sb.append("\t").append('"').append(device_carrier).append('"');
+        sb.append("\t").append('"').append(device_model).append('"');
+        sb.append("\t").append('"').append(lang).append('"');
+        sb.append("\t").append('"').append(plat_id).append('"');
+        sb.append("\t").append('"').append(user_agent).append('"');
+        sb.append("\t").append('"').append(publisher_id).append('"');
+        sb.append("\t").append('"').append(publisher_name).append('"');
+        sb.append("\t").append('"').append(click_ip).append('"');
+        sb.append("\t").append('"').append(click_time);
+        sb.append("\t").append('"').append(bundle_id).append('"');
+        sb.append("\t").append('"').append(install_ip).append('"');
+        sb.append("\t").append('"').append(install_time);
+        sb.append("\t").append('"').append(agency_name).append('"');
+        sb.append("\t").append('"').append(site_id).append('"');
+        sb.append("\t").append('"').append(site_name).append('"');
+        sb.append("\t").append('"').append(match_type).append('"');
+        sb.append("\t").append('"').append(campaign_id).append('"');
+        sb.append("\t").append('"').append(campaign_name).append('"');
+        sb.append("\t").append('"').append(ad_url).append('"');
+        sb.append("\t").append('"').append(ad_name).append('"');
+        sb.append("\t").append('"').append(region_name).append('"');
+        sb.append("\t").append('"').append(country_code).append('"');
+        sb.append("\t").append('"').append(currency_code).append('"');
+        sb.append("\t").append('"').append(existing_user).append('"');
+        sb.append("\t").append('"').append(imp_time);
+        sb.append("\t").append('"').append(stat_click_id).append('"');
+        sb.append("\t").append('"').append(stat_impression_id).append('"');
+        sb.append("\t").append(payout);
+        sb.append("\t").append('"').append(referral_source).append('"');
+        sb.append("\t").append('"').append(referral_url).append('"');
+        sb.append("\t").append(revenue);
+        sb.append("\t").append(revenue_usd);
+        sb.append("\t").append('"').append(status).append('"');
+        sb.append("\t").append('"').append(status_code).append('"');
+        sb.append("\t").append('"').append(tracking_id).append('"');
+        sb.append("\t").append('"').append(ios_ifa).append('"');
+        sb.append("\t").append('"').append(ios_ifv).append('"');
+        sb.append("\t").append('"').append(google_aid).append('"');
+        sb.append("\t").append('"').append(pub_camp_id).append('"');
+        sb.append("\t").append('"').append(pub_camp_name).append('"');
+        sb.append("\t").append('"').append(pub_camp_ref).append('"');
+        sb.append("\t").append('"').append(pub_adset).append('"');
+        sb.append("\t").append('"').append(pub_ad).append('"');
+        sb.append("\t").append('"').append(pub_keyword).append('"');
+        sb.append("\t").append('"').append(pub_place).append('"');
+        sb.append("\t").append('"').append(pub_sub_id).append('"');
+        sb.append("\t").append('"').append(pub_sub_name).append('"');
+        sb.append("\t").append('"').append(adv_camp_id).append('"');
+        sb.append("\t").append('"').append(adv_camp_name).append('"');
+        sb.append("\t").append('"').append(adv_camp_ref).append('"');
+        sb.append("\t").append('"').append(adv_adset).append('"');
+        sb.append("\t").append('"').append(adv_ad).append('"');
+        sb.append("\t").append('"').append(adv_keyword).append('"');
+        sb.append("\t").append('"').append(adv_place).append('"');
+        sb.append("\t").append('"').append(adv_sub_id).append('"');
+        sb.append("\t").append('"').append(adv_sub_name).append('"');
+        sb.append("\t").append('"').append(sdk).append('"');
+        sb.append("\t").append('"').append(sdk_version).append('"');
+        sb.append("\t").append('"').append(game_user_id).append('"');
+        sb.append("\t").append(os_jailbroke);
+        sb.append("\t").append('"').append(pub_pref_id).append('"');
+        sb.append("\t").append('"').append(pub_sub1).append('"');
+        sb.append("\t").append('"').append(pub_sub2).append('"');
+        sb.append("\t").append('"').append(pub_sub3).append('"');
+        sb.append("\t").append('"').append(pub_sub4).append('"');
+        sb.append("\t").append('"').append(pub_sub5).append('"');
+        sb.append("\t").append('"').append(cost_model).append('"');
+        sb.append("\t").append(cost);
+        sb.append("\t").append(ip_from);
+        sb.append("\t").append(ip_to);
+        sb.append("\t").append('"').append(city_code).append('"');
+        sb.append("\t").append('"').append(metro_code).append('"');
+        sb.append("\t").append('"').append(order_id).append('"');
+        sb.append("\t").append(postback_code);
+        sb.append("\t").append('"').append(postback_desc).append('"');
+        sb.append("\t").append(eval_prop);
+        sb.append("\t").append('"').append(af_site_id).append('"');
+        sb.append("\t").append('"').append(af_camp_id).append('"');
+        sb.append("\t").append('"').append(af_status);
+        sb.append("\t").append('"').append(postback).append('"');
+        sb.append('\n');
+        return sb.toString();
     }
 
     /**

@@ -20,6 +20,8 @@ public class UIDRequest implements SQLRequest {
     private String created = null;
     private double revenue = 0;
     private double revenue_usd = 0;
+    private String site_id = null;
+    private String site_name = null;
 
     private String ios_ifa = null;
     private String google_aid = null;
@@ -120,6 +122,22 @@ public class UIDRequest implements SQLRequest {
         this.google_aid = google_aid;
     }
 
+    public String getSite_id() {
+        return site_id;
+    }
+
+    public void setSite_id(String site_id) {
+        this.site_id = site_id;
+    }
+
+    public String getSite_name() {
+        return site_name;
+    }
+
+    public void setSite_name(String site_name) {
+        this.site_name = site_name;
+    }
+
     @Override
     public String toSQL() {
         //Get device_id from ios_ifa or google_aid
@@ -171,6 +189,16 @@ public class UIDRequest implements SQLRequest {
                 buf.append("created,");
                 valueBuf.append("'{created}',");
                 map.put("created", StringUtil.validSQLInput(created));
+            }
+            if (StringUtil.isNotEmptyString(site_id)) {
+                buf.append("site_id,");
+                valueBuf.append("'{site_id}',");
+                map.put("site_id", StringUtil.validSQLInput(site_id));
+            }
+            if (StringUtil.isNotEmptyString(site_name)) {
+                buf.append("site_name,");
+                valueBuf.append("'{site_name}',");
+                map.put("site_name", StringUtil.validSQLInput(site_name));
             }
             buf.deleteCharAt(buf.length() - 1);
             buf.append(") values ");

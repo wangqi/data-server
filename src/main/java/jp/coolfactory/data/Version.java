@@ -7,8 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Version {
 
-    public static final String VERSION = "master.23.78a771f";
-    public static final String BUILD_DATE = "2017-03-29 17:52:30:030 CST";
+    public static final String VERSION = "master.24.c82e43d";
+    public static final String BUILD_DATE = "2017-04-07 18:52:25:025 CST";
 
     public static final ConcurrentHashMap<String, Object> CONTEXT = new ConcurrentHashMap<>();
 }

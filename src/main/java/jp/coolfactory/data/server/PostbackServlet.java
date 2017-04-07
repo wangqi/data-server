@@ -57,6 +57,9 @@ public class PostbackServlet extends HttpServlet {
 
         HashMap<String, String> params = new HashMap<String, String>();
         String action = request.getParameter("action");
+        if ( StringUtil.isNotEmptyString(action) ) {
+            action = action.toLowerCase();
+        }
         String source = request.getParameter("source");
         if ( source == null ) {
             source = Constants.SOURCE_UNKNOWN;

@@ -36,6 +36,8 @@ public class AdRequestUIDCommand implements Handler<AdRequest> {
             user.setGame_user_id(adRequest.getGame_user_id());
             user.setRevenue(adRequest.getRevenue());
             user.setRevenue_usd(adRequest.getRevenue_usd());
+            user.setSite_id(adRequest.getSite_id());
+            user.setSite_name(adRequest.getSite_name());
             DBJobManager manager = (DBJobManager)Version.CONTEXT.get(Constants.DB_JOB_MANAGER);
             manager.submitRequest(user);
         } catch (Exception e) {

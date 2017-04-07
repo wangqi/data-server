@@ -32,6 +32,7 @@ public class AdCommandController implements Controller{
         AdRequestUserCommand userCommand = new AdRequestUserCommand();
         AdRequestUIDCommand uidCommand = new AdRequestUIDCommand();
         AdRequestDBCommand dbCommand = new AdRequestDBCommand();
+        AdRequestLogCommand logCommand = new AdRequestLogCommand();
 
         //AntiFraud
         AfMATCommand afMatCommand = new AfMATCommand();
@@ -53,6 +54,7 @@ public class AdCommandController implements Controller{
         commandChain.add(afPostbackCommand);
 
         //Finally save the request to database.
+        commandChain.add(logCommand);
         commandChain.add(dbCommand);
 
 

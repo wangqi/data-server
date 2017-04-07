@@ -40,6 +40,70 @@
         </layout>
     </appender>
 
+    <appender name="install_file" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="append" value="true" />
+        <param name="datePattern" value="_yyyy-MM-dd" />
+        <param name="file" value="/var/log/tomcat8/ad_install.log" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d{yyyy-MM-dd HH:mm:ss}\t%m%n" />
+        </layout>
+    </appender>
+
+    <appender name="click_file" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="append" value="true" />
+        <param name="datePattern" value="_yyyy-MM-dd" />
+        <param name="file" value="/var/log/tomcat8/ad_click.log" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d{yyyy-MM-dd HH:mm:ss}\t%m%n" />
+        </layout>
+    </appender>
+
+    <appender name="event_file" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="append" value="true" />
+        <param name="datePattern" value="_yyyy-MM-dd" />
+        <param name="file" value="/var/log/tomcat8/ad_event.log" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d{yyyy-MM-dd HH:mm:ss}\t%m%n" />
+        </layout>
+    </appender>
+
+    <appender name="purchase_file" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="append" value="true" />
+        <param name="datePattern" value="_yyyy-MM-dd" />
+        <param name="file" value="/var/log/tomcat8/ad_purchase.log" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d{yyyy-MM-dd HH:mm:ss}\t%m%n" />
+        </layout>
+    </appender>
+
+    <logger name="install_log">
+        <level value="info" />
+        <appender-ref ref="console" />
+        <appender-ref ref="install_file" />
+    </logger>
+
+    <logger name="click_log">
+        <level value="info" />
+        <appender-ref ref="console" />
+        <appender-ref ref="click_file" />
+    </logger>
+
+    <logger name="event_log">
+        <level value="info" />
+        <appender-ref ref="console" />
+        <appender-ref ref="event_file" />
+    </logger>
+
+    <logger name="purchase_log">
+        <level value="info" />
+        <appender-ref ref="console" />
+        <appender-ref ref="purchase_file" />
+    </logger>
+
     <logger name="access_log">
         <level value="info" />
         <appender-ref ref="console" />
@@ -48,7 +112,7 @@
 
     <root>
         <level value="info" />
-        <appender-ref ref="console" />
+        <!--<appender-ref ref="console" />-->
         <appender-ref ref="file" />
     </root>
 
