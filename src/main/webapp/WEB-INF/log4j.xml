@@ -82,31 +82,26 @@
 
     <logger name="install_log">
         <level value="info" />
-        <appender-ref ref="console" />
         <appender-ref ref="install_file" />
     </logger>
 
     <logger name="click_log">
         <level value="info" />
-        <appender-ref ref="console" />
         <appender-ref ref="click_file" />
     </logger>
 
     <logger name="event_log">
         <level value="info" />
-        <appender-ref ref="console" />
         <appender-ref ref="event_file" />
     </logger>
 
     <logger name="purchase_log">
         <level value="info" />
-        <appender-ref ref="console" />
         <appender-ref ref="purchase_file" />
     </logger>
 
     <logger name="access_log">
         <level value="info" />
-        <appender-ref ref="console" />
         <appender-ref ref="access_file" />
     </logger>
 

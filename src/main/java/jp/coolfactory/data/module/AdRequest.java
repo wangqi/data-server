@@ -967,7 +967,6 @@ public class AdRequest implements SQLRequest {
         sb.append("\t").append('"').append(af_camp_id).append('"');
         sb.append("\t").append('"').append(af_status);
         sb.append("\t").append('"').append(postback).append('"');
-        sb.append('\n');
         return sb.toString();
     }
 
