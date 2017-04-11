@@ -895,10 +895,18 @@ public class AdRequest implements SQLRequest {
         sb.append("\t").append('"').append(publisher_id).append('"');
         sb.append("\t").append('"').append(publisher_name).append('"');
         sb.append("\t").append('"').append(click_ip).append('"');
-        sb.append("\t").append('"').append(click_time);
+        if ( click_time != null ) {
+            sb.append("\t").append('"').append(DateUtil.formatDateTime(click_time)).append('"');
+        } else {
+            sb.append("\t").append("\"\"");
+        }
         sb.append("\t").append('"').append(bundle_id).append('"');
         sb.append("\t").append('"').append(install_ip).append('"');
-        sb.append("\t").append('"').append(install_time);
+        if ( install_time != null ) {
+            sb.append("\t").append('"').append(DateUtil.formatDateTime(install_time)).append('"');
+        } else {
+            sb.append("\t").append("\"\"");
+        }
         sb.append("\t").append('"').append(agency_name).append('"');
         sb.append("\t").append('"').append(site_id).append('"');
         sb.append("\t").append('"').append(site_name).append('"');
@@ -911,7 +919,11 @@ public class AdRequest implements SQLRequest {
         sb.append("\t").append('"').append(country_code).append('"');
         sb.append("\t").append('"').append(currency_code).append('"');
         sb.append("\t").append('"').append(existing_user).append('"');
-        sb.append("\t").append('"').append(imp_time);
+        if ( imp_time != null ) {
+            sb.append("\t").append('"').append(DateUtil.formatDateTime(imp_time)).append('"');
+        } else {
+            sb.append("\t").append("\"\"");
+        }
         sb.append("\t").append('"').append(stat_click_id).append('"');
         sb.append("\t").append('"').append(stat_impression_id).append('"');
         sb.append("\t").append(payout);
@@ -965,7 +977,7 @@ public class AdRequest implements SQLRequest {
         sb.append("\t").append(eval_prop);
         sb.append("\t").append('"').append(af_site_id).append('"');
         sb.append("\t").append('"').append(af_camp_id).append('"');
-        sb.append("\t").append('"').append(af_status);
+        sb.append("\t").append('"').append(af_status).append('"');
         sb.append("\t").append('"').append(postback).append('"');
         return sb.toString();
     }

@@ -79,7 +79,7 @@ public class AntiFraudController implements Controller {
                     @Override
                     public void process(ResultSet resultSet) throws SQLException {
                         while (resultSet.next() ) {
-                            createAccountFromResultSet(resultSet);
+                            AfAccount account = createAccountFromResultSet(resultSet);
                         }
                     }
         });
@@ -97,7 +97,7 @@ public class AntiFraudController implements Controller {
                     @Override
                     public void process(ResultSet resultSet) throws SQLException {
                         while (resultSet.next() ) {
-                            createSiteFromResultSet(resultSet);
+                            AfSite afsite = createSiteFromResultSet(resultSet);
                         }
                     }
                 });
@@ -107,16 +107,16 @@ public class AntiFraudController implements Controller {
      * Load all campaigns.
      */
     public final void loadCampaigns() {
-        DBUtil.select(
-                "select s.id, s.created, s.name, s.site_id, a.name site_name, s.include_countries, s.include_devices, s.include_lang, s.include_os, " +
-                        " s.exclude_countries, s.exclude_devices, s.exclude_lang, s.exclude_os, s.include_carrier, s.exclude_carrier, s.is_default, s.timezone from "
-                        + ConfigUtil.getAntiFraudDatabaseSchema()
-                        + ".af_campaign s inner join af_site a on s.site_id = a.id",
+        String sql = "select s.id, s.created, s.name, s.site_id, a.name site_name, s.include_countries, s.include_devices, s.include_lang, s.include_os, " +
+                " s.exclude_countries, s.exclude_devices, s.exclude_lang, s.exclude_os, s.include_carrier, s.exclude_carrier, s.is_default, s.timezone from "
+                + ConfigUtil.getAntiFraudDatabaseSchema()
+                + ".af_campaign s inner join af_site a on s.site_id = a.id";
+        DBUtil.select(sql,
                 new ResultSetProcessor() {
                     @Override
                     public void process(ResultSet resultSet) throws SQLException {
                         while (resultSet.next() ) {
-                            createCampaignFromResultSet(resultSet);
+                            AfCampaign afCampaign = createCampaignFromResultSet(resultSet);
                         }
                     }
                 });
@@ -199,12 +199,12 @@ public class AntiFraudController implements Controller {
 
     /**
      * Get given site by its site name. May be null
-     * @param externalId
+     * @param af_site_id
      * @return
      */
-    public final AfSite getSite(String externalId) {
-        if (StringUtil.isNotEmptyString(externalId)) {
-            return _sites.get(externalId);
+    public final AfSite getSite(String af_site_id) {
+        if (StringUtil.isNotEmptyString(af_site_id)) {
+            return _sites.get(af_site_id);
         } else {
             return null;
         }
@@ -248,7 +248,7 @@ public class AntiFraudController implements Controller {
         site.setExternalId(resultSet.getString("external_id"));
         site.setAccountId(resultSet.getInt("account_id"));
         site.setAccountName(resultSet.getString("account_name"));
-        _sites.put(site.getExternalId(), site);
+        _sites.put(String.valueOf(site.getId()), site);
         AfAccount account = _accounts.get(site.getAccountName());
         if ( account != null ) {
             account.addSite(site);

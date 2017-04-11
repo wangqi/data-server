@@ -18,14 +18,14 @@ public class StringUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(StringUtil.class);
 
     public static final boolean isNotEmptyString(String str) {
-        if(str != null && !str.isEmpty()) {
+        if(str != null && !str.isEmpty() && !str.equals("null") ) {
             return true;
         }
         return false;
     }
 
     public static final boolean isEmptyString(String str) {
-        if(str == null || str.isEmpty()) {
+        if(str == null || str.isEmpty() || str.equals("null") ) {
             return true;
         }
         return false;

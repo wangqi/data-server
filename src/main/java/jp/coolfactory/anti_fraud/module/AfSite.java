@@ -119,7 +119,7 @@ public class AfSite {
             return null;
         }
         try {
-            Integer id = new Integer(campaignId);
+//            Integer id = new Integer(campaignId);
             return this._campaigns.get(campaignId);
         } catch (NumberFormatException e) {
             LOGGER.warning("campaignId : " + campaignId + " is not a number.");
