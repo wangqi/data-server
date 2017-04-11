@@ -76,11 +76,11 @@ public class ConfigUtil {
         }
         LOGGER.warn("Didn't find the ipv4 file specified in system property -Dipv4: " + ipv4 );
         String workingDir = System.getProperty("user.dir");
-        file = new File(workingDir, "ipv4.csv");
+        file = new File(workingDir, "IP24.BIN");
         if ( file.exists() ) {
             return file.getAbsolutePath();
         }
-        LOGGER.warn("Didn't find the ipv4.csv in working dir: " + file.getAbsolutePath());
+        LOGGER.warn("Didn't find the IP24.BIN in working dir: " + file.getAbsolutePath());
         return null;
     }
 
