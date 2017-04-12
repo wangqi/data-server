@@ -136,7 +136,6 @@ public class IP2Location {
             }
 
         }
-
     }
 
     private void CreateMappedBytes(FileChannel var1) throws IOException {
@@ -289,15 +288,15 @@ public class IP2Location {
         super.finalize();
     }
 
-    public IPResult IPQuery(String var1) throws IOException {
-        var1 = var1.trim();
-        IPResult var2 = new IPResult(var1);
-        RandomAccessFile var3 = null;
-        MappedByteBuffer var4 = null;
+    public IPResult IPQuery(String ip) throws IOException {
+        ip = ip.trim();
+        IPResult ipResult = new IPResult(ip);
+        RandomAccessFile randomAccessFile = null;
+        MappedByteBuffer mappedByteBuffer = null;
 
         IPResult var5;
         try {
-            if(var1 != null && var1.length() != 0) {
+            if(ip != null && ip.length() != 0) {
                 boolean var6 = false;
                 boolean var7 = false;
                 boolean var8 = false;
@@ -311,277 +310,278 @@ public class IP2Location {
                 long var17 = 0L;
                 boolean var20 = false;
 
-                BigInteger var40;
-                int var43;
+                BigInteger ipNumber;
+                int ipVersion;
                 try {
-                    BigInteger[] var19 = this.ip2no(var1);
-                    var43 = var19[0].intValue();
-                    var40 = var19[1];
-                    int var42 = var19[2].intValue();
+                    BigInteger[] ipArray = this.ip2no(ip);
+                    ipVersion = ipArray[0].intValue();
+                    ipNumber = ipArray[1];
+                    int var42 = ipArray[2].intValue();
                     if(var42 == 6) {
-                        String[] var21 = this.ExpandIPv6(var1, var43);
-                        var2.ip_address = var21[0];
-                        var43 = Integer.parseInt(var21[1]);
+                        String[] var21 = this.ExpandIPv6(ip, ipVersion);
+                        ipResult.ip_address = var21[0];
+                        ipVersion = Integer.parseInt(var21[1]);
                     }
                 } catch (UnknownHostException var37) {
-                    var2.status = "INVALID_IP_ADDRESS";
-                    IPResult var23 = var2;
+                    ipResult.status = "INVALID_IP_ADDRESS";
+                    IPResult var23 = ipResult;
                     return var23;
                 }
 
-                this.checkLicense();
-                var2.delay = this.delay();
+                // this.checkLicense();
+                ipResult.delay = this.delay();
                 long var22 = 0L;
-                long var24 = 0L;
+                long dbCount = 0L;
                 long var26 = 0L;
                 long var28 = 0L;
                 BigInteger var30 = BigInteger.ZERO;
                 BigInteger var31 = BigInteger.ZERO;
                 IPResult var32;
                 if(this._MetaData == null && !this.LoadBIN()) {
-                    var2.status = "MISSING_FILE";
-                    var32 = var2;
+                    ipResult.status = "MISSING_FILE";
+                    var32 = ipResult;
                     return var32;
                 }
 
-                int var44 = this._MetaData.getDBType();
-                int var45 = this._MetaData.getDBColumn();
+                int dbType = this._MetaData.getDBType();
+                int dbColumn = this._MetaData.getDBColumn();
                 if(this.UseMemoryMappedFile) {
                     if(this._IPv4Buffer == null || !this._MetaData.getOldBIN() && this._IPv6Buffer == null || this._MapDataBuffer == null) {
                         this.CreateMappedBytes();
                     }
                 } else {
                     this.DestroyMappedBytes();
-                    var3 = new RandomAccessFile(this.IPDatabasePath, "r");
-                    if(var3 == null) {
-                        var2.status = "MISSING_FILE";
-                        var32 = var2;
+                    randomAccessFile = new RandomAccessFile(this.IPDatabasePath, "r");
+                    if(randomAccessFile == null) {
+                        ipResult.status = "MISSING_FILE";
+                        var32 = ipResult;
                         return var32;
                     }
                 }
 
                 int var41;
                 int var46;
-                if(var43 == 4) {
+                if(ipVersion == 4) {
                     var14 = MAX_IPV4_RANGE;
-                    var24 = (long)this._MetaData.getDBCount();
+                    dbCount = (long)this._MetaData.getDBCount();
                     if(this.UseMemoryMappedFile) {
-                        var4 = this._IPv4Buffer;
-                        var13 = var4.capacity();
+                        mappedByteBuffer = this._IPv4Buffer;
+                        var13 = mappedByteBuffer.capacity();
                     } else {
                         var10 = this._MetaData.getBaseAddr();
                     }
 
                     var46 = this._IPv4ColumnSize;
                     if(this._MetaData.getIndexed()) {
-                        var41 = var40.shiftRight(16).intValue();
+                        var41 = ipNumber.shiftRight(16).intValue();
                         var22 = (long)this._IndexArrayIPv4[var41][0];
-                        var24 = (long)this._IndexArrayIPv4[var41][1];
+                        dbCount = (long)this._IndexArrayIPv4[var41][1];
                     }
                 } else {
                     if(this._MetaData.getOldBIN()) {
-                        var2.status = "IPV6_NOT_SUPPORTED";
-                        var32 = var2;
+                        ipResult.status = "IPV6_NOT_SUPPORTED";
+                        var32 = ipResult;
                         return var32;
                     }
 
                     var14 = MAX_IPV6_RANGE;
-                    var24 = (long)this._MetaData.getDBCountIPv6();
+                    dbCount = (long)this._MetaData.getDBCountIPv6();
                     if(this.UseMemoryMappedFile) {
-                        var4 = this._IPv6Buffer;
-                        var13 = var4.capacity();
+                        mappedByteBuffer = this._IPv6Buffer;
+                        var13 = mappedByteBuffer.capacity();
                     } else {
                         var10 = this._MetaData.getBaseAddrIPv6();
                     }
 
                     var46 = this._IPv6ColumnSize;
                     if(this._MetaData.getIndexedIPv6()) {
-                        var41 = var40.shiftRight(112).intValue();
+                        var41 = ipNumber.shiftRight(112).intValue();
                         var22 = (long)this._IndexArrayIPv6[var41][0];
-                        var24 = (long)this._IndexArrayIPv6[var41][1];
+                        dbCount = (long)this._IndexArrayIPv6[var41][1];
                     }
                 }
 
-                if(var40.compareTo(var14) == 0) {
-                    var40 = var40.subtract(BigInteger.ONE);
+                if(ipNumber.compareTo(var14) == 0) {
+                    ipNumber = ipNumber.subtract(BigInteger.ONE);
                 }
 
                 while(true) {
-                    if(var22 <= var24) {
-                        var26 = (var22 + var24) / 2L;
+                    if(var22 <= dbCount) {
+                        var26 = (var22 + dbCount) / 2L;
                         var15 = (long)var10 + var26 * (long)var46;
                         var17 = var15 + (long)var46;
                         if(this.UseMemoryMappedFile) {
                             var20 = var17 >= (long)var13;
                         }
 
-                        var30 = this.read32or128(var15, var43, var4, var3);
-                        var31 = var20?BigInteger.ZERO:this.read32or128(var17, var43, var4, var3);
-                        if(var40.compareTo(var30) < 0 || var40.compareTo(var31) >= 0) {
-                            if(var40.compareTo(var30) < 0) {
-                                var24 = var26 - 1L;
+                        var30 = this.read32or128(var15, ipVersion, mappedByteBuffer, randomAccessFile);
+                        var31 = var20?BigInteger.ZERO:this.read32or128(var17, ipVersion, mappedByteBuffer, randomAccessFile);
+                        if(ipNumber.compareTo(var30) < 0 || ipNumber.compareTo(var31) >= 0) {
+                            if(ipNumber.compareTo(var30) < 0) {
+                                dbCount = var26 - 1L;
                             } else {
                                 var22 = var26 + 1L;
                             }
                             continue;
                         }
 
-                        if(var43 == 6) {
+                        if(ipVersion == 6) {
                             var15 += 12L;
                         }
-
+                        ipResult.ip_from = var30.longValue();
+                        ipResult.ip_to = var31.longValue();
                         if(this.COUNTRY_ENABLED) {
-                            var28 = this.read32(var15 + (long)this.COUNTRY_POSITION_OFFSET, var4, var3).longValue();
-                            var2.country_short = this.readStr(var28, var3);
+                            var28 = this.read32(var15 + (long)this.COUNTRY_POSITION_OFFSET, mappedByteBuffer, randomAccessFile).longValue();
+                            ipResult.country_short = this.readStr(var28, randomAccessFile);
                             var28 += 3L;
-                            var2.country_long = this.readStr(var28, var3);
+                            ipResult.country_long = this.readStr(var28, randomAccessFile);
                         } else {
-                            var2.country_short = "Not_Supported";
-                            var2.country_long = "Not_Supported";
+                            ipResult.country_short = "Not_Supported";
+                            ipResult.country_long = "Not_Supported";
                         }
 
                         if(this.REGION_ENABLED) {
-                            var28 = this.read32(var15 + (long)this.REGION_POSITION_OFFSET, var4, var3).longValue();
-                            var2.region = this.readStr(var28, var3);
+                            var28 = this.read32(var15 + (long)this.REGION_POSITION_OFFSET, mappedByteBuffer, randomAccessFile).longValue();
+                            ipResult.region = this.readStr(var28, randomAccessFile);
                         } else {
-                            var2.region = "Not_Supported";
+                            ipResult.region = "Not_Supported";
                         }
 
                         if(this.CITY_ENABLED) {
-                            var28 = this.read32(var15 + (long)this.CITY_POSITION_OFFSET, var4, var3).longValue();
-                            var2.city = this.readStr(var28, var3);
+                            var28 = this.read32(var15 + (long)this.CITY_POSITION_OFFSET, mappedByteBuffer, randomAccessFile).longValue();
+                            ipResult.city = this.readStr(var28, randomAccessFile);
                         } else {
-                            var2.city = "Not_Supported";
+                            ipResult.city = "Not_Supported";
                         }
 
                         if(this.ISP_ENABLED) {
-                            var28 = this.read32(var15 + (long)this.ISP_POSITION_OFFSET, var4, var3).longValue();
-                            var2.isp = this.readStr(var28, var3);
+                            var28 = this.read32(var15 + (long)this.ISP_POSITION_OFFSET, mappedByteBuffer, randomAccessFile).longValue();
+                            ipResult.isp = this.readStr(var28, randomAccessFile);
                         } else {
-                            var2.isp = "Not_Supported";
+                            ipResult.isp = "Not_Supported";
                         }
 
                         if(this.LATITUDE_ENABLED) {
                             var28 = var15 + (long)this.LATITUDE_POSITION_OFFSET;
-                            var2.latitude = Float.parseFloat(this.setDecimalPlaces(this.readFloat(var28, var4, var3)));
+                            ipResult.latitude = Float.parseFloat(this.setDecimalPlaces(this.readFloat(var28, mappedByteBuffer, randomAccessFile)));
                         } else {
-                            var2.latitude = 0.0F;
+                            ipResult.latitude = 0.0F;
                         }
 
                         if(this.LONGITUDE_ENABLED) {
                             var28 = var15 + (long)this.LONGITUDE_POSITION_OFFSET;
-                            var2.longitude = Float.parseFloat(this.setDecimalPlaces(this.readFloat(var28, var4, var3)));
+                            ipResult.longitude = Float.parseFloat(this.setDecimalPlaces(this.readFloat(var28, mappedByteBuffer, randomAccessFile)));
                         } else {
-                            var2.longitude = 0.0F;
+                            ipResult.longitude = 0.0F;
                         }
 
                         if(this.DOMAIN_ENABLED) {
-                            var28 = this.read32(var15 + (long)this.DOMAIN_POSITION_OFFSET, var4, var3).longValue();
-                            var2.domain = this.readStr(var28, var3);
+                            var28 = this.read32(var15 + (long)this.DOMAIN_POSITION_OFFSET, mappedByteBuffer, randomAccessFile).longValue();
+                            ipResult.domain = this.readStr(var28, randomAccessFile);
                         } else {
-                            var2.domain = "Not_Supported";
+                            ipResult.domain = "Not_Supported";
                         }
 
                         if(this.ZIPCODE_ENABLED) {
-                            var28 = this.read32(var15 + (long)this.ZIPCODE_POSITION_OFFSET, var4, var3).longValue();
-                            var2.zipcode = this.readStr(var28, var3);
+                            var28 = this.read32(var15 + (long)this.ZIPCODE_POSITION_OFFSET, mappedByteBuffer, randomAccessFile).longValue();
+                            ipResult.zipcode = this.readStr(var28, randomAccessFile);
                         } else {
-                            var2.zipcode = "Not_Supported";
+                            ipResult.zipcode = "Not_Supported";
                         }
 
                         if(this.TIMEZONE_ENABLED) {
-                            var28 = this.read32(var15 + (long)this.TIMEZONE_POSITION_OFFSET, var4, var3).longValue();
-                            var2.timezone = this.readStr(var28, var3);
+                            var28 = this.read32(var15 + (long)this.TIMEZONE_POSITION_OFFSET, mappedByteBuffer, randomAccessFile).longValue();
+                            ipResult.timezone = this.readStr(var28, randomAccessFile);
                         } else {
-                            var2.timezone = "Not_Supported";
+                            ipResult.timezone = "Not_Supported";
                         }
 
                         if(this.NETSPEED_ENABLED) {
-                            var28 = this.read32(var15 + (long)this.NETSPEED_POSITION_OFFSET, var4, var3).longValue();
-                            var2.netspeed = this.readStr(var28, var3);
+                            var28 = this.read32(var15 + (long)this.NETSPEED_POSITION_OFFSET, mappedByteBuffer, randomAccessFile).longValue();
+                            ipResult.netspeed = this.readStr(var28, randomAccessFile);
                         } else {
-                            var2.netspeed = "Not_Supported";
+                            ipResult.netspeed = "Not_Supported";
                         }
 
                         if(this.IDDCODE_ENABLED) {
-                            var28 = this.read32(var15 + (long)this.IDDCODE_POSITION_OFFSET, var4, var3).longValue();
-                            var2.iddcode = this.readStr(var28, var3);
+                            var28 = this.read32(var15 + (long)this.IDDCODE_POSITION_OFFSET, mappedByteBuffer, randomAccessFile).longValue();
+                            ipResult.iddcode = this.readStr(var28, randomAccessFile);
                         } else {
-                            var2.iddcode = "Not_Supported";
+                            ipResult.iddcode = "Not_Supported";
                         }
 
                         if(this.AREACODE_ENABLED) {
-                            var28 = this.read32(var15 + (long)this.AREACODE_POSITION_OFFSET, var4, var3).longValue();
-                            var2.areacode = this.readStr(var28, var3);
+                            var28 = this.read32(var15 + (long)this.AREACODE_POSITION_OFFSET, mappedByteBuffer, randomAccessFile).longValue();
+                            ipResult.areacode = this.readStr(var28, randomAccessFile);
                         } else {
-                            var2.areacode = "Not_Supported";
+                            ipResult.areacode = "Not_Supported";
                         }
 
                         if(this.WEATHERSTATIONCODE_ENABLED) {
-                            var28 = this.read32(var15 + (long)this.WEATHERSTATIONCODE_POSITION_OFFSET, var4, var3).longValue();
-                            var2.weatherstationcode = this.readStr(var28, var3);
+                            var28 = this.read32(var15 + (long)this.WEATHERSTATIONCODE_POSITION_OFFSET, mappedByteBuffer, randomAccessFile).longValue();
+                            ipResult.weatherstationcode = this.readStr(var28, randomAccessFile);
                         } else {
-                            var2.weatherstationcode = "Not_Supported";
+                            ipResult.weatherstationcode = "Not_Supported";
                         }
 
                         if(this.WEATHERSTATIONNAME_ENABLED) {
-                            var28 = this.read32(var15 + (long)this.WEATHERSTATIONNAME_POSITION_OFFSET, var4, var3).longValue();
-                            var2.weatherstationname = this.readStr(var28, var3);
+                            var28 = this.read32(var15 + (long)this.WEATHERSTATIONNAME_POSITION_OFFSET, mappedByteBuffer, randomAccessFile).longValue();
+                            ipResult.weatherstationname = this.readStr(var28, randomAccessFile);
                         } else {
-                            var2.weatherstationname = "Not_Supported";
+                            ipResult.weatherstationname = "Not_Supported";
                         }
 
                         if(this.MCC_ENABLED) {
-                            var28 = this.read32(var15 + (long)this.MCC_POSITION_OFFSET, var4, var3).longValue();
-                            var2.mcc = this.readStr(var28, var3);
+                            var28 = this.read32(var15 + (long)this.MCC_POSITION_OFFSET, mappedByteBuffer, randomAccessFile).longValue();
+                            ipResult.mcc = this.readStr(var28, randomAccessFile);
                         } else {
-                            var2.mcc = "Not_Supported";
+                            ipResult.mcc = "Not_Supported";
                         }
 
                         if(this.MNC_ENABLED) {
-                            var28 = this.read32(var15 + (long)this.MNC_POSITION_OFFSET, var4, var3).longValue();
-                            var2.mnc = this.readStr(var28, var3);
+                            var28 = this.read32(var15 + (long)this.MNC_POSITION_OFFSET, mappedByteBuffer, randomAccessFile).longValue();
+                            ipResult.mnc = this.readStr(var28, randomAccessFile);
                         } else {
-                            var2.mnc = "Not_Supported";
+                            ipResult.mnc = "Not_Supported";
                         }
 
                         if(this.MOBILEBRAND_ENABLED) {
-                            var28 = this.read32(var15 + (long)this.MOBILEBRAND_POSITION_OFFSET, var4, var3).longValue();
-                            var2.mobilebrand = this.readStr(var28, var3);
+                            var28 = this.read32(var15 + (long)this.MOBILEBRAND_POSITION_OFFSET, mappedByteBuffer, randomAccessFile).longValue();
+                            ipResult.mobilebrand = this.readStr(var28, randomAccessFile);
                         } else {
-                            var2.mobilebrand = "Not_Supported";
+                            ipResult.mobilebrand = "Not_Supported";
                         }
 
                         if(this.ELEVATION_ENABLED) {
-                            var28 = this.read32(var15 + (long)this.ELEVATION_POSITION_OFFSET, var4, var3).longValue();
-                            var2.elevation = this.convertFloat(this.readStr(var28, var3));
+                            var28 = this.read32(var15 + (long)this.ELEVATION_POSITION_OFFSET, mappedByteBuffer, randomAccessFile).longValue();
+                            ipResult.elevation = this.convertFloat(this.readStr(var28, randomAccessFile));
                         } else {
-                            var2.elevation = 0.0F;
+                            ipResult.elevation = 0.0F;
                         }
 
                         if(this.USAGETYPE_ENABLED) {
-                            var28 = this.read32(var15 + (long)this.USAGETYPE_POSITION_OFFSET, var4, var3).longValue();
-                            var2.usagetype = this.readStr(var28, var3);
+                            var28 = this.read32(var15 + (long)this.USAGETYPE_POSITION_OFFSET, mappedByteBuffer, randomAccessFile).longValue();
+                            ipResult.usagetype = this.readStr(var28, randomAccessFile);
                         } else {
-                            var2.usagetype = "Not_Supported";
+                            ipResult.usagetype = "Not_Supported";
                         }
 
-                        var2.status = "OK";
+                        ipResult.status = "OK";
                     }
 
-                    var32 = var2;
+                    var32 = ipResult;
                     return var32;
                 }
             }
 
-            var2.status = "EMPTY_IP_ADDRESS";
-            var5 = var2;
+            ipResult.status = "EMPTY_IP_ADDRESS";
+            var5 = ipResult;
         } catch (IOException var38) {
             throw var38;
         } finally {
-            if(var3 != null) {
-                var3.close();
-                var3 = null;
+            if(randomAccessFile != null) {
+                randomAccessFile.close();
+                randomAccessFile = null;
             }
 
         }

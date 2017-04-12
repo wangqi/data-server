@@ -6,6 +6,7 @@ import jp.coolfactory.data.Version;
 import jp.coolfactory.data.db.DBUtil;
 import jp.coolfactory.data.module.AdRequest;
 import jp.coolfactory.data.server.DBJobManager;
+import jp.coolfactory.data.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +31,15 @@ public class AdRequestDBCommand implements Handler<AdRequest> {
     public CommandStatus handle(AdRequest adRequest) {
         try {
             DBJobManager manager = (DBJobManager)Version.CONTEXT.get(Constants.DB_JOB_MANAGER);
-            manager.submitRequest(adRequest);
+            String postback = adRequest.getPostback();
+            if ( Constants.ACTION_INSTALL.equals(adRequest.getAction()) && StringUtil.isNotEmptyString(postback) ) {
+                // do nothing
+            } else {
+                /**
+                 * Only store the requests to install table if postback is empty.
+                 */
+                manager.submitRequest(adRequest);
+            }
         } catch (Exception e) {
             LOGGER.warn("handle is interrupted.");
             return CommandStatus.Fail;

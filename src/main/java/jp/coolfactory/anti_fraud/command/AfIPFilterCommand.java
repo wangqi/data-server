@@ -47,6 +47,8 @@ public class AfIPFilterCommand implements Handler<AdRequest> {
                         adRequest.setAf_status(Status.OK);
                     } else if ( afIPFilter.getBlacklist().contains(adRequest.getInstall_ip()) ) {
                         adRequest.setAf_status(Status.FORBIDDEN_IP);
+                    } else if ( adRequest.getIs_proxy() > 0 ) {
+                        adRequest.setAf_status(Status.FORBIDDEN_IP_PRXOY);
                     } else {
                         adRequest.setAf_status(Status.OK);
                     }

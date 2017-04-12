@@ -93,6 +93,28 @@ public class DBUtil {
 
     /**
      * Execute the SQL in batch for Statement.
+     * @param list
+     */
+    public static void sqlBatch(ArrayList<String> list) {
+        try (Connection conn = db.getConnection() ) {
+            Statement ps =  conn.createStatement();
+            try {
+                for ( String sql : list ) {
+                    if (StringUtil.isNotEmptyString(sql) ) {
+                        ps.addBatch(sql);
+                    }
+                }
+                ps.executeBatch();
+            } catch (SQLException e) {
+                LOGGER.error("Failed to execute sql", e);
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Failed to execute sql", e);
+        }
+    }
+
+    /**
+     * Execute the SQL in batch for Statement.
      * @param process
      * @param list
      * @param <T>

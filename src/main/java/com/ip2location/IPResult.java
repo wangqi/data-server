@@ -26,6 +26,8 @@ public class IPResult {
     String status;
     boolean delay = false;
     String version = "Version 8.0.2";
+    long ip_from;
+    long ip_to;
 
     IPResult(String var1) {
         this.ip_address = var1;
@@ -121,6 +123,22 @@ public class IPResult {
 
     public String getVersion() {
         return this.version;
+    }
+
+    public long getIp_from() {
+        return ip_from;
+    }
+
+    public void setIp_from(long ip_from) {
+        this.ip_from = ip_from;
+    }
+
+    public long getIp_to() {
+        return ip_to;
+    }
+
+    public void setIp_to(long ip_to) {
+        this.ip_to = ip_to;
     }
 
     public String toString() {

@@ -15,6 +15,7 @@ public class AdRequestIPCommandTest {
 
     @Before
     public void setUp() throws Exception {
+        System.setProperty("mode", "test");
         ConfigUtil.initGlobalConfig();
     }
 
@@ -28,7 +29,7 @@ public class AdRequestIPCommandTest {
         req.setInstall_ip("49.96.23.163");
         AdRequestIPCommand command = new AdRequestIPCommand();
         command.handle(req);
-        assertEquals("", req.getCity_code());
+        assertEquals("Kushima", req.getCity_code());
     }
 
 }

@@ -4,12 +4,8 @@ import jp.coolfactory.data.Constants;
 import jp.coolfactory.data.controller.AdAppController;
 import jp.coolfactory.data.controller.AdCommandController;
 import jp.coolfactory.data.controller.AdParamMapController;
-import jp.coolfactory.data.db.DBUtil;
-import jp.coolfactory.data.module.AdApp;
 import jp.coolfactory.data.module.AdRequest;
-import jp.coolfactory.data.util.DateUtil;
 import jp.coolfactory.data.util.StringUtil;
-import jp.coolfactory.data.util.URLUtil;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -18,16 +14,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.URLDecoder;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TimeZone;
-import java.util.concurrent.Executors;
 
 /**
  * It's a generic postback receiver that can process default standard action postback parameters
@@ -161,7 +151,7 @@ public class PostbackServlet extends HttpServlet {
         req.setIp_from(getParamValueAsLong(request,source, "ip_from"));
         req.setIp_to(getParamValueAsLong(request,source, "ip_to"));
         req.setCity_code(getParamValue(request,source, "city_code"));
-        req.setMetro_code(getParamValue(request,source, "metro_code"));
+        req.setProxy_type(getParamValue(request,source, "metro_code"));
         req.setOrder_id(getParamValue(request,source, "order_id"));
         req.setAf_site_id(getParamValue(request,source, "af_site_id"));
         if ( StringUtil.isEmptyString(req.getAf_site_id()) ) {

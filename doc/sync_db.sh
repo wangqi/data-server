@@ -16,7 +16,7 @@ region="cn-north-1"
 access_key="AKIAPKZGEVPJ5JS3KXRA"
 secret_key="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"
 bucket="qiku-db-sync"
-database="apidb"
+database="apidb2"
 table="ad_install ad_purchase ad_event ad_gameuser ad_register ad_click"
 
 # Timestamp (sortable AND readable)
@@ -56,7 +56,7 @@ restore() {
     echo "url: $url"
     curl "$url" -O "$filename.gz"
     gunzip -f "$filename.gz"
-    mysql -uroot -pr00t1234 -h qikudb.c2v07yqpyqzr.ap-northeast-1.rds.amazonaws.com apidb < "$filename"
+    mysql -uroot -pr00t1234 -h qikudb.c2v07yqpyqzr.ap-northeast-1.rds.amazonaws.com $database < "$filename"
 }
 
 if [ "$1" = "backup" ]

@@ -1,3 +1,5 @@
+create database apidb2 default character set utf8mb4;
+
 create table ad_account (
   id int auto_increment primary key,
   account_key varchar(64),
@@ -7,8 +9,10 @@ create table ad_account (
   unique key account_key(account_key)
 ) default character set=utf8mb4 collate utf8mb4_general_ci;
 
-insert into ad_account (account_key, account_name, api_key, created) values
-  ('talkingdata', 'TalkingData', '', now());
+insert into ad_account (id, account_key, account_name, api_key, created) values
+  (1, 'talkingdata', 'TalkingData', '', now());
+insert into ad_account (id, account_key, account_name, api_key, created) values
+  (2, 'mat', 'TalkingData', '', now());
 
 drop table ad_app;
 create table ad_app (
@@ -112,7 +116,7 @@ values
   (null, 'ip_from', 'ip_from'),
   (null, 'ip_to', 'ip_to'),
   (null, 'city_code', 'city_code'),
-  (null, 'metro_code', 'metro_code'),
+  (null, 'proxy_type', 'proxy_type'),
   (null, 'install_time', 'install_time');
   (null, 'order_id', 'order_id');
 
@@ -157,10 +161,37 @@ create table ad_gameuser (
   revenue_usd double,
   site_id varchar(50) DEFAULT NULL,
   site_name varchar(100) DEFAULT NULL,
-  unique key id (account_key, source, app_key, device_id, game_user_id, site_name),
+  unique key id (account_key, source, app_key, stat_id, game_user_id, site_name),
   key device_id (device_id),
   key game_user_id (game_user_id),
   key stat_id (stat_id)
+) default character set=utf8mb4 collate utf8mb4_general_ci;
+
+drop table ad_postback;
+create table ad_postback (
+  id bigint auto_increment primary key,
+  action varchar(50) DEFAULT 'install',
+  account_key varchar(50) DEFAULT NULL,
+  ip varchar(50) DEFAULT NULL,
+  created datetime,
+  source varchar(50) DEFAULT NULL,
+  stat_id varchar(100) DEFAULT NULL,
+  app_key varchar(100) DEFAULT NULL,
+  plat_id varchar(100) DEFAULT NULL,
+  publisher_id varchar(100) DEFAULT NULL,
+  publisher_name varchar(100) DEFAULT NULL,
+  site_id varchar(50) DEFAULT NULL,
+  site_name varchar(100) DEFAULT NULL,
+  tracking_id varchar(100) DEFAULT NULL,
+  ios_ifa varchar(100) DEFAULT NULL,
+  google_aid varchar(100) DEFAULT NULL,
+  ip_from int(10) unsigned zerofill,
+  ip_to  int(10) unsigned zerofill,
+  postback_code int(11) DEFAULT 0,
+  postback_desc varchar(100),
+  key id (stat_id),
+  key created (created),
+  key aid ( ios_ifa, google_aid )
 ) default character set=utf8mb4 collate utf8mb4_general_ci;
 
 drop table ad_install;
@@ -244,13 +275,12 @@ create table ad_install (
   cost_model varchar(50) DEFAULT NULL,
   order_id varchar(200) DEFAULT NULL,
   cost double,
-  ip_from int(11),
-  ip_to  int(11),
+  ip_from int(10) unsigned zerofill,
+  ip_to  int(10) unsigned zerofill,
   city_code varchar(20) DEFAULT NULL,
-  metro_code varchar(20) DEFAULT NULL,
+  is_proxy int DEFAULT 0,
+  proxy_type varchar(20) DEFAULT NULL,
   eval_prop float DEFAULT 0,
-  postback_code int(11) DEFAULT 0,
-  postback_desc varchar(100),
   key id (stat_id),
   key install_time (created),
   key aid ( ios_ifa, google_aid )
@@ -341,13 +371,12 @@ create table ad_purchase(
   cost_model varchar(50) DEFAULT NULL,
   order_id varchar(200) DEFAULT NULL,
   cost double,
-  ip_from int(11),
-  ip_to  int(11),
+  ip_from int(10) unsigned zerofill,
+  ip_to  int(10) unsigned zerofill,
   city_code varchar(20) DEFAULT NULL,
-  metro_code varchar(20) DEFAULT NULL,
+  is_proxy int default 0,
+  proxy_type varchar(20) DEFAULT NULL,
   eval_prop float DEFAULT 0,
-  postback_code int(11) DEFAULT 0,
-  postback_desc varchar(100),
   key id (stat_id),
   key install_time (created),
   key aid ( ios_ifa, google_aid )
@@ -434,13 +463,12 @@ create table ad_click (
   cost_model varchar(50) DEFAULT NULL,
   order_id varchar(200) DEFAULT NULL,
   cost double,
-  ip_from int(11),
-  ip_to  int(11),
+  ip_from int(10) unsigned zerofill,
+  ip_to  int(10) unsigned zerofill,
   city_code varchar(20) DEFAULT NULL,
-  metro_code varchar(20) DEFAULT NULL,
+  is_proxy int default 0,
+  proxy_type varchar(20) DEFAULT NULL,
   eval_prop float DEFAULT 0,
-  postback_code int(11) DEFAULT 0,
-  postback_desc varchar(100),
   key id (stat_id),
   key install_time (created),
   key aid ( ios_ifa, google_aid )
@@ -527,17 +555,43 @@ create table ad_event (
   cost_model varchar(50) DEFAULT NULL,
   order_id varchar(200) DEFAULT NULL,
   cost double,
-  ip_from int(11),
-  ip_to  int(11),
+  ip_from int(10) unsigned zerofill,
+  ip_to  int(10) unsigned zerofill,
   city_code varchar(20) DEFAULT NULL,
-  metro_code varchar(20) DEFAULT NULL,
+  is_proxy int default 0,
+  proxy_type varchar(20) DEFAULT NULL,
   eval_prop float DEFAULT 0,
-  postback_code int(11) DEFAULT 0,
-  postback_desc varchar(100),
   key id (stat_id),
   key install_time (created),
   key aid ( ios_ifa, google_aid )
 ) default character set=utf8mb4 collate utf8mb4_general_ci;
+
+alter table ad_install add column is_proxy int default 0;
+alter table ad_install change metro_code proxy_type varchar(20) DEFAULT NULL;
+alter table ad_click add column is_proxy int default 0;
+alter table ad_click change metro_code proxy_type varchar(20) DEFAULT NULL;
+alter table ad_event add column is_proxy int default 0;
+alter table ad_event change metro_code proxy_type varchar(20) DEFAULT NULL;
+alter table ad_purchase add column is_proxy int default 0;
+alter table ad_purchase change metro_code proxy_type varchar(20) DEFAULT NULL;
+
+alter table ad_install change ip_from ip_from bigint default 0;
+alter table ad_install change ip_to ip_to bigint default 0;
+alter table ad_click change ip_from ip_from bigint default 0;
+alter table ad_click change ip_to ip_to bigint default 0;
+alter table ad_purchase change ip_from ip_from bigint default 0;
+alter table ad_purchase change ip_to ip_to bigint default 0;
+alter table ad_event change ip_from ip_from bigint default 0;
+alter table ad_event change ip_to ip_to bigint default 0;
+
+alter table ad_install drop column postback_code;
+alter table ad_install drop column postback_desc;
+alter table ad_click drop column postback_code;
+alter table ad_click drop column postback_desc;
+alter table ad_purchase drop column postback_code;
+alter table ad_purchase drop column postback_desc;
+alter table ad_event drop column postback_code;
+alter table ad_event drop column postback_desc;
 
 drop table ad_flow;
 CREATE TABLE `ad_flow` (

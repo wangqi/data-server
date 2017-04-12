@@ -57,12 +57,7 @@ public class AfPostbackCommand implements Handler<AdRequest> {
                     String postback = adRequest.getPostback();
                     if ( StringUtil.isNotEmptyString(postback) ) {
                         URLJobManager jobManager = (URLJobManager)Version.CONTEXT.get(Constants.URL_JOB_MANAGER);
-                        jobManager.submitRequest(new Runnable() {
-                            @Override
-                            public void run() {
-                                sendPostback(postback, adRequest);
-                            }
-                        });
+                        jobManager.submitRequest(adRequest);
                     }
                 }
             } else {
@@ -75,51 +70,4 @@ public class AfPostbackCommand implements Handler<AdRequest> {
         return CommandStatus.Continue;
     }
 
-    /**
-     * Send back the postback URL
-     *
-     * @param postback
-     * @param request
-     */
-    private void sendPostback(String postback, AdRequest request ) {
-        try {
-            Status checkStatus = request.getAf_status();
-            if ( checkStatus == Status.OK ) {
-                //Resend the postback
-                if ( postback != null && postback != "" ) {
-                    LOGGER.info("Resend to postback to " + postback);
-                    String postbackEncoded = URLUtil.encodeURL(postback);
-                    LOGGER.info("Encode postback to " + postbackEncoded);
-                    URL url = new URL(postbackEncoded);
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setRequestMethod("GET");
-                    conn.setRequestProperty("User-Agent", "antifraud/"+ Version.VERSION);
-                    int responseCode = conn.getResponseCode();
-                    StringBuffer response = new StringBuffer();
-                    if ( responseCode > 200 ) {
-                        LOGGER.warn("Failed to send postback. Response code: " + responseCode);
-                    } else {
-                        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                        String inputLine;
-                        while ((inputLine = in.readLine()) != null) {
-                            response.append(inputLine);
-                        }
-                        in.close();
-                    }
-                    request.setPostback_code(responseCode);
-                    request.setPostback_desc(response.toString());
-                } else {
-                    LOGGER.warn("postback param does not exist");
-                }
-            }
-        } catch (MalformedURLException e) {
-            LOGGER.warn("Malformed postback url: " + postback);
-        } catch (Exception e) {
-            LOGGER.warn("Failed to connect to postback url: " + postback, e);
-        } finally {
-            //@TODO
-            //Save in the install log
-//                AntiFraudController.instance.saveLog(params);
-        }
-    }
 }

@@ -1,5 +1,6 @@
 package jp.coolfactory.data.module;
 
+import jp.coolfactory.data.Constants;
 import jp.coolfactory.data.db.DBUtil;
 import jp.coolfactory.data.util.StringUtil;
 
@@ -8,7 +9,7 @@ import java.util.HashMap;
 /**
  * Created by wangqi on 7/3/2017.
  */
-public class UIDRequest implements SQLRequest {
+public class GameRoleRequest implements SQLRequest {
 
     private String action = null;
     private String account_key = null;
@@ -145,15 +146,12 @@ public class UIDRequest implements SQLRequest {
         if ( StringUtil.isEmptyString(device_id)  ) {
             device_id = google_aid;
         }
-        if ( StringUtil.isEmptyString(device_id) || StringUtil.isEmptyString(game_user_id) ) {
-            //Ignore null mapping.
-            return null;
-        } else {
-            StringBuilder buf = new StringBuilder(200);
-            StringBuilder valueBuf = new StringBuilder(200);
-            HashMap<String, String> map = new HashMap<>();
-            valueBuf.append("(");
+        StringBuilder buf = new StringBuilder(200);
+        StringBuilder valueBuf = new StringBuilder(200);
+        HashMap<String, String> map = new HashMap<>();
+        valueBuf.append("(");
 
+        if ( !Constants.ACTION_PURCHASE.equals(action) ) {
             buf.append("insert ignore into ").append(DBUtil.getDatabaseSchema()).append(".ad_gameuser (");
             if (StringUtil.isNotEmptyString(account_key)) {
                 buf.append("account_key,");
@@ -179,7 +177,13 @@ public class UIDRequest implements SQLRequest {
                 buf.append("game_user_id,");
                 valueBuf.append("'{game_user_id}',");
                 map.put("game_user_id", StringUtil.validSQLInput(game_user_id));
+            } else {
+                //Make an empty game_user_id because it's a key in the table.
+                buf.append("game_user_id,");
+                valueBuf.append("'{game_user_id}',");
+                map.put("game_user_id", "");
             }
+
             if (StringUtil.isNotEmptyString(device_id)) {
                 buf.append("device_id,");
                 valueBuf.append("'{device_id}',");
@@ -200,28 +204,39 @@ public class UIDRequest implements SQLRequest {
                 valueBuf.append("'{site_name}',");
                 map.put("site_name", StringUtil.validSQLInput(site_name));
             }
+            buf.append("revenue,");
+            valueBuf.append("{revenue},");
+            map.put("revenue", "0.0");
+            buf.append("revenue_usd,");
+            valueBuf.append("{revenue_usd},");
+            map.put("revenue_usd", "0.0");
+
             buf.deleteCharAt(buf.length() - 1);
             buf.append(") values ");
             valueBuf.deleteCharAt(valueBuf.length() - 1);
             valueBuf.append(')');
             String sql = StringUtil.replaceKey(buf.append('\n').append(valueBuf.toString()).toString(), map);
 
-//            if (revenue > 0) {
-//                StringBuilder updateBuf = new StringBuilder(100);
-//                updateBuf.append("update ").append(AFDBManager.getDatabaseSchema()).append(".ad_gameuser ");
-//                updateBuf.append("set revenue=revenue+{revenue}, revenue_usd=revenue_usd+{revenue_usd} ");
-//                updateBuf.append("where account_key='{account_key}' and app_key='{app_key}' and source='{source}' and game_user_id='{game_user_id}' and device_id='{device_id}'");
-//                map.put("revenue", "revenue");
-//                map.put("revenue_usd", String.valueOf(revenue_usd));
-//                map.put("account_key", account_key);
-//                map.put("app_key", app_key);
-//                map.put("source", source);
-//                map.put("device_id", device_id);
-//                map.put("game_user_id", game_user_id);
-//                sql = sql + "; \n" + StringUtil.replaceKey(updateBuf.toString(), map);
-//            }
             return sql;
+        } else {
+            buf.append("update ").append(DBUtil.getDatabaseSchema()).append(".ad_gameuser ");
+            if (revenue > 0) {
+                buf.append("set revenue=revenue+{revenue}, revenue_usd=revenue_usd+{revenue_usd} ");
+                buf.append("where account_key='{account_key}' and app_key='{app_key}' and source='{source}' and stat_id='{stat_id}' and game_user_id='{game_user_id}' and site_name='{site_name}'");
+                map.put("revenue", String.valueOf(revenue));
+                map.put("revenue_usd", String.valueOf(revenue_usd));
+                map.put("account_key", account_key);
+                map.put("app_key", app_key);
+                map.put("source", source);
+                map.put("stat_id", stat_id);
+                map.put("game_user_id", game_user_id);
+                map.put("site_name", site_name);
+                String sql = StringUtil.replaceKey(buf.toString(), map);
+                return sql;
+            }
         }
+
+        return null;
     }
 }
 

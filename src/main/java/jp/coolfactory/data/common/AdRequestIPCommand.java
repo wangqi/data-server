@@ -11,6 +11,7 @@ import jp.coolfactory.data.module.UserRequest;
 import jp.coolfactory.data.server.DBJobManager;
 import jp.coolfactory.data.util.ConfigUtil;
 import jp.coolfactory.data.util.DateUtil;
+import jp.coolfactory.data.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,22 +45,30 @@ public class AdRequestIPCommand implements Handler<AdRequest> {
             IPResult result = ipLocation.IPQuery(installIP);
             if ( result != null ) {
                 String countryCode = result.getCountryShort();
-                String countryName = result.getCountryLong();
+//                String countryName = result.getCountryLong();
                 String regionName = result.getRegion();
                 String cityName = result.getCity();
-                String isp = result.getISP();
-                String domain = result.getDomain();
+//                String isp = result.getISP();
+//                String domain = result.getDomain();
                 adRequest.setCountry_code(countryCode);
                 adRequest.setRegion_name(regionName);
                 adRequest.setCity_code(cityName);
+                adRequest.setIp_from(result.getIp_from());
+                adRequest.setIp_to(result.getIp_to());
             } else {
                 LOGGER.warn("Didn't find ip data for " + adRequest.getInstall_ip());
             }
             ProxyResult proxyResult = ipProxy.GetAll(installIP);
-            boolean isProxy = proxyResult.Is_Proxy>0;
+            int isProxy = proxyResult.Is_Proxy;
             String proxyType = proxyResult.Proxy_Type;
+            adRequest.setIs_proxy(isProxy);
+            if (StringUtil.isNotEmptyString(proxyType)) {
+                if ( ! "-".equals(proxyType) ) {
+                    adRequest.setProxy_type(proxyType);
+                }
+            }
         } catch (Exception e) {
-            LOGGER.warn("handle is interrupted.");
+            LOGGER.warn("handle is interrupted.", e);
             return CommandStatus.Fail;
         }
         return CommandStatus.Continue;

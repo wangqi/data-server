@@ -31,7 +31,7 @@ public class AdCommandController implements Controller{
         AdRequestCountryCommand countryCommand = new AdRequestCountryCommand();
         AdRequestUSDCommand usdCommand = new AdRequestUSDCommand();
         AdRequestUserCommand userCommand = new AdRequestUserCommand();
-        AdRequestUIDCommand uidCommand = new AdRequestUIDCommand();
+        AdRequestGameRoleCommand gameRoleCommand = new AdRequestGameRoleCommand();
         AdRequestDBCommand dbCommand = new AdRequestDBCommand();
         AdRequestLogCommand logCommand = new AdRequestLogCommand();
 
@@ -47,7 +47,7 @@ public class AdCommandController implements Controller{
         commandChain.add(countryCommand);
         commandChain.add(usdCommand);
         commandChain.add(userCommand);
-        commandChain.add(uidCommand);
+        commandChain.add(gameRoleCommand);
 
         commandChain.add(afMatCommand);
         commandChain.add(afClickInstallIntervalCommand);

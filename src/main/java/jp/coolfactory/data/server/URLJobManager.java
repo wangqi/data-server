@@ -5,14 +5,24 @@ package jp.coolfactory.data.server; /**
 import jp.coolfactory.data.Constants;
 import jp.coolfactory.data.Version;
 import jp.coolfactory.data.db.DBUtil;
+import jp.coolfactory.data.module.AdRequest;
 import jp.coolfactory.data.module.SQLRequest;
+import jp.coolfactory.data.util.StringUtil;
+import jp.coolfactory.data.util.URLUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,9 +32,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class URLJobManager implements ServletContextListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(URLJobManager.class);
-    private static final int DEFAULT_DRAIN_SIZE = 10;
-    private static final int DEFAULT_WAIT_SECOND = 5;
-    private BlockingQueue<Runnable> queue = new LinkedBlockingQueue<>();
+    private static final int DEFAULT_DRAIN_SIZE = 20;
+    private BlockingQueue<AdRequest> queue = new LinkedBlockingQueue<>();
     private ExecutorService service;
 
     // Public constructor is required by servlet spec
@@ -36,7 +45,7 @@ public class URLJobManager implements ServletContextListener {
      *
      * @param req
      */
-    public void submitRequest(Runnable req) {
+    public void submitRequest(AdRequest req) {
         try {
             if ( req != null )
                 queue.put(req);
@@ -64,13 +73,16 @@ public class URLJobManager implements ServletContextListener {
                             LOGGER.info("URLWorker is shutdown.");
                             break;
                         } else {
-                            ArrayList<Runnable> list = new ArrayList<>();
+                            ArrayList<AdRequest> list = new ArrayList<>(DEFAULT_DRAIN_SIZE);
                             //If no objects avaiable, then wait
                             list.add(queue.take());
                             queue.drainTo(list, DEFAULT_DRAIN_SIZE);
-                            for ( Runnable runnable : list ) {
-                                runnable.run();
+                            ArrayList<String> sqlList = new ArrayList<>(DEFAULT_DRAIN_SIZE);
+                            for ( AdRequest req : list ) {
+                                sendPostback(req);
+                                sqlList.add(req.toPostbackSQL());
                             }
+                            DBUtil.sqlBatch(sqlList);
                             //TODO Add CouldWatch here if necessary.
                             LOGGER.info("Post " + list.size() + " requests to server. ");
                         }
@@ -89,6 +101,51 @@ public class URLJobManager implements ServletContextListener {
          Application Server shuts down.
       */
         service.shutdownNow();
+    }
+
+    /**
+     * Send back the postback URL
+     */
+    public static final int sendPostback(AdRequest req) {
+        String postback = req.getPostback();
+        try {
+            if ( StringUtil.isNotEmptyString(postback) ) {
+                LOGGER.info("Resend to postback to " + postback);
+                String postbackEncoded = URLUtil.encodeURL(postback);
+                LOGGER.info("Encode postback to " + postbackEncoded);
+                URL url = new URL(postbackEncoded);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.setRequestProperty("User-Agent", "antifraud/1.0");
+                int responseCode = conn.getResponseCode();
+                StringBuffer response = new StringBuffer();
+                if ( responseCode > 200 ) {
+                    LOGGER.warn("Failed to send postback. Response code: " + responseCode);
+                } else {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    String inputLine;
+                    while ((inputLine = in.readLine()) != null) {
+                        response.append(inputLine);
+                        if ( response.length()>100 ) {
+                            response.setLength(100);
+                            break;
+                        }
+                    }
+                    in.close();
+                }
+                req.setPostback_code(responseCode);
+                req.setPostback_desc(response.toString());
+                return responseCode;
+            } else {
+                LOGGER.warn("postback param does not exist");
+            }
+        } catch (MalformedURLException e) {
+            LOGGER.warn("Malformed postback url: " + postback);
+        } catch (Exception e) {
+            LOGGER.warn("Failed to connect to postback url: " + postback, e);
+        } finally {
+        }
+        return -1;
     }
 
 }
