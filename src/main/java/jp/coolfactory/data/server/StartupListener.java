@@ -5,6 +5,7 @@ import jp.coolfactory.data.Version;
 import jp.coolfactory.data.controller.AdAppController;
 import jp.coolfactory.data.controller.AdCommandController;
 import jp.coolfactory.data.controller.AdParamMapController;
+import jp.coolfactory.data.util.ConfigUtil;
 import org.apache.log4j.xml.DOMConfigurator;
 
 import javax.servlet.ServletContextEvent;
@@ -22,6 +23,9 @@ public class StartupListener implements ServletContextListener {
         System.out.println("================================================================================");
         System.out.println("    DataServer & AntiFraud ("+ Version.VERSION+") builds at: " + Version.BUILD_DATE);
         System.out.println("================================================================================");
+
+        //Initialize the config here
+        ConfigUtil.initGlobalConfig();
 
         //Initialize the controller here.
         AdParamMapController.getInstance().init();

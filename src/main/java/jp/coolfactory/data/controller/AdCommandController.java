@@ -27,6 +27,7 @@ public class AdCommandController implements Controller{
     public void init() {
         //DataServer
         AdRequestIDCommand idCommand = new AdRequestIDCommand();
+        AdRequestIPCommand ipCommand = new AdRequestIPCommand();
         AdRequestCountryCommand countryCommand = new AdRequestCountryCommand();
         AdRequestUSDCommand usdCommand = new AdRequestUSDCommand();
         AdRequestUserCommand userCommand = new AdRequestUserCommand();
@@ -42,6 +43,7 @@ public class AdCommandController implements Controller{
         AfPostbackCommand afPostbackCommand = new AfPostbackCommand();
 
         commandChain.add(idCommand);
+        commandChain.add(ipCommand);
         commandChain.add(countryCommand);
         commandChain.add(usdCommand);
         commandChain.add(userCommand);
