@@ -32,6 +32,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class URLJobManager implements ServletContextListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(URLJobManager.class);
+    private static final Logger FRAUD_LOGGER = LoggerFactory.getLogger("fraud_log");
     private static final int DEFAULT_DRAIN_SIZE = 20;
     private BlockingQueue<AdRequest> queue = new LinkedBlockingQueue<>();
     private ExecutorService service;
@@ -144,6 +145,7 @@ public class URLJobManager implements ServletContextListener {
         } catch (Exception e) {
             LOGGER.warn("Failed to connect to postback url: " + postback, e);
         } finally {
+            FRAUD_LOGGER.info(req.toString());
         }
         return -1;
     }

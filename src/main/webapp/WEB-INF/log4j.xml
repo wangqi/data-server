@@ -40,6 +40,16 @@
         </layout>
     </appender>
 
+    <appender name="fraud_file" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="append" value="true" />
+        <param name="datePattern" value="_yyyy-MM-dd" />
+        <param name="file" value="/var/log/tomcat8/ad_fraud.log" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d{yyyy-MM-dd HH:mm:ss}\t%m%n" />
+        </layout>
+    </appender>
+
     <appender name="install_file" class="org.apache.log4j.DailyRollingFileAppender">
         <param name="append" value="true" />
         <param name="datePattern" value="_yyyy-MM-dd" />
@@ -79,6 +89,11 @@
                    value="%d{yyyy-MM-dd HH:mm:ss}\t%m%n" />
         </layout>
     </appender>
+
+    <logger name="fraud_log">
+        <level value="info" />
+        <appender-ref ref="fraud_file" />
+    </logger>
 
     <logger name="install_log">
         <level value="info" />
