@@ -22,12 +22,16 @@ table="ad_install ad_purchase ad_event ad_gameuser ad_register ad_click"
 # Timestamp (sortable AND readable)
 month=`date +"%Y_%m"`
 today=`date +"%Y_%m_%d"`
-last_hour=`date +"%Y-%m-%d %H:00:00" -d "2 hour ago"`
-this_hour=`date +"%Y-%m-%d %H:00:00" -d "1 hour ago"`
-stamp=`date +"%Y_%m_%d_%H"`
-#last_hour="2017-04-14 00:00:00"
-#this_hour="2017-04-15 00:00:00"
-#stamp="2017_04_14_24"
+last_hour=`date +"%Y-%m-%d 00:00:00" -d "1 day ago"`
+this_hour=`date +"%Y-%m-%d 00:00:00"`
+stamp=`date +"%Y_%m_%d_24" -d "1 day ago"`
+#last_hour="2017-04-16 00:00:00"
+#this_hour="2017-04-17 00:00:00"
+#stamp="2017_04_16_24"
+echo "last_hour=$last_hour"
+echo "this_hour=$this_hour"
+echo "stamp=$stamp"
+
 filename="$database-$stamp.sql"
 tmpfile="$month/$filename"
 
