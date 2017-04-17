@@ -21,16 +21,18 @@ table="ad_install ad_purchase ad_event ad_gameuser ad_register ad_click"
 
 # Timestamp (sortable AND readable)
 month=`date +"%Y_%m"`
-last_hour=`date +"%Y-%m-%d %H:00:00" -d  "1 hour ago"`
-this_hour=`date +"%Y-%m-%d %H:00:00"`
-#last_hour="2017-03-06 00:00:00"
-#this_hour="2017-03-10 00:00:00"
+today=`date +"%Y_%m_%d"`
+last_hour=`date +"%Y-%m-%d %H:00:00" -d "2 hour ago"`
+this_hour=`date +"%Y-%m-%d %H:00:00" -d "1 hour ago"`
 stamp=`date +"%Y_%m_%d_%H"`
+#last_hour="2017-04-14 00:00:00"
+#this_hour="2017-04-15 00:00:00"
+#stamp="2017_04_14_24"
 filename="$database-$stamp.sql"
 tmpfile="$month/$filename"
 
 backup() {
-    echo "backup data"
+    echo "backup data between $last_hour and $this_hour"
     # Define our filenames
     object="$bucket/$stamp/$filename"
 
@@ -51,12 +53,25 @@ backup() {
 }
 
 restore() {
+    cd /data/scripts
     echo "restore data"
     url="https://s3.cn-north-1.amazonaws.com.cn/qiku-db-sync/$tmpfile.gz"
     echo "url: $url"
     curl "$url" -O "$filename.gz"
     gunzip -f "$filename.gz"
     mysql -uroot -pr00t1234 -h qikudb.c2v07yqpyqzr.ap-northeast-1.rds.amazonaws.com $database < "$filename"
+    mv "$filename" log/
+    gzip log/"$filename"
+}
+
+manual_load() {
+    cd /data/scripts
+    echo "manual load sql into database: $1"
+    for sql_file in log/$database-$1_*.sql
+    do
+        echo "reimport $sql_file"
+        mysql -uroot -pr00t1234 -h qikudb.c2v07yqpyqzr.ap-northeast-1.rds.amazonaws.com $database < $sql_file
+    done
 }
 
 if [ "$1" = "backup" ]
@@ -65,6 +80,9 @@ then
 elif [ "$1" = 'restore' ]
 then
     restore
+elif [ "$1" = 'manual_load' ]
+then
+    manual_load $2
 else
     echo "unknown command $1"
 fi

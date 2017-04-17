@@ -1791,6 +1791,16 @@ public class AdRequest implements SQLRequest {
                 valueBuf.append("'{postback_desc}',");
                 map.put("postback_desc", StringUtil.validSQLInput(postback_desc));
             }
+            if (StringUtil.isNotEmptyString(status) ) {
+                buf.append("status,");
+                valueBuf.append("'{status}',");
+                map.put("status", StringUtil.validSQLInput(status));
+            }
+            if (StringUtil.isNotEmptyString(status_code) ) {
+                buf.append("status_code,");
+                valueBuf.append("'{status_code}',");
+                map.put("status_code", StringUtil.validSQLInput(status_code));
+            }
             buf.deleteCharAt(buf.length()-1);
             buf.append(") values ");
             valueBuf.deleteCharAt(valueBuf.length()-1);

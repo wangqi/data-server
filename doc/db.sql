@@ -187,12 +187,17 @@ create table ad_postback (
   google_aid varchar(100) DEFAULT NULL,
   ip_from int(10) unsigned zerofill,
   ip_to  int(10) unsigned zerofill,
+  status varchar(50) DEFAULT NULL,
+  status_code varchar(20) DEFAULT NULL,
   postback_code int(11) DEFAULT 0,
   postback_desc varchar(100),
   key id (stat_id),
   key created (created),
   key aid ( ios_ifa, google_aid )
 ) default character set=utf8mb4 collate utf8mb4_general_ci;
+
+alter table ad_postback add column status varchar(50) default null;
+alter table ad_postback add column status_code varchar(20) default null;
 
 drop table ad_install;
 create table ad_install (
