@@ -159,7 +159,7 @@ public class PostbackServlet extends HttpServlet {
             req.setAf_site_id( req.getSite_id() );
         }
         req.setAf_camp_id(getParamValue(request,source, "af_camp_id"));
-        req.setPostback(getParamValue(request,source, "postback"));
+        req.setPostback(getParamValue(request,source, "postback", true));
 
         //Call the chain to process the request.
         AdCommandController.getInstance().handle(req);
@@ -218,6 +218,21 @@ public class PostbackServlet extends HttpServlet {
         }
         if (StringUtil.isNotEmptyString(value) ) {
             value = value.toLowerCase();
+        }
+        return value;
+    }
+
+    private String getParamValue(HttpServletRequest request, String source, String stdParamName, boolean reserveCase) {
+        String value = request.getParameter(AdParamMapController.getInstance().translateStdName(source, stdParamName));
+        try {
+            if ( value !=null )
+                value = URLDecoder.decode(value, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+        }
+        if ( !reserveCase ) {
+            if (StringUtil.isNotEmptyString(value)) {
+                value = value.toLowerCase();
+            }
         }
         return value;
     }
