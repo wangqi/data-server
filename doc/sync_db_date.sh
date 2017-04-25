@@ -63,7 +63,13 @@ restore() {
     echo "url: $url"
     #curl --retry 100 --retry-delay 1 --connect-timeout 30 "$url" -O "$filename.gz"
     rm -f "$filename.gz"
-    wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 "$url" -O "$filename.gz"
+    while [ 1 ]; do
+        #wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 "$url" -O "$filename.gz"
+        wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 0 "$url" -O "$filename.gz"
+        if [ $? = 0 ]; then break; fi; # check return value, break if successful (0)
+        echo "retry wget $filename.gz"
+        sleep 1s;
+    done;
     gunzip -f "$filename.gz"
     mysql -uroot -pr00t1234 -h qikudb.c2v07yqpyqzr.ap-northeast-1.rds.amazonaws.com $database < "$filename"
     mv "$filename" log/
