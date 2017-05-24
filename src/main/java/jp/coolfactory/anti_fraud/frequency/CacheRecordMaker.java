@@ -1,10 +1,12 @@
 package jp.coolfactory.anti_fraud.frequency;
 
+import jp.coolfactory.data.module.AdRequest;
 import jp.coolfactory.data.util.DateUtil;
 import jp.coolfactory.data.util.IPUtil;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 
 /**
@@ -22,29 +24,25 @@ public interface CacheRecordMaker {
      * @param params
      * @return
      */
-    default CacheRecord makeKey(HashMap<String, String> params) {
-        String site_id = params.get("site_id");
+    default CacheRecord makeKey(AdRequest params) {
+        String site_id = params.getSite_id();
         if ( site_id == null ) {
             return null;
         }
-        String device_ip = params.get("device_ip");
+        String device_ip = params.getInstall_ip();
         String device_ip_segment = device_ip;
         if ( device_ip == null ) {
             return null;
         } else {
-            device_ip_segment = IPUtil.formatIPPrefix(device_ip, 32);
+            device_ip_segment = IPUtil.formatIPPrefix(device_ip);
         }
         String key = site_id + "_" + device_ip_segment;
         String id = site_id + "_" + device_ip;
-        String createdStr = params.get("install_date");
-        if ( createdStr == null ) {
-            return null;
-        }
-        LocalDateTime createdDate = DateUtil.convertIOS2Date(createdStr);
+        ZonedDateTime createdDate = params.getInstall_time();
         if ( createdDate == null ) {
-            createdDate = LocalDateTime.now();
+            createdDate = ZonedDateTime.now();
         }
-        CacheRecord record = new CacheRecord(key, id, createdDate.toInstant(ZoneOffset.UTC).toEpochMilli());
+        CacheRecord record = new CacheRecord(key, id, createdDate.toInstant().toEpochMilli());
         return record;
     }
 

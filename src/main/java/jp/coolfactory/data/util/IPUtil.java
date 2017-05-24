@@ -13,7 +13,7 @@ public class IPUtil {
 
     private final static Logger LOGGER = Logger.getLogger(IPUtil.class.getName());
 
-    private static final int DEFAULT_IP_PREFIX_LEN = 24;
+    private static final int DEFAULT_IP_PREFIX_LEN = 18;
 
     private static final int NBITS = 32;
 

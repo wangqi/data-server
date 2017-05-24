@@ -20,6 +20,7 @@ public enum Status {
     FORBIDDEN_IP(700, "IP is in blacklist"),
     FORBIDDEN_IP_FREQ(710, "IP's freqency is suspicious"),
     FORBIDDEN_IP_PRXOY(720, "IP is proxy"),
+    FORBIDDEN_IP_SEG(730, "IP segment duplicate"),
     FORBIDDEN_INTERVAL(800, "Click to install is too quick");
 
     private int status;
