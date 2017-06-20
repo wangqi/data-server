@@ -106,6 +106,7 @@ public class AdRequest implements SQLRequest {
     private String af_camp_id;
     private Status af_status;
     private String postback;
+    private String attr1;
 
     public String getAccount_key() {
         return account_key;
@@ -831,6 +832,14 @@ public class AdRequest implements SQLRequest {
         this.postback = postback;
     }
 
+    public String getAttr1() {
+        return attr1;
+    }
+
+    public void setAttr1(String attr1) {
+        this.attr1 = attr1;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -1211,6 +1220,7 @@ public class AdRequest implements SQLRequest {
         sb.append("\t").append('"').append(format_str(af_site_id)).append('"');
         sb.append("\t").append('"').append(format_str(af_camp_id)).append('"');
         sb.append("\t").append('"').append(format_str(af_status)).append('"');
+        sb.append("\t").append('"').append(format_str(attr1)).append('"');
         sb.append("\t").append('"').append(format_str(postback)).append('"');
 
         return sb.toString();
@@ -1623,6 +1633,11 @@ public class AdRequest implements SQLRequest {
                 buf.append("pub_sub5,");
                 valueBuf.append("'{pub_sub5}',");
                 map.put("pub_sub5", StringUtil.validSQLInput(pub_sub5));
+            }
+            if (StringUtil.isNotEmptyString(attr1) ) {
+                buf.append("attr1,");
+                valueBuf.append("'{attr1}',");
+                map.put("attr1", StringUtil.validSQLInput(attr1));
             }
             if (StringUtil.isNotEmptyString(cost_model) ) {
                 buf.append("cost_model,");

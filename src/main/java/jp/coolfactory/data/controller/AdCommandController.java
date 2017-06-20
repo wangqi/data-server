@@ -42,6 +42,7 @@ public class AdCommandController implements Controller{
         AfCampaignCommand afCampaignCommand = new AfCampaignCommand();
         AfPostbackCommand afPostbackCommand = new AfPostbackCommand();
         AfIPSegmentCommand afIPSegmentCommand = new AfIPSegmentCommand();
+        AfTimeRangeCommand afTimeRangeCommand = new AfTimeRangeCommand();
 
         commandChain.add(idCommand);
         commandChain.add(ipCommand);
@@ -51,6 +52,7 @@ public class AdCommandController implements Controller{
         commandChain.add(gameRoleCommand);
 
         commandChain.add(afMatCommand);
+        commandChain.add(afTimeRangeCommand);
         commandChain.add(afCampaignCommand);
         commandChain.add(afIPFilterCommand);
         commandChain.add(afClickInstallIntervalCommand);

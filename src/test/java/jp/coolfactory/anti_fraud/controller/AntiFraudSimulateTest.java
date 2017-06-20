@@ -38,6 +38,16 @@ import static org.junit.Assert.*;
      and publisher_name = 'Appier'
      and site_name = '戦艦帝国-android-jp'
      group by 1, 2, 3;
+
+    Use the following SQL to export simulation test records
+         select site_id, site_name, i.country_code, i.status, i.status_code, device_brand, device_carrier, device_model, lang, ip install_ip, click_ip, status, ios_ifa, ios_ifv, google_aid,
+         os_version, publisher_id, publisher_name, tracking_id, i.region_name region, click_time click_date, created install_date, os_jailbroke,
+         l.country_name, l.region_name, l.city_name, l.isp, l.domain, l.net_speed
+         from app_data.ad_install i, ip.ip2location l
+         where created>="2017-06-18" and created<"2017-06-19"
+         and i.ip_from = l.ip_from
+         and publisher_name = 'Appier'
+         and site_name = '戦艦帝国-IOS-JP';
  *
  *
  */
@@ -58,8 +68,10 @@ public class AntiFraudSimulateTest {
         AfCampaignCommand afCampaignCommand = new AfCampaignCommand();
         AfPostbackCommand afPostbackCommand = new AfPostbackCommand();
         AfIPSegmentCommand afIPSegmentCommand = new AfIPSegmentCommand();
+        AfTimeRangeCommand afTimeRangeCommand = new AfTimeRangeCommand();
 
         commandChain.add(afMatCommand);
+        commandChain.add(afTimeRangeCommand);
         commandChain.add(afCampaignCommand);
         commandChain.add(afIPFilterCommand);
         commandChain.add(afClickInstallIntervalCommand);
@@ -94,7 +106,7 @@ public class AntiFraudSimulateTest {
     public void evaluateInstall() throws Exception {
         {
             System.out.println("--------- Appier -----------");
-            List<AdRequest> records = readRecordsFromCSV("/appier_20170518-0523.csv", "\t");
+            List<AdRequest> records = readRecordsFromCSV("/appier_20170618-0619.csv", "\t");
             Map groupByStatus  = records.stream()
                     .map(record -> handle(record))
                     .collect(
