@@ -1,9 +1,12 @@
 package jp.coolfactory.anti_fraud.frequency;
 
 
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeSet;
+import java.util.logging.Logger;
 
 /**
  * It manage the CacheRecord in a HashMap and manage the timeout manually. It's for test only.
@@ -15,6 +18,7 @@ import java.util.TreeSet;
  * Created by wangqi on 27/12/2016.
  */
 public class InternalFreqManager implements FrequencyManager {
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(InternalFreqManager.class);
 
     //The interval in seconds that we do statistic for same IP prefix/site_id records
     private int intervalSeconds = 86400;
@@ -63,29 +67,34 @@ public class InternalFreqManager implements FrequencyManager {
      */
     @Override
     public RecordStatus check(CacheRecord record) {
-        TreeSet<CacheRecord> set = cache.get(record.getKey());
-        if (set == null) {
-            set = new TreeSet<CacheRecord>();
-            cache.put(record.getKey(), set);
-        }
-        ArrayList<CacheRecord> oldRecords = new ArrayList<CacheRecord>();
-        for (CacheRecord that: set ) {
-            int diff = (int)((record.getCreated() - that.getCreated())/1000);
-            if ( diff > this.intervalSeconds ) {
-                oldRecords.add(that);
-            } else {
-                //In an ordered Set, if the current record is less than threshold, it's no need to check further.
-                break;
+        if ( record != null ) {
+            TreeSet<CacheRecord> set = cache.get(record.getKey());
+            if (set == null) {
+                set = new TreeSet<CacheRecord>();
+                cache.put(record.getKey(), set);
             }
-        }
-        set.removeAll(oldRecords);
-        set.add(record);
-        if ( set.size() < suspicious_threshold ) {
-            return RecordStatus.OK;
-        } else if ( set.size() < forbidden_threshold ) {
-            return RecordStatus.SUSPICIOUS;
+            ArrayList<CacheRecord> oldRecords = new ArrayList<CacheRecord>();
+            for (CacheRecord that : set) {
+                int diff = (int) ((record.getCreated() - that.getCreated()) / 1000);
+                if (diff > this.intervalSeconds) {
+                    oldRecords.add(that);
+                } else {
+                    return RecordStatus.OK;
+                    //In an ordered Set, if the current record is less than threshold, it's no need to check further.
+                }
+            }
+            set.removeAll(oldRecords);
+            set.add(record);
+            if (set.size() < suspicious_threshold) {
+                return RecordStatus.OK;
+            } else if (set.size() < forbidden_threshold) {
+                return RecordStatus.SUSPICIOUS;
+            } else {
+                return RecordStatus.FORBIDDEN;
+            }
         } else {
-            return RecordStatus.FORBIDDEN;
+            LOGGER.warn("The CacheRecord is null.");
+            return RecordStatus.OK;
         }
     }
 

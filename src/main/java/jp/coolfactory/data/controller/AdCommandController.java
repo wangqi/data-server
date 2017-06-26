@@ -52,7 +52,7 @@ public class AdCommandController implements Controller{
         commandChain.add(gameRoleCommand);
 
         commandChain.add(afMatCommand);
-        commandChain.add(afTimeRangeCommand);
+//        commandChain.add(afTimeRangeCommand);
         commandChain.add(afCampaignCommand);
         commandChain.add(afIPFilterCommand);
         commandChain.add(afClickInstallIntervalCommand);

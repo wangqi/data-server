@@ -42,29 +42,31 @@ public class AdRequestIPCommand implements Handler<AdRequest> {
     public CommandStatus handle(AdRequest adRequest) {
         try {
             String installIP = adRequest.getInstall_ip();
-            IPResult result = ipLocation.IPQuery(installIP);
-            if ( result != null ) {
-                String countryCode = result.getCountryShort();
+            if ( StringUtil.isNotEmptyString(installIP) ) {
+                IPResult result = ipLocation.IPQuery(installIP);
+                if ( result != null ) {
+                    String countryCode = result.getCountryShort();
 //                String countryName = result.getCountryLong();
-                String regionName = result.getRegion();
-                String cityName = result.getCity();
+                    String regionName = result.getRegion();
+                    String cityName = result.getCity();
 //                String isp = result.getISP();
 //                String domain = result.getDomain();
-                adRequest.setCountry_code(countryCode);
-                adRequest.setRegion_name(regionName);
-                adRequest.setCity_code(cityName);
-                adRequest.setIp_from(result.getIp_from());
-                adRequest.setIp_to(result.getIp_to());
-            } else {
-                LOGGER.warn("Didn't find ip data for " + adRequest.getInstall_ip());
-            }
-            ProxyResult proxyResult = ipProxy.GetAll(installIP);
-            int isProxy = proxyResult.Is_Proxy;
-            String proxyType = proxyResult.Proxy_Type;
-            adRequest.setIs_proxy(isProxy);
-            if (StringUtil.isNotEmptyString(proxyType)) {
-                if ( ! "-".equals(proxyType) ) {
-                    adRequest.setProxy_type(proxyType);
+                    adRequest.setCountry_code(countryCode);
+                    adRequest.setRegion_name(regionName);
+                    adRequest.setCity_code(cityName);
+                    adRequest.setIp_from(result.getIp_from());
+                    adRequest.setIp_to(result.getIp_to());
+                } else {
+                    LOGGER.warn("Didn't find ip data for " + adRequest.getInstall_ip());
+                }
+                ProxyResult proxyResult = ipProxy.GetAll(installIP);
+                int isProxy = proxyResult.Is_Proxy;
+                String proxyType = proxyResult.Proxy_Type;
+                adRequest.setIs_proxy(isProxy);
+                if (StringUtil.isNotEmptyString(proxyType)) {
+                    if ( ! "-".equals(proxyType) ) {
+                        adRequest.setProxy_type(proxyType);
+                    }
                 }
             }
         } catch (Exception e) {
