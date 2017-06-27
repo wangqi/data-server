@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 public class AfPostbackCommand implements Handler<AdRequest> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AfPostbackCommand.class);
+    private final static org.apache.log4j.Logger POSTBACK_LOGGER = org.apache.log4j.Logger.getLogger("postback_log");
 
     public AfPostbackCommand() {
     }
@@ -42,12 +43,15 @@ public class AfPostbackCommand implements Handler<AdRequest> {
                         URLJobManager jobManager = (URLJobManager)Version.CONTEXT.get(Constants.URL_JOB_MANAGER);
                         jobManager.submitRequest(adRequest);
                     }
+                } else {
+                    POSTBACK_LOGGER.info(adRequest + "\taf_status is null or not OK.");
                 }
             } else {
                 LOGGER.warn("adRequest is null.");
             }
         } catch (Exception e) {
             LOGGER.warn("Failed to process stat_id", e);
+            POSTBACK_LOGGER.info(adRequest + "\tFailed to send postback due to: "+e.getMessage());
             return CommandStatus.Fail;
         }
         return CommandStatus.Continue;

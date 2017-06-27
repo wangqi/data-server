@@ -155,7 +155,7 @@ public class PostbackServlet extends HttpServlet {
         req.setOrder_id(getParamValue(request,source, "order_id"));
         req.setAf_site_id(getParamValue(request,source, "af_site_id"));
         if ( StringUtil.isEmptyString(req.getAf_site_id()) ) {
-            LOGGER.info("'af_site_id' is empty. request: " + req);
+            LOGGER.info("'af_site_id' is empty. request: " + req + ", fallback to: " + req.getSite_id());
             req.setAf_site_id( req.getSite_id() );
         }
         req.setAf_camp_id(getParamValue(request,source, "af_camp_id"));

@@ -90,6 +90,16 @@
         </layout>
     </appender>
 
+    <appender name="postback_file" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="append" value="true" />
+        <param name="datePattern" value="_yyyy-MM-dd" />
+        <param name="file" value="/var/log/tomcat8/ad_postback.log" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d{yyyy-MM-dd HH:mm:ss}\t%m%n" />
+        </layout>
+    </appender>
+
     <logger name="fraud_log">
         <level value="info" />
         <appender-ref ref="fraud_file" />
@@ -118,6 +128,11 @@
     <logger name="access_log">
         <level value="info" />
         <appender-ref ref="access_file" />
+    </logger>
+
+    <logger name="postback_log">
+        <level value="info" />
+        <appender-ref ref="postback_file" />
     </logger>
 
     <root>

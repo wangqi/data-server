@@ -33,6 +33,8 @@ public class URLJobManager implements ServletContextListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(URLJobManager.class);
     private static final Logger FRAUD_LOGGER = LoggerFactory.getLogger("fraud_log");
+    private final static org.apache.log4j.Logger POSTBACK_LOGGER = org.apache.log4j.Logger.getLogger("postback_log");
+
     private static final int DEFAULT_DRAIN_SIZE = 20;
     private BlockingQueue<AdRequest> queue = new LinkedBlockingQueue<>();
     private ExecutorService service;
@@ -136,14 +138,18 @@ public class URLJobManager implements ServletContextListener {
                 }
                 req.setPostback_code(responseCode);
                 req.setPostback_desc(response.toString());
+                POSTBACK_LOGGER.info(req+"\tsucceed");
                 return responseCode;
             } else {
                 LOGGER.warn("postback param does not exist");
+                POSTBACK_LOGGER.info(req+"\tpostback url empty");
             }
         } catch (MalformedURLException e) {
             LOGGER.warn("Malformed postback url: " + postback);
+            POSTBACK_LOGGER.info(req+"\tpostback url malformed");
         } catch (Exception e) {
             LOGGER.warn("Failed to connect to postback url: " + postback, e);
+            POSTBACK_LOGGER.info(req+"\t"+e.getMessage());
         } finally {
             FRAUD_LOGGER.info(req.toString());
         }
