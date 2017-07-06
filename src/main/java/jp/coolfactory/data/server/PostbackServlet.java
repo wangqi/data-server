@@ -93,7 +93,8 @@ public class PostbackServlet extends HttpServlet {
         req.setClick_ip(getParamValue(request,source, "click_ip"));
         req.setClick_time(getParamValueAsDate(request,source, "click_time"));
         req.setBundle_id(getParamValue(request,source, "bundle_id"));
-        req.setInstall_ip(getParamValue(request,source, "ip"));
+        String install_ip = getParamValue(request,source, "ip");
+        req.setInstall_ip(install_ip);
         req.setAgency_name(getParamValue(request,source, "agency_name"));
         req.setSite_id(getParamValue(request,source, "site_id"));
         req.setSite_name(getParamValue(request,source, "site_name"));
@@ -157,6 +158,10 @@ public class PostbackServlet extends HttpServlet {
         if ( StringUtil.isEmptyString(req.getAf_site_id()) ) {
             LOGGER.info("'af_site_id' is empty. request: " + req + ", fallback to: " + req.getSite_id());
             req.setAf_site_id( req.getSite_id() );
+        }
+        if ( StringUtil.isEmptyString(install_ip) ) {
+            req.setInstall_ip(req.getClick_ip());
+            LOGGER.warn("No install_ip found for request: " + req + ", fallback to: " + req.getClick_ip());
         }
         req.setAf_camp_id(getParamValue(request,source, "af_camp_id"));
         req.setPostback(getParamValue(request,source, "postback", true));
