@@ -42,7 +42,8 @@ public class AdCommandController implements Controller{
         AfCampaignCommand afCampaignCommand = new AfCampaignCommand();
         AfPostbackCommand afPostbackCommand = new AfPostbackCommand();
         AfIPSegmentCommand afIPSegmentCommand = new AfIPSegmentCommand();
-        AfTimeRangeCommand afTimeRangeCommand = new AfTimeRangeCommand();
+        // Disable mid-night filter
+//        AfTimeRangeCommand afTimeRangeCommand = new AfTimeRangeCommand();
 
         commandChain.add(idCommand);
         commandChain.add(ipCommand);

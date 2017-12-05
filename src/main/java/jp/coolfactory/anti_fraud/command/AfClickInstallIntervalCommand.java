@@ -35,6 +35,7 @@ public class AfClickInstallIntervalCommand implements Handler<AdRequest> {
     private static final Logger LOGGER = LoggerFactory.getLogger(AfClickInstallIntervalCommand.class);
 
     private final static int THRESHOLD = 30;
+    private final static int LONG_THRESHOLD = 86400;
 
     public AfClickInstallIntervalCommand() {
     }
@@ -54,7 +55,7 @@ public class AfClickInstallIntervalCommand implements Handler<AdRequest> {
                         Instant clickInstant = clickZonedDate.toInstant();
                         Instant installInstant = installZonedDate.toInstant();
                         int interval = (int)((installInstant.toEpochMilli()-clickInstant.toEpochMilli())/1000);
-                        if ( interval < THRESHOLD ) {
+                        if (( interval < THRESHOLD ) || (interval > LONG_THRESHOLD )) {
                             adRequest.setAf_status(Status.FORBIDDEN_INTERVAL);
                         }
                     }

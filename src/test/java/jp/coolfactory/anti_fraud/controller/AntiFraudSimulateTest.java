@@ -68,10 +68,11 @@ public class AntiFraudSimulateTest {
         AfCampaignCommand afCampaignCommand = new AfCampaignCommand();
         AfPostbackCommand afPostbackCommand = new AfPostbackCommand();
         AfIPSegmentCommand afIPSegmentCommand = new AfIPSegmentCommand();
-        AfTimeRangeCommand afTimeRangeCommand = new AfTimeRangeCommand();
+        // Disable mid-night filter
+//        AfTimeRangeCommand afTimeRangeCommand = new AfTimeRangeCommand();
 
         commandChain.add(afMatCommand);
-        commandChain.add(afTimeRangeCommand);
+//        commandChain.add(afTimeRangeCommand);
         commandChain.add(afCampaignCommand);
         commandChain.add(afIPFilterCommand);
         commandChain.add(afClickInstallIntervalCommand);
@@ -106,7 +107,7 @@ public class AntiFraudSimulateTest {
     public void evaluateInstall() throws Exception {
         {
             System.out.println("--------- Appier -----------");
-            List<AdRequest> records = readRecordsFromCSV("/appier_20170618-0619.csv", "\t");
+            List<AdRequest> records = readRecordsFromCSV("/youappi_20171101-1201.csv", "\t");
             Map groupByStatus  = records.stream()
                     .map(record -> handle(record))
                     .collect(
