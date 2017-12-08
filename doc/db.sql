@@ -26,7 +26,9 @@ create table ad_app (
 ) default character set=utf8mb4 collate utf8mb4_general_ci;
 
 insert into ad_app (app_key, app_name, src_timezone, dst_timezone, created) values
-  ('battleship2cn', '战舰帝国2-IOS-CN', 'Asia/Shanghai', 'Asia/Shanghai', now());
+  ('battleship2cn', '战舰帝国2-IOS-CN', 'UTC', 'Asia/Shanghai', now());
+insert into ad_app (app_key, app_name, src_timezone, dst_timezone, created) values
+  ('battleship2cn-android', '战舰帝国2-Android-CN', 'UTC', 'Asia/Shanghai', now());
 
 drop table ad_param_map;
 create table ad_param_map (
