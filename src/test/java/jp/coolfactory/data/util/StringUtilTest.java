@@ -169,4 +169,42 @@ public class StringUtilTest {
         assertEquals(base64_aid.length(), base64_ifa.length());
         assertEquals(base64_aid.length(), base64_ua_devicemodel_lang_os_ip.length());
     }
+
+    @Test
+    public void extractAttrFromJson() throws Exception {
+        String json = "[{\"event_item_id\":\"20552486\",\"quantity\":1,\"value\":120,\"value_usd\":1.1000000000000001,\"unit_price\":120,\"unit_price_usd\":1.1000000000000001,\"currency_code\":\"JPY\",\"attribute_sub1\":\"ja_JP@currency=JPY\",\"attribute_sub2\":null,\"attribute_sub3\":null,\"attribute_sub4\":null,\"attribute_sub5\":null,\"event_item_name\":\"50\\u30c0\\u30a4\\u30e4\",\"event_item_ref\":\"50\\u30c0\\u30a4\\u30e4\"}]\n";
+        String expect = "50\\u30c0\\u30a4\\u30e4";
+        String name = "event_item_ref" ;
+        String actual = StringUtil.extractAttrFromJson(name, json);
+        assertEquals(expect, actual);
+    }
+
+    @Test
+    public void extractAttrFromJsonEmpty() throws Exception {
+        String json = "[]\n";
+        String expect = "";
+        String name = "event_item_ref" ;
+        String actual = StringUtil.extractAttrFromJson(name, json);
+        assertEquals(expect, actual);
+    }
+
+    @Test
+    public void extractAttrFromJsonNotFound() throws Exception {
+//        String json = "[]\n";
+        String json = "[{\"event_item_id\":\"20552486\",\"quantity\":1,\"value\":120,\"value_usd\":1.1000000000000001,\"unit_price\":120,\"unit_price_usd\":1.1000000000000001,\"currency_code\":\"JPY\",\"attribute_sub1\":\"ja_JP@currency=JPY\",\"attribute_sub2\":null,\"attribute_sub3\":null,\"attribute_sub4\":null,\"attribute_sub5\":null,\"event_item_name\":\"50\\u30c0\\u30a4\\u30e4\",\"event_item_ref\":\"50\\u30c0\\u30a4\\u30e4\"}]\n";
+        String expect = "";
+        String name = "not_found" ;
+        String actual = StringUtil.extractAttrFromJson(name, json);
+        assertEquals(expect, actual);
+    }
+
+    @Test
+    public void extractAttrFromJsonNotFound2() throws Exception {
+        String json = "[]\n";
+        String expect = "";
+        String name = "not_found" ;
+        String actual = StringUtil.extractAttrFromJson(name, json);
+        assertEquals(expect, actual);
+    }
+
 }

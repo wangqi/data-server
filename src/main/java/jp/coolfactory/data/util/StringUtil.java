@@ -32,6 +32,34 @@ public class StringUtil {
     }
 
     /**
+     * Extract an attribute from JSON by using string methods.
+     * @param json
+     * @return
+     */
+    public static String extractAttrFromJson(String name, String json) {
+        if (StringUtil.isEmptyString(name)) {
+            return "";
+        }
+        if (StringUtil.isEmptyString(json)) {
+            return "";
+        }
+        int idx = json.indexOf(name);
+        if ( idx > 0 ) {
+            idx = idx + name.length();
+            int colon_idx = json.indexOf(':', idx);
+            if ( colon_idx > 0 ) {
+                // jump over "
+                colon_idx += 2;
+                int end_idx = json.indexOf('"', colon_idx);
+                if ( end_idx > 0 && colon_idx < end_idx ) {
+                    return json.substring(colon_idx, end_idx);
+                }
+            }
+        }
+        return "";
+    }
+
+    /**
      * Generate a Base64 of SHA-256 string
      * @param string
      * @return

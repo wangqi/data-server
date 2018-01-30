@@ -119,7 +119,8 @@ values
   (null, 'ip_to', 'ip_to'),
   (null, 'city_code', 'city_code'),
   (null, 'proxy_type', 'proxy_type'),
-  (null, 'install_time', 'install_time');
+  (null, 'install_time', 'install_time'),
+  (null, 'sku_id', 'sku_id'),
   (null, 'order_id', 'order_id');
 
 drop table ad_register;

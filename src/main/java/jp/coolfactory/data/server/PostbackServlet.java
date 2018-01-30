@@ -165,6 +165,13 @@ public class PostbackServlet extends HttpServlet {
         }
         req.setAf_camp_id(getParamValue(request,source, "af_camp_id"));
         req.setPostback(getParamValue(request,source, "postback", true));
+        // Parse the purchase event SKU from json
+        String event_items_json = getParamValue(request, source, "event_items_json");
+        String event_item_ref = StringUtil.extractAttrFromJson("event_item_ref", event_items_json);
+        if ( StringUtil.isNotEmptyString(event_item_ref) ) {
+            req.setAttr1(event_item_ref);
+            LOGGER.info("event_item_ref: " + event_item_ref);
+        }
 
         //Call the chain to process the request.
         AdCommandController.getInstance().handle(req);
