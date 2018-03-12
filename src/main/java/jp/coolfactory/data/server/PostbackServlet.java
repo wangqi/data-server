@@ -45,7 +45,6 @@ public class PostbackServlet extends HttpServlet {
         //Print the access log.
         printAccessLog(request);
 
-        HashMap<String, String> params = new HashMap<String, String>();
         String action = request.getParameter("action");
         if ( StringUtil.isNotEmptyString(action) ) {
             action = action.toLowerCase();
@@ -169,6 +168,7 @@ public class PostbackServlet extends HttpServlet {
         String event_items_json = getParamValue(request, source, "event_items_json");
         String event_item_ref = StringUtil.extractAttrFromJson("event_item_ref", event_items_json);
         if ( StringUtil.isNotEmptyString(event_item_ref) ) {
+            event_item_ref = StringUtil.parseUnicodeEscaped(event_item_ref, null);
             req.setAttr1(event_item_ref);
             LOGGER.info("event_item_ref: " + event_item_ref);
         }

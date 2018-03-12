@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -57,6 +59,49 @@ public class StringUtil {
             }
         }
         return "";
+    }
+
+    /**
+     * Parse the string like '\\u3423' to char
+     * @param str
+     * @param enc
+     * @return
+     */
+    public static String parseUnicodeEscaped(String str, String enc) {
+        String encoding = enc;
+        if ( StringUtil.isEmptyString(encoding) ) {
+            encoding = "utf8";
+        }
+        if ( StringUtil.isEmptyString(str) ) {
+            return "";
+        }
+        StringBuilder buf = new StringBuilder(20);
+        int idx = str.indexOf("\\u");
+        if ( idx > 0 ) {
+            buf.append(str.substring(0, idx));
+        } else if ( idx<0 ) {
+            // No escaped string found
+            return str;
+        }
+        int lastIdx = idx;
+        try {
+            while ( idx >= 0 ) {
+                int startIdx = idx + 2;
+                int endIdx = idx + 6;
+                if (endIdx <= str.length() && startIdx < endIdx) {
+                    int hexVal = Integer.parseInt(str.substring(startIdx, endIdx), 16);
+                    buf.append((char) hexVal);
+                }
+                lastIdx = endIdx;
+                idx = str.indexOf("\\u", endIdx);
+            }
+        } catch ( Exception e ) {
+            LOGGER.warn("Failed to parse unicode escaped string: " + str + ", Error: " + e.getMessage());
+        }
+        if ( lastIdx>0 && lastIdx<str.length() ) {
+            buf.append(str.substring(lastIdx));
+        }
+        return buf.toString();
     }
 
     /**
@@ -187,5 +232,61 @@ public class StringUtil {
      */
     public static String validSQLInput(String sql) {
         return ESAPI.encoder().encodeForSQL(new MySQLCodec(MySQLCodec.Mode.ANSI), sql);
+    }
+
+    /**
+     * Parse the parameters of a URL to HashMap
+     * @param url
+     * @return
+     * @throws UnsupportedEncodingException
+     */
+    public static Map<String, String[]> url2Map(URL url) throws UnsupportedEncodingException {
+        final Map<String, String[]> query_pairs = new HashMap<String, String[]>();
+        final String query = url.getQuery();
+        if (StringUtil.isEmptyString(query)) {
+            return query_pairs;
+        }
+        final String[] pairs = query.split("&");
+        for (String pair : pairs) {
+            final int idx = pair.indexOf("=");
+            final String key = idx > 0 ? URLDecoder.decode(pair.substring(0, idx), "UTF-8") : pair;
+            final String value = idx > 0 && pair.length() > idx + 1 ? URLDecoder.decode(pair.substring(idx + 1), "UTF-8") : "";
+            if (!query_pairs.containsKey(key)) {
+                String[] values = new String[1];
+                values[0] = value;
+                query_pairs.put(key, values);
+            } else {
+                String[] oldValues = query_pairs.get(key);
+                String[] newValues = new String[oldValues.length+1];
+                System.arraycopy(oldValues, 0, newValues, 0, oldValues.length);
+                newValues[oldValues.length] = value;
+                query_pairs.put(key, newValues);
+            }
+        }
+        return query_pairs;
+    }
+
+    /**
+     * Parse the parameters of a URL to HashMap
+     * @param url
+     * @return
+     * @throws UnsupportedEncodingException
+     */
+    public static Map<String, String> url2MapSingle(URL url) throws UnsupportedEncodingException {
+        final Map<String, String> query_pairs = new HashMap<String, String>();
+        final String query = url.getQuery();
+        if (StringUtil.isEmptyString(query)) {
+            return query_pairs;
+        }
+        final String[] pairs = query.split("&");
+        for (String pair : pairs) {
+            final int idx = pair.indexOf("=");
+            final String key = idx > 0 ? URLDecoder.decode(pair.substring(0, idx), "UTF-8") : pair;
+            final String value = idx > 0 && pair.length() > idx + 1 ? URLDecoder.decode(pair.substring(idx + 1), "UTF-8") : "";
+            if (!query_pairs.containsKey(key)) {
+                query_pairs.put(key, value);
+            }
+        }
+        return query_pairs;
     }
 }

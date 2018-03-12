@@ -4,7 +4,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -207,4 +209,93 @@ public class StringUtilTest {
         assertEquals(expect, actual);
     }
 
+    @Test
+    public void parseUnicodeEscaped() throws Exception {
+        String str = "50\\u30c0\\u30a4\\u30e4";
+        String expect = "50ダイヤ";
+        String actual = StringUtil.parseUnicodeEscaped(str, null);
+        assertEquals(expect, actual);
+    }
+
+    @Test
+    public void parseUnicodeEscaped2() throws Exception {
+        String str = "50\\u30c0\\u30a4\\u30e4 Hello";
+        String expect = "50ダイヤ Hello";
+        String actual = StringUtil.parseUnicodeEscaped(str, null);
+        assertEquals(expect, actual);
+    }
+
+    @Test
+    public void parseUnicodeEscaped3() throws Exception {
+        String str = "\\u30c0\\u30a4\\u30e4";
+        String expect = "ダイヤ";
+        String actual = StringUtil.parseUnicodeEscaped(str, null);
+        assertEquals(expect, actual);
+    }
+
+    @Test
+    public void parseUnicodeEscaped4() throws Exception {
+        String str = "";
+        String expect = "";
+        String actual = StringUtil.parseUnicodeEscaped(str, null);
+        assertEquals(expect, actual);
+    }
+
+    @Test
+    public void parseUnicodeEscaped5() throws Exception {
+        String str = "你好";
+        String expect = "你好";
+        String actual = StringUtil.parseUnicodeEscaped(str, null);
+        assertEquals(expect, actual);
+    }
+
+    @Test
+    public void url2Map() throws Exception {
+        String url = "https://lnk0.com/El8Qh8?t=1&t=2";
+        Map<String, String[]> params = StringUtil.url2Map(new URL(url));
+        String[] expectedValues = new String[]{"1", "2"};
+        assertArrayEquals(expectedValues, params.get("t"));
+    }
+
+    @Test
+    public void url2MapSingle() throws Exception {
+        String url = "https://lnk0.com/El8Qh8?t=1&t=2";
+        Map<String, String> params = StringUtil.url2MapSingle(new URL(url));
+        String expectedValues = "1";
+        assertEquals(expectedValues, params.get("t"));
+    }
+
+    @Test
+    public void url2Map2() throws Exception {
+        String url = "https://lnk0.com/El8Qh8?t1=1&t2=2";
+        Map<String, String[]> params = StringUtil.url2Map(new URL(url));
+        String[] expectedValues1 = new String[]{"1"};
+        String[] expectedValues2 = new String[]{"2"};
+        assertArrayEquals(expectedValues1, params.get("t1"));
+        assertArrayEquals(expectedValues2, params.get("t2"));
+    }
+
+    @Test
+    public void url2MapSingle2() throws Exception {
+        String url = "https://lnk0.com/El8Qh8?t1=1&t2=2";
+        Map<String, String> params = StringUtil.url2MapSingle(new URL(url));
+        String expectedValues1 = "1";
+        String expectedValues2 = "2";
+        assertEquals(expectedValues1, params.get("t1"));
+        assertEquals(expectedValues2, params.get("t2"));
+    }
+
+    @Test
+    public void url2Map3() throws Exception {
+        String url = "https://lnk0.com/El8Qh8";
+        Map<String, String[]> params = StringUtil.url2Map(new URL(url));
+        assertArrayEquals(null, params.get("t"));
+    }
+
+    @Test
+    public void url2MapSingle3() throws Exception {
+        String url = "https://lnk0.com/El8Qh8";
+        Map<String, String> params = StringUtil.url2MapSingle(new URL(url));
+        assertEquals(null, params.get("t"));
+    }
 }
