@@ -191,9 +191,9 @@ public class TalkingDataTrackingLink implements TrackingLink {
     public boolean isRedirected(Map<String, String> params) {
         String value = params.get("action");
         if ( StringUtil.isNotEmptyString(value) && value.equalsIgnoreCase("none") ) {
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
 
