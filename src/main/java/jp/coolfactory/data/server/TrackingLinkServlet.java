@@ -1,5 +1,15 @@
 package jp.coolfactory.data.server;
 
+import jp.coolfactory.data.Constants;
+import jp.coolfactory.data.Version;
+import jp.coolfactory.data.module.AdRequest;
+import jp.coolfactory.data.s2s.TalkingDataTrackingLink;
+import jp.coolfactory.data.s2s.TrackingLink;
+import jp.coolfactory.data.s2s.TrackingLinkRecord;
+import jp.coolfactory.data.s2s.TuneKeyParamNames;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -7,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -95,7 +106,7 @@ import java.util.Map;
 @WebServlet(name = "TrackingLinkServlet", urlPatterns = {"/tk"})
 public class TrackingLinkServlet extends HttpServlet {
 
-    private static String MAT_S2S_BASE_URL = "https://1.api-01.com/serve?action=click&response_format=json";
+    private static final Logger LOGGER = LoggerFactory.getLogger("track_log");
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
@@ -103,16 +114,34 @@ public class TrackingLinkServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
-        Map<String, String[]> maps = request.getParameterMap();
-        StringBuilder buf = new StringBuilder(200);
-        for (String paramName : maps.keySet()) {
-            buf.append(paramName).append(":").append(Arrays.toString(maps.get(paramName))).append("\n");
+        StringBuilder msgBuf = new StringBuilder(200);
+        try {
+            String forward_ip = request.getHeader("x-forwarded-for");
+            Map<String, String[]> maps = new HashMap<String, String[]>(request.getParameterMap());
+            maps.put("x-forwarded-for", new String[]{forward_ip});
+            TrackingLink trackingLink = new TalkingDataTrackingLink();
+            TrackingLinkRecord record = trackingLink.processTracking(maps);
+            URLJobManager jobManager = (URLJobManager) Version.CONTEXT.get(Constants.URL_JOB_MANAGER);
+            msgBuf.append(record.isRedirect()).append("\t").append(record.getMatS2SUrl()).append("\t").append(record.getThirdPartyS2SUrl());
+            // Send MAT message
+            AdRequest adReq = new AdRequest();
+            adReq.setPostback(record.getMatS2SUrl());
+            adReq.setTracking(true);
+            jobManager.submitRequest(adReq);
+            if ( record.isRedirect() ) {
+                response.sendRedirect(record.getThirdPartyS2SUrl());
+            } else {
+                //Notify third-party server
+                adReq = new AdRequest();
+                adReq.setPostback(record.getThirdPartyS2SUrl());
+                adReq.setTracking(true);
+                jobManager.submitRequest(adReq);
+            }
+        } catch (Exception e) {
+            msgBuf.append("\tError:").append(e.getMessage());
+        } finally {
+            LOGGER.info(msgBuf.toString());
         }
-        if (buf.length()==0) {
-            buf.append("OK");
-        }
-        response.getWriter().print(buf.toString());
-        response.getWriter().close();
     }
 
 }

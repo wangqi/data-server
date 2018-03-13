@@ -26,5 +26,11 @@ public interface TuneKeyParamNames {
     String TP_PROT = "tp_prot";
     String TP_HOST = "tp_host";
     String TP_PATH = "tp_path";
+    /**
+     * Note MAT also has a parameter called 'action'. It's either 'click' or 'impression'.
+     * The TalkingData's 'action' is used to indicate if it is a S2S request. If it's 'none', then no redirect will be replied.
+     */
+    String TP_ACTION = "action";
+    String TP_CHANNEL = "chn";
 
 }

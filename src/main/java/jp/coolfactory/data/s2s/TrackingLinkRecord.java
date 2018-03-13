@@ -38,10 +38,11 @@ public class TrackingLinkRecord {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder(200);
-        sb.append("").append(isRedirect);
-        sb.append("\t").append('"').append(matS2SUrl).append('"');
-        sb.append("\t").append('"').append(thirdPartyS2SUrl).append('"');
-        sb.append('\n');
+        sb.append("{\nTrackingLinkRecord:");
+        sb.append("isRedirect=").append(isRedirect);
+        sb.append("\n matS2SUrl=").append('"').append(matS2SUrl).append('"');
+        sb.append("\n thirdPartyS2SUrl=").append('"').append(thirdPartyS2SUrl).append("\"");
+        sb.append("\n}");
         return sb.toString();
     }
 

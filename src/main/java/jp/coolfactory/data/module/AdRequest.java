@@ -107,6 +107,17 @@ public class AdRequest implements SQLRequest {
     private Status af_status;
     private String postback;
     private String attr1;
+    /**
+     * I add a TrackingLink measure API, which will call the URLJobmanager to refresh MAT's server.
+     * However the URLJobmanager is designed for postback. So we need a field to differentiate the postback and tracking
+     * 2018-03-13
+     */
+    private boolean isTracking = false;
+
+
+    public boolean isTracking() { return isTracking; }
+
+    public void setTracking(boolean tracking) { isTracking = tracking; }
 
     public String getAccount_key() {
         return account_key;

@@ -19,70 +19,46 @@ public interface TrackingLink {
     /**
      * It's the base part of MAT's S2S tracking url.
      */
-    public static String MAT_BASE_URL = "https://{publisher_id}.api-01.com/serve?action=click&publisher_id={publisher_id}&site_id={site_id}";
+    public static String MAT_BASE_URL = "https://{publisher_id}.api-01.com/serve?action=click&publisher_id={publisher_id}&site_id={site_id}&response_format=json";
 
     /**
-     * First, get all third-party url param names by given Tune's MAT name, which are already configured in TuneKeyParamNames interface.
-     * Second, loop all possible names and get the url param values. It's a string array.
-     * If found, return the array. Otherwise, return an empty array
+     * Parse MAT's required parameters from param map. Because third-party system has their own parameter name, we
+     * map those names to MAT's. For example, TalkingData call IP field as 'click_ip' while MAT calls it 'device_ip'.
+     * We try to get the IP by 'click_ip' first, if it does not exist. We fall back to 'device_ip'.
+     * If no given parameter found, it will return an null
      *
      * @param tuneKey
+     * @param keyMap
      * @param params
-     * @return The String array which contains the param value. It may be an empty array but never be null.
+     * @return A string array with two elements. First element is the value, second is the final third-party key name.
      */
-    public default String[] parseTuneParam(String tuneKey, Map<String,String[]> params) {
-        String[] defaultValue = new String[0];
-        String[] thirdPartyNames = params.get(tuneKey);
-        if ( thirdPartyNames == null ) {
-            return defaultValue;
+    public default String[] parseTuneParamValue(String tuneKey, Map<String, String[]> keyMap, Map<String, String> params) {
+        /**
+         * Try to get device IP
+         * 1). Step 1, check if the URL contains 'click_ip', which is TalkingData's parameter
+         * 2). Step 2, if no click_ip, then check if the params contains 'device_ip' directly.
+         */
+        String[] thirdPartyKeys = keyMap.get(tuneKey);
+        String[] newThirdPartyKeys = null;
+        if ( thirdPartyKeys != null ) {
+            newThirdPartyKeys = new String[thirdPartyKeys.length+1];
+            System.arraycopy(thirdPartyKeys, 0, newThirdPartyKeys, 0, thirdPartyKeys.length);
+            newThirdPartyKeys[thirdPartyKeys.length] = tuneKey;
+        } else {
+            newThirdPartyKeys = new String[1];
+            newThirdPartyKeys[0] = tuneKey;
         }
-        for (String thirdPartyName : thirdPartyNames) {
-            String[] values = params.get(thirdPartyName);
-            if ( values != null && values.length>0 ) {
+        String[] values = new String[2];
+        for ( String keyName : newThirdPartyKeys ) {
+            String value = params.get(keyName.toLowerCase());
+            if ( StringUtil.isNotEmptyString(value) ) {
+                values[0] = value;
+                values[1] = keyName.toLowerCase();
                 return values;
             }
         }
-        return defaultValue;
-    }
-
-    /**
-     * First, get all third-party url param names by given Tune's MAT name, which are already configured in TuneKeyParamNames interface.
-     * Second, loop all possible names and get the url param values. It's a string array.
-     * If found, return the element of the array. Otherwise, return null
-     *
-     * @param tuneKey
-     * @param params
-     * @return The value for given param. Return null if not found
-     */
-    public default String parseTuneParamFirstValue(String tuneKey, Map<String,String[]> params) {
-        String[] values = parseTuneParam(tuneKey, params);
-        if ( values.length>0 ) {
-            return values[0];
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Use it to construct the MAT S2S measurement URL.
-     * Note, The 'publisher_id' and 'site_id' are mandatory in params
-     *
-     * @param params
-     * @return
-     */
-    public default String contructMATS2SLink(Map<String, String> params) {
-        if ( (!params.containsKey(TuneKeyParamNames.MAT_PUB_ID) || (!params.containsKey(TuneKeyParamNames.MAT_SITE_ID))))  {
-            LOGGER.error("No publisher_id or site_id found in params: ", params);
-        }
-        StringBuilder matS2SUrl = new StringBuilder(StringUtil.replaceKey(MAT_BASE_URL, params));
-        for ( String key : params.keySet() ) {
-            if (TuneKeyParamNames.MAT_PUB_ID.equalsIgnoreCase(key) || TuneKeyParamNames.MAT_SITE_ID.equalsIgnoreCase(key) ) {
-                continue;
-            } else {
-                matS2SUrl.append('&').append(key).append('=').append(params.get(key));
-            }
-        }
-        return matS2SUrl.toString();
+        LOGGER.info("No " + tuneKey + " found for contrctMATS2SLink");
+        return null;
     }
 
     /**
@@ -101,7 +77,7 @@ public interface TrackingLink {
                 String[] values = params.get(key);
                 if (values != null && values.length > 0) {
                     String value = values[0];
-                    singleValueParams.put(key, value);
+                    singleValueParams.put(key.toLowerCase(), value);
                 }
             }
             // Construct MAT and third-party tracking URL
@@ -116,6 +92,15 @@ public interface TrackingLink {
         }
         return record;
     }
+
+    /**
+     * Use it to construct the MAT S2S measurement URL.
+     * Note, The 'publisher_id' and 'site_id' are mandatory in params
+     *
+     * @param params
+     * @return
+     */
+    public String contructMATS2SLink(Map<String, String> params);
 
     /**
      * It's used to generate third-party tracking URL links. The sub-class will implement it.
