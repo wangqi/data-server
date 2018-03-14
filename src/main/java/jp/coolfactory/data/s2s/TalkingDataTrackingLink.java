@@ -3,7 +3,12 @@ package jp.coolfactory.data.s2s;
 import jp.coolfactory.data.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.jvm.hotspot.utilities.UnsupportedPlatformException;
 
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -194,6 +199,64 @@ public class TalkingDataTrackingLink implements TrackingLink {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Translate third-party's link to this server's format.
+     *
+     * @param thirdPartyLink
+     * @return
+     */
+    @Override
+    public String translateThirdPartyLink(String prot, String host, String path, String thirdPartyLink) {
+        StringBuilder buf = new StringBuilder(200);
+        try {
+            URL url = new URL(thirdPartyLink);
+            String tp_prot = url.getProtocol();
+            String tp_host = url.getHost();
+            String tp_path = url.getPath();
+            String tp_queryString = url.getQuery();
+            buf.append(prot).append("://").append(host);
+            if ( StringUtil.isNotEmptyString(path) ) {
+                if ( path.charAt(0) == '/' ) {
+                    buf.append(path);
+                } else {
+                    buf.append('/').append(path);
+                }
+            }
+            buf.append('?');
+            if ( !tp_prot.equalsIgnoreCase("https")) {
+                buf.append(TuneKeyParamNames.TP_PROT).append('=').append(tp_prot).append('&');
+            }
+            if ( !tp_host.equalsIgnoreCase("lnk0.com")) {
+                buf.append(TuneKeyParamNames.TP_HOST).append('=').append(tp_host).append('&');
+            }
+            if ( StringUtil.isNotEmptyString(tp_path)) {
+                buf.append(TuneKeyParamNames.TP_PATH).append('=');
+                if ( tp_path.charAt(0) == '/' ) {
+                    buf.append(tp_path.substring(1));
+                } else {
+                    buf.append(tp_path);
+                }
+                buf.append('&');
+            }
+            Map<String, String[]> params = StringUtil.url2Map(url);
+            for ( String key : params.keySet() ) {
+                String[] values = params.get(key);
+                for ( String value : values ) {
+                    buf.append(key).append('=').append(URLEncoder.encode(value, "utf-8")).append('&');
+                }
+            }
+            if (buf.charAt(buf.length()-1) == '&') {
+                buf.deleteCharAt(buf.length()-1);
+            }
+            return buf.toString();
+        } catch ( MalformedURLException e ) {
+            LOGGER.warn("The third-party URL is not in right format, ", e);
+        } catch ( UnsupportedEncodingException upe) {
+            LOGGER.warn("The third-party URL is not in right format, ", upe);
+        }
+        return buf.toString();
     }
 
 

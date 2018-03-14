@@ -116,4 +116,12 @@ public interface TrackingLink {
      */
     public boolean isRedirected(Map<String, String> params);
 
+    /**
+     * Translate third-party's link to this server's format.
+     *
+     * @param thirdPartyLink
+     * @return
+     */
+    public String translateThirdPartyLink(String prot, String host, String path, String thirdPartyLink);
+
 }
