@@ -207,7 +207,8 @@ public class TalkingDataTrackingLink implements TrackingLink {
      * @return
      */
     @Override
-    public String translateThirdPartyLink(String prot, String host, String path, String thirdPartyLink) {
+    public String translateThirdPartyLink(String prot, String host, String path,
+            String publisher_id, String site_id, String thirdPartyLink) {
         StringBuilder buf = new StringBuilder(200);
         try {
             URL url = new URL(thirdPartyLink);
@@ -229,6 +230,16 @@ public class TalkingDataTrackingLink implements TrackingLink {
             }
             if ( !tp_host.equalsIgnoreCase("lnk0.com")) {
                 buf.append(TuneKeyParamNames.TP_HOST).append('=').append(tp_host).append('&');
+            }
+            if ( StringUtil.isNotEmptyString(publisher_id) ) {
+                buf.append(TuneKeyParamNames.MAT_PUB_ID).append('=').append(publisher_id).append('&');
+            } else {
+                return "No publisher_id";
+            }
+            if ( StringUtil.isNotEmptyString(site_id) ) {
+                buf.append(TuneKeyParamNames.MAT_SITE_ID).append('=').append(site_id).append('&');
+            } else {
+                return "No site_id";
             }
             if ( StringUtil.isNotEmptyString(tp_path)) {
                 buf.append(TuneKeyParamNames.TP_PATH).append('=');

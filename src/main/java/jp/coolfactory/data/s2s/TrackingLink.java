@@ -122,6 +122,7 @@ public interface TrackingLink {
      * @param thirdPartyLink
      * @return
      */
-    public String translateThirdPartyLink(String prot, String host, String path, String thirdPartyLink);
+    public String translateThirdPartyLink(String prot, String host, String path,
+                                          String publisherId, String siteId, String thirdPartyLink);
 
 }

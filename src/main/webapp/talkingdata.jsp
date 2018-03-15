@@ -9,9 +9,11 @@
     String current_url = request.getRequestURL().toString();
     URL url = new URL(current_url);
     String inputURL = request.getParameter("inputURLField");
+    String publisher_id = request.getParameter("publisherIdField");
+    String site_id = request.getParameter("siteIdField");
     String outputURL = "Hello";
     if (inputURL != null) {
-        outputURL = tdLink.translateThirdPartyLink(url.getProtocol(), url.getHost(), "/tk", inputURL);
+        outputURL = tdLink.translateThirdPartyLink(url.getProtocol(), url.getHost(), "/tk", publisher_id, site_id, inputURL);
     }
 %>
 <!DOCTYPE html>
@@ -51,6 +53,23 @@
 <div class="m-grid m-grid--hor m-grid--root m-page">
     <div class="m-container m-container--fluid m-container--full-height" style="margin-top: 10%">
         <form class="m-form m-form--fit m-form--label-align-right" action="/talkingdata.jsp">
+            <div class="form-group m-form__group">
+                <label for="publisherIdField">
+                    选择渠道
+                </label>
+                <select class="form-control m-input" name="publisherIdField" id="publisherIdField">
+                    <option value="351244">今日头条</option>
+                </select>
+            </div>
+            <div class="form-group m-form__group">
+                <label for="siteIdField">
+                    选择游戏
+                </label>
+                <select class="form-control m-input" name="siteIdField" id="siteIdField">
+                    <option value="134022">帝国海战-IOS</option>
+                    <option value="138269">帝国海战-Android</option>
+                </select>
+            </div>
             <div class="m-portlet__body">
                 <div class="form-group m-form__group">
                     <label for="inputURLText"><h3>输入第三方地址</h3></label>

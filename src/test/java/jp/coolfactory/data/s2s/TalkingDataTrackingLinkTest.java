@@ -94,7 +94,7 @@ public class TalkingDataTrackingLinkTest {
         String url = "https://lnk0.com/El8Qh8?t=1&idfa=asdfas-23r2-sadfsdf0-34234&ip=111.222.333.444&chn=toutiao&useragent=iphone&action=none&clicktime=123412341234&x-forwarded-for=null&osversion=10.1&callback={callback_param}";
         String expected = "https://api.qiku.mobi/tk?tp_path=El8Qh8&t=1&idfa=asdfas-23r2-sadfsdf0-34234&ip=111.222.333.444&chn=toutiao&useragent=iphone&action=none&callback=%7Bcallback_param%7D&clicktime=123412341234&x-forwarded-for=null&osversion=10.1";
         TalkingDataTrackingLink tdLink = new TalkingDataTrackingLink();
-        String actual =tdLink.translateThirdPartyLink("https", "api.qiku.mobi", "tk", url);
+        String actual =tdLink.translateThirdPartyLink("https", "api.qiku.mobi", "tk", "123456", "4321", url);
         assertEquals(expected, actual);
     }
 }
