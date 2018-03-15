@@ -8,12 +8,18 @@
     TalkingDataTrackingLink tdLink = new TalkingDataTrackingLink();
     String current_url = request.getRequestURL().toString();
     URL url = new URL(current_url);
+    String path = url.getPath();
+    int index = path.lastIndexOf('/');
+    String new_path = "/tk";
+    if ( index > 0 ) {
+        new_path = path.substring(0, index)+"/tk";
+    }
     String inputURL = request.getParameter("inputURLField");
     String publisher_id = request.getParameter("publisherIdField");
     String site_id = request.getParameter("siteIdField");
     String outputURL = "Hello";
     if (inputURL != null) {
-        outputURL = tdLink.translateThirdPartyLink(url.getProtocol(), url.getHost(), "/tk", publisher_id, site_id, inputURL);
+        outputURL = tdLink.translateThirdPartyLink(url.getProtocol(), url.getHost(), new_path, publisher_id, site_id, inputURL);
     }
 %>
 <!DOCTYPE html>
@@ -51,8 +57,8 @@
 <!-- end::Head -->        <!-- end::Body -->
 <body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default">
 <div class="m-grid m-grid--hor m-grid--root m-page">
-    <div class="m-container m-container--fluid m-container--full-height" style="margin-top: 10%">
-        <form class="m-form m-form--fit m-form--label-align-right" action="/talkingdata.jsp">
+    <div class="m-container m-container--fluid m-container--full-height" style="margin-top: 5%">
+        <form class="m-form m-form--fit m-form--label-align-right" action="talkingdata.jsp">
             <div class="form-group m-form__group">
                 <label for="publisherIdField">
                     选择渠道
