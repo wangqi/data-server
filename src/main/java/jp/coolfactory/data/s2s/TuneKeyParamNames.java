@@ -20,6 +20,7 @@ public interface TuneKeyParamNames {
      */
     String MAT_PUB_ID = "publisher_id";
     String MAT_SITE_ID = "site_id";
+    String MAT_SUG_PUB = "sub_publisher";
 
     /**
      * They are used to contruct third-party URL

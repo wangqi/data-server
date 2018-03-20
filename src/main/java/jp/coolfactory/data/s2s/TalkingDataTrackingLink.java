@@ -121,11 +121,22 @@ public class TalkingDataTrackingLink implements TrackingLink {
                 String campaign = values[0];
                 dupKeys.add(values[1]);
                 matS2SUrl.append('&').append(TuneKeyParamNames.SUB_CAMPAIGN).append('=').append(campaign);
+            } else {
+                // Set TalkingData's PATH as default campaign name
+                String path = params.get(TuneKeyParamNames.TP_PATH);
+                if (StringUtil.isNotEmptyString(path)) {
+                    matS2SUrl.append('&').append(TuneKeyParamNames.SUB_CAMPAIGN).append('=').append(path);
+                } else {
+                    matS2SUrl.append('&').append(TuneKeyParamNames.SUB_CAMPAIGN).append('=').append("ad_track");
+                }
             }
         }
+        // Set sub-publisher to AD_TRACK
+        matS2SUrl.append('&').append(TuneKeyParamNames.MAT_SUG_PUB).append("=ad_track");
         for ( String key : params.keySet() ) {
             if (TuneKeyParamNames.MAT_PUB_ID.equalsIgnoreCase(key)
                     || TuneKeyParamNames.MAT_SITE_ID.equalsIgnoreCase(key)
+                    || TuneKeyParamNames.MAT_SUG_PUB.equalsIgnoreCase(key)
                     || TuneKeyParamNames.TP_PATH.equalsIgnoreCase(key)
                     || TuneKeyParamNames.TP_PROT.equalsIgnoreCase(key)
                     || TuneKeyParamNames.TP_HOST.equalsIgnoreCase(key)
