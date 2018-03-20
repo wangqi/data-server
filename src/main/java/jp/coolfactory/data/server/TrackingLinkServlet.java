@@ -108,6 +108,11 @@ public class TrackingLinkServlet extends HttpServlet {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("track_log");
 
+    @Override
+    protected void doHead(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doGet(request, response);
+    }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
     }

@@ -90,6 +90,15 @@ public class URLJobManager implements ServletContextListener {
                                  */
                                 if ( !req.isTracking() ) {
                                     sqlList.add(req.toPostbackSQL());
+                                } else {
+                                    StringBuilder buf = new StringBuilder(80);
+                                    buf.append("ad_track_log\t");
+                                    buf.append(req.getPostback());
+                                    buf.append('\t');
+                                    buf.append(req.getPostback_code());
+                                    buf.append('\t');
+                                    buf.append(req.getPostback_desc());
+                                    LOGGER.info(buf.toString());
                                 }
                             }
                             DBUtil.sqlBatch(sqlList);

@@ -13,6 +13,7 @@ public interface TuneKeyParamNames {
     String GOOGLE_AID = "google_aid";
     String USER_AGENT = "user_agent";
     String SUB_CAMPAIGN = "sub_campaign";
+    String CLICK_TIME = "clicktime";
 
     /**
      * They are used to get publisher info
