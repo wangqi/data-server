@@ -248,6 +248,7 @@ public class AntiFraudController implements Controller {
         site.setExternalId(resultSet.getString("external_id"));
         site.setAccountId(resultSet.getInt("account_id"));
         site.setAccountName(resultSet.getString("account_name"));
+        site.setAdwordsLinkId(resultSet.getString(""));
         _sites.put(String.valueOf(site.getId()), site);
         AfAccount account = _accounts.get(site.getAccountName());
         if ( account != null ) {

@@ -651,3 +651,10 @@ create table ad_currency (
   unique key idx (created, currency_code)
 ) default character set=utf8mb4 collate utf8mb4_general_ci;
 
+/**
+ * Add Adwords Link ID to AfSite
+ */
+
+alter table af_site add column adwords_link_id varchar(100) DEFAULT NULL;
+
+

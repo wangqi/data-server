@@ -110,6 +110,16 @@
         </layout>
     </appender>
 
+    <appender name="google_file" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="append" value="true" />
+        <param name="datePattern" value="_yyyy-MM-dd" />
+        <param name="file" value="/var/log/tomcat8/ad_google.log" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d{yyyy-MM-dd HH:mm:ss}\t%m%n" />
+        </layout>
+    </appender>
+
     <logger name="fraud_log">
         <level value="info" />
         <appender-ref ref="fraud_file" />
@@ -148,6 +158,11 @@
     <logger name="track_log">
         <level value="info" />
         <appender-ref ref="track_file" />
+    </logger>
+
+    <logger name="google_log">
+        <level value="info" />
+        <appender-ref ref="google_file" />
     </logger>
 
     <root>

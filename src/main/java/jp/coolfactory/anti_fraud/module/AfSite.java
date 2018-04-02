@@ -18,6 +18,8 @@ public class AfSite {
     private String externalId;
     private int accountId;
     private String accountName;
+    private String adwordsLinkId;
+
     /**
      * The map that stores the AfCampaign by campaign's ID
      */
@@ -92,6 +94,14 @@ public class AfSite {
         this.accountName = accountName;
     }
 
+    public String getAdwordsLinkId() {
+        return adwordsLinkId;
+    }
+
+    public void setAdwordsLinkId(String adwordsLinkId) {
+        this.adwordsLinkId = adwordsLinkId;
+    }
+
     /**
      * Add a campaign to this Site
      * @param campaign
@@ -144,34 +154,8 @@ public class AfSite {
                 ", externalId='" + externalId + '\'' +
                 ", accountId=" + accountId +
                 ", accountName='" + accountName + '\'' +
+                ", adwordsLinkId='" + adwordsLinkId + '\'' +
                 '}';
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        AfSite afSite = (AfSite) o;
-
-        if (getId() != afSite.getId()) return false;
-        if (getAccountId() != afSite.getAccountId()) return false;
-        if (getCreated() != null ? !getCreated().equals(afSite.getCreated()) : afSite.getCreated() != null)
-            return false;
-        if (getName() != null ? !getName().equals(afSite.getName()) : afSite.getName() != null) return false;
-        if (getExternalId() != null ? !getExternalId().equals(afSite.getExternalId()) : afSite.getExternalId() != null)
-            return false;
-        return getAccountName() != null ? getAccountName().equals(afSite.getAccountName()) : afSite.getAccountName() == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = getId();
-        result = 31 * result + (getCreated() != null ? getCreated().hashCode() : 0);
-        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
-        result = 31 * result + (getExternalId() != null ? getExternalId().hashCode() : 0);
-        result = 31 * result + getAccountId();
-        result = 31 * result + (getAccountName() != null ? getAccountName().hashCode() : 0);
-        return result;
-    }
 }
