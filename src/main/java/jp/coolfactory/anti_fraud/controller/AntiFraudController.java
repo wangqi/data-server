@@ -90,7 +90,7 @@ public class AntiFraudController implements Controller {
      */
     public final void loadSites() {
         DBUtil.select(
-                "select s.id, s.created, s.name, s.external_id, s.account_id, a.account_name from "
+                "select s.id, s.created, s.name, s.external_id, s.account_id, a.account_name, s.adwords_link_id from "
                         + ConfigUtil.getAntiFraudDatabaseSchema()
                         + ".af_site s inner join af_account a on s.account_id = a.id",
                 new ResultSetProcessor() {
@@ -248,7 +248,7 @@ public class AntiFraudController implements Controller {
         site.setExternalId(resultSet.getString("external_id"));
         site.setAccountId(resultSet.getInt("account_id"));
         site.setAccountName(resultSet.getString("account_name"));
-        site.setAdwordsLinkId(resultSet.getString(""));
+        site.setAdwordsLinkId(resultSet.getString("adwords_link_id"));
         _sites.put(String.valueOf(site.getId()), site);
         AfAccount account = _accounts.get(site.getAccountName());
         if ( account != null ) {

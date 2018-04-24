@@ -11,16 +11,16 @@ import jp.coolfactory.data.util.StringUtil;
 import jp.coolfactory.data.util.URLUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.swing.StringUIClientPropertyKey;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.BlockingQueue;
@@ -33,7 +33,7 @@ public class URLJobManager implements ServletContextListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(URLJobManager.class);
     private static final Logger FRAUD_LOGGER = LoggerFactory.getLogger("fraud_log");
-    private final static org.apache.log4j.Logger POSTBACK_LOGGER = org.apache.log4j.Logger.getLogger("postback_log");
+//    private final static org.apache.log4j.Logger POSTBACK_LOGGER = org.apache.log4j.Logger.getLogger("postback_log");
 
     private static final int DEFAULT_DRAIN_SIZE = 20;
     private BlockingQueue<AdRequest> queue = new LinkedBlockingQueue<>();
@@ -127,22 +127,55 @@ public class URLJobManager implements ServletContextListener {
      */
     public static final int sendPostback(AdRequest req) {
         String postback = req.getPostback();
+        Logger postbackLogger = req.getUrlLogger();
+        String userAgent = req.getUrlUserAgent();
+        String deviceIP = req.getInstall_ip();
+        String contentType = req.getUrlContentType();
+        if (StringUtil.isEmptyString(userAgent)) {
+            userAgent = "dataserver/" + Version.VERSION;
+        }
+        String httpMethod = req.getUrlMethod();
+        if (StringUtil.isEmptyString(httpMethod)) {
+            httpMethod = "GET";
+        }
         try {
             if ( StringUtil.isNotEmptyString(postback) ) {
                 String postbackEncoded = URLUtil.encodeURL(postback);
                 if ( !req.isTracking() ) {
-                    LOGGER.info("Resend to postback to " + postback + ", Encode postback to " + postbackEncoded);
+                    LOGGER.info("Send to postback to " + postback + ", Encode postback to " + postbackEncoded);
                 } else {
                     LOGGER.info("Send tracking to Tune " + postback + ", Encode measure link to " + postbackEncoded);
                 }
                 URL url = new URL(postbackEncoded);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-                if ( !req.isTracking() ) {
-                    conn.setRequestProperty("User-Agent", "antifraud/1.0");
-                } else {
-                    conn.setRequestProperty("User-Agent", "dataserver/1.0");
+                conn.setRequestMethod(httpMethod);
+                conn.setRequestProperty("User-Agent", userAgent);
+                conn.setRequestProperty("X-Forwared-For", deviceIP);
+                if ( StringUtil.isNotEmptyString(contentType) ) {
+                    conn.setRequestProperty("Content-Type", contentType);
                 }
+                if ( "post".equalsIgnoreCase(httpMethod) ) {
+                    HashMap<String, String> params = req.getUrlPostData();
+                    if ( params != null ) {
+                        StringBuilder buf = new StringBuilder(200);
+                        for ( String key : params.keySet() ) {
+                            String value = params.get(key);
+                            buf.append(key).append('=').append(URLEncoder.encode(value, "utf8")).append('&');
+                        }
+                        String queryString = buf.toString();
+                        byte[] contents = queryString.getBytes("utf8");
+                        int contentLength = contents.length;
+                        conn.setDoOutput(true);
+                        BufferedOutputStream os = new BufferedOutputStream(conn.getOutputStream());
+                        os.write(contents, 0, contentLength);
+                    }
+                }
+//                if ( !req.isTracking() ) {
+//                    conn.setRequestProperty("User-Agent", "antifraud/1.0");
+//                } else {
+//                    conn.setRequestProperty("User-Agent", "dataserver/1.0");
+//                }
+
                 int responseCode = conn.getResponseCode();
                 StringBuffer response = new StringBuffer();
                 if ( responseCode > 200 ) {
@@ -166,26 +199,30 @@ public class URLJobManager implements ServletContextListener {
                 req.setPostback_code(responseCode);
                 req.setPostback_desc(response.toString());
                 if ( !req.isTracking() ) {
-                    POSTBACK_LOGGER.info(req + "\tsucceed");
+                    if ( postbackLogger != null )
+                        postbackLogger.info(req + "\tsucceed");
                 }
                 return responseCode;
             } else {
                 if ( !req.isTracking() ) {
                     LOGGER.warn("postback param does not exist");
-                    POSTBACK_LOGGER.info(req + "\tpostback url empty");
+                    if ( postbackLogger != null )
+                        postbackLogger.info(req + "\turl empty");
                 }
             }
         } catch (MalformedURLException e) {
             if ( !req.isTracking() ) {
                 LOGGER.warn("Malformed postback url: " + postback);
-                POSTBACK_LOGGER.info(req + "\tpostback url malformed");
+                if ( postbackLogger != null )
+                    postbackLogger.info(req + "\turl malformed");
             } else {
                 LOGGER.warn("Malformed measure url: " + postback);
             }
         } catch (Exception e) {
             if ( !req.isTracking() ) {
                 LOGGER.warn("Failed to connect to postback url: " + postback, e);
-                POSTBACK_LOGGER.info(req + "\t" + e.getMessage());
+                if ( postbackLogger != null )
+                    postbackLogger.info(req + "\t" + e.getMessage());
             } else {
                 LOGGER.warn("Failed to connect to  measure url: " + postback, e);
             }

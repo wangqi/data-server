@@ -1,11 +1,8 @@
 package jp.coolfactory.anti_fraud.controller;
 
 import jp.coolfactory.anti_fraud.command.*;
-import jp.coolfactory.anti_fraud.module.Status;
 import jp.coolfactory.data.common.CommandStatus;
 import jp.coolfactory.data.common.Handler;
-import jp.coolfactory.data.controller.AdCommandController;
-import jp.coolfactory.data.controller.AdParamMapController;
 import jp.coolfactory.data.module.AdRequest;
 import jp.coolfactory.data.server.URLJobManager;
 import jp.coolfactory.data.util.DateUtil;
@@ -15,7 +12,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,8 +21,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static org.junit.Assert.*;
 
 /**
  * Please make sure the 'test' mode is linked to product server database.
@@ -52,9 +46,9 @@ import static org.junit.Assert.*;
  *
  *
  */
-public class AntiFraudSimulateTest {
+public class GoogleAdwordsSimulateTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AntiFraudSimulateTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GoogleAdwordsSimulateTest.class);
 
     //    private Chain<AdRequest> chain = null;
     private static LinkedList<Handler> commandChain= new LinkedList<>();
@@ -67,7 +61,7 @@ public class AntiFraudSimulateTest {
         AfClickInstallIntervalCommand afClickInstallIntervalCommand = new AfClickInstallIntervalCommand();
         AfIPFilterCommand afIPFilterCommand = new AfIPFilterCommand();
         AfCampaignCommand afCampaignCommand = new AfCampaignCommand();
-        AfPostbackCommand afPostbackCommand = new AfPostbackCommand();
+//        AfPostbackCommand afPostbackCommand = new AfPostbackCommand();
         AfIPSegmentCommand afIPSegmentCommand = new AfIPSegmentCommand();
         // Disable mid-night filter
 //        AfTimeRangeCommand afTimeRangeCommand = new AfTimeRangeCommand();
@@ -80,7 +74,7 @@ public class AntiFraudSimulateTest {
         commandChain.add(afIPFilterCommand);
         commandChain.add(afClickInstallIntervalCommand);
         commandChain.add(afIPSegmentCommand);
-        commandChain.add(afPostbackCommand);
+//        commandChain.add(afPostbackCommand);
         commandChain.add(afGoogleAdwordsCommand);
     }
 
@@ -122,6 +116,7 @@ public class AntiFraudSimulateTest {
 
             System.out.println(groupByStatus);
         }
+        Thread.sleep(50000000);
     }
 
     private List<AdRequest> readRecordsFromCSV(String fileName, String separator) {

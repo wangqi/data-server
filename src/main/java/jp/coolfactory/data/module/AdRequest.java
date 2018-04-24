@@ -2,9 +2,11 @@ package jp.coolfactory.data.module;
 
 import jp.coolfactory.anti_fraud.module.Status;
 import jp.coolfactory.data.Constants;
+import jp.coolfactory.data.Version;
 import jp.coolfactory.data.db.DBUtil;
 import jp.coolfactory.data.util.DateUtil;
 import jp.coolfactory.data.util.StringUtil;
+import org.slf4j.Logger;
 
 import java.time.ZonedDateTime;
 import java.util.HashMap;
@@ -113,6 +115,56 @@ public class AdRequest implements SQLRequest {
      * 2018-03-13
      */
     private boolean isTracking = false;
+
+    /**
+     * The following fields are used to customize URLJobManager
+     */
+    private String urlUserAgent = "dataserver/" + Version.VERSION;
+    private String urlMethod = "GET";
+    private String urlContentType = null;
+    private HashMap<String,String> urlPostData = new HashMap<>();
+
+    public HashMap<String, String> getUrlPostData() {
+        return urlPostData;
+    }
+
+    public void setUrlPostData(HashMap<String, String> urlPostData) {
+        this.urlPostData = urlPostData;
+    }
+
+    public String getUrlContentType() {
+        return urlContentType;
+    }
+
+    public void setUrlContentType(String urlContentType) {
+        this.urlContentType = urlContentType;
+    }
+
+    public String getUrlUserAgent() {
+        return urlUserAgent;
+    }
+
+    public void setUrlUserAgent(String urlUserAgent) {
+        this.urlUserAgent = urlUserAgent;
+    }
+
+    public String getUrlMethod() {
+        return urlMethod;
+    }
+
+    public void setUrlMethod(String urlMethod) {
+        this.urlMethod = urlMethod;
+    }
+
+    public Logger getUrlLogger() {
+        return urlLogger;
+    }
+
+    public void setUrlLogger(Logger urlLogger) {
+        this.urlLogger = urlLogger;
+    }
+
+    private Logger urlLogger = null;
 
 
     public boolean isTracking() { return isTracking; }
@@ -868,6 +920,7 @@ public class AdRequest implements SQLRequest {
         if (getIs_proxy() != adRequest.getIs_proxy()) return false;
         if (getPostback_code() != adRequest.getPostback_code()) return false;
         if (Float.compare(adRequest.getEval_prop(), getEval_prop()) != 0) return false;
+        if (isTracking() != adRequest.isTracking()) return false;
         if (getAccount_key() != null ? !getAccount_key().equals(adRequest.getAccount_key()) : adRequest.getAccount_key() != null)
             return false;
         if (getAction() != null ? !getAction().equals(adRequest.getAction()) : adRequest.getAction() != null)
@@ -1023,7 +1076,12 @@ public class AdRequest implements SQLRequest {
         if (getAf_camp_id() != null ? !getAf_camp_id().equals(adRequest.getAf_camp_id()) : adRequest.getAf_camp_id() != null)
             return false;
         if (getAf_status() != adRequest.getAf_status()) return false;
-        return getPostback() != null ? getPostback().equals(adRequest.getPostback()) : adRequest.getPostback() == null;
+        if (getPostback() != null ? !getPostback().equals(adRequest.getPostback()) : adRequest.getPostback() != null)
+            return false;
+        if (getAttr1() != null ? !getAttr1().equals(adRequest.getAttr1()) : adRequest.getAttr1() != null) return false;
+        if (getUrlUserAgent() != null ? !getUrlUserAgent().equals(adRequest.getUrlUserAgent()) : adRequest.getUrlUserAgent() != null)
+            return false;
+        return getUrlMethod() != null ? getUrlMethod().equals(adRequest.getUrlMethod()) : adRequest.getUrlMethod() == null;
     }
 
     @Override
@@ -1124,6 +1182,10 @@ public class AdRequest implements SQLRequest {
         result = 31 * result + (getAf_camp_id() != null ? getAf_camp_id().hashCode() : 0);
         result = 31 * result + (getAf_status() != null ? getAf_status().hashCode() : 0);
         result = 31 * result + (getPostback() != null ? getPostback().hashCode() : 0);
+        result = 31 * result + (getAttr1() != null ? getAttr1().hashCode() : 0);
+        result = 31 * result + (isTracking() ? 1 : 0);
+        result = 31 * result + (getUrlUserAgent() != null ? getUrlUserAgent().hashCode() : 0);
+        result = 31 * result + (getUrlMethod() != null ? getUrlMethod().hashCode() : 0);
         return result;
     }
 
@@ -1233,6 +1295,8 @@ public class AdRequest implements SQLRequest {
         sb.append("\t").append('"').append(format_str(af_status)).append('"');
         sb.append("\t").append('"').append(format_str(attr1)).append('"');
         sb.append("\t").append('"').append(format_str(postback)).append('"');
+        sb.append("\t").append('"').append(format_str(urlMethod)).append('"');
+        sb.append("\t").append('"').append(format_str(urlUserAgent)).append('"');
 
         return sb.toString();
     }

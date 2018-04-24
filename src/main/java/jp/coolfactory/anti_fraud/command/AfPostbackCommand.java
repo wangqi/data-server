@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 public class AfPostbackCommand implements Handler<AdRequest> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AfPostbackCommand.class);
-    private final static org.apache.log4j.Logger POSTBACK_LOGGER = org.apache.log4j.Logger.getLogger("postback_log");
+    private final static Logger POSTBACK_LOGGER = LoggerFactory.getLogger("postback_log");
 
     public AfPostbackCommand() {
     }
@@ -39,6 +39,7 @@ public class AfPostbackCommand implements Handler<AdRequest> {
                 }
                 if ( adRequest.getAf_status() == null || adRequest.getAf_status() == Status.OK ) {
                     String postback = adRequest.getPostback();
+                    adRequest.setUrlLogger(POSTBACK_LOGGER);
                     if ( StringUtil.isNotEmptyString(postback) ) {
                         URLJobManager jobManager = (URLJobManager)Version.CONTEXT.get(Constants.URL_JOB_MANAGER);
                         jobManager.submitRequest(adRequest);
