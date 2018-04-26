@@ -1,7 +1,5 @@
 package jp.coolfactory.anti_fraud.command;
 
-import com.sun.tools.internal.jxc.ap.Const;
-import com.sun.tools.javac.code.Attribute;
 import jp.coolfactory.anti_fraud.controller.AntiFraudController;
 import jp.coolfactory.anti_fraud.module.AfSite;
 import jp.coolfactory.anti_fraud.module.Status;
@@ -15,6 +13,7 @@ import jp.coolfactory.data.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URLEncoder;
 import java.util.HashMap;
 
 /**
@@ -75,50 +74,56 @@ public class AfGoogleAdwordsPostbackCommand implements Handler<AdRequest> {
                                 LOGGER.warn("AfSite " + adRequest.getSite_name() + " don't have adword_link_id.");
                                 return CommandStatus.Continue;
                             } else {
-                                HashMap<String, String> postParams = new HashMap<>();
-                                postParams.put("dev_token", MCC_DEVELOPER_TOKEN);
-                                postParams.put("link_id", site.getAdwordsLinkId());
-                                postParams.put("app_event_type", EVENT_TYPE_MAP.get(adRequest.getAction()));
+                                HashMap<String, String> queryParams = new HashMap<>();
+                                queryParams.put("dev_token", MCC_DEVELOPER_TOKEN);
+                                queryParams.put("link_id", site.getAdwordsLinkId());
+                                queryParams.put("app_event_type", EVENT_TYPE_MAP.get(adRequest.getAction()));
                                 boolean is_ios = adRequest.getSite_name().toLowerCase().indexOf("ios")>0;
                                 boolean is_android = adRequest.getSite_name().toLowerCase().indexOf("android")>0;
                                 String ios_ifa = adRequest.getIos_ifa();
                                 String google_aid = adRequest.getGoogle_aid();
                                 if ( is_ios && StringUtil.isNotEmptyString(ios_ifa) ) {
-                                    postParams.put("rdid", ios_ifa);
-                                    postParams.put("id_type", "idfa");
-                                    postParams.put("lat", "1");
+                                    queryParams.put("rdid", ios_ifa);
+                                    queryParams.put("id_type", "idfa");
+                                    queryParams.put("lat", "1");
                                     adRequest.setUrlUserAgent(IOS_UA);
                                 } else if ( is_android && StringUtil.isNotEmptyString(google_aid) ) {
-                                    postParams.put("rdid", ios_ifa);
-                                    postParams.put("id_type", "advertisingid");
-                                    postParams.put("lat", "1");
+                                    queryParams.put("rdid", ios_ifa);
+                                    queryParams.put("id_type", "advertisingid");
+                                    queryParams.put("lat", "1");
                                     adRequest.setUrlUserAgent(AND_UA);
                                 } else {
-                                    postParams.put("rdid", "");
-                                    postParams.put("lat", "0");
+                                    queryParams.put("rdid", "");
+                                    queryParams.put("lat", "0");
                                 }
-                                postParams.put("app_version", "1.0.0");
-                                postParams.put("os_version", adRequest.getOs_version());
+                                queryParams.put("app_version", "1.0.0");
+                                queryParams.put("os_version", adRequest.getOs_version());
                                 if ( adRequest.getOs_version() == null ) {
-                                    postParams.put("os_version", "1.0.0");
+                                    queryParams.put("os_version", "1.0.0");
                                 }
-                                postParams.put("sdk_version", adRequest.getSdk_version());
+                                queryParams.put("sdk_version", adRequest.getSdk_version());
                                 if ( adRequest.getSdk_version() == null ) {
-                                    postParams.put("sdk_version", "1.0.0");
+                                    queryParams.put("sdk_version", "1.0.0");
                                 }
                                 // Align the time to UTC
                                 double click_time = (double)(adRequest.getClick_time().toInstant().toEpochMilli()/1000.0);
-                                postParams.put("timestamp", String.format("%.3f", click_time));
+                                queryParams.put("timestamp", String.format("%.3f", click_time));
                                 if ( Constants.ACTION_PURCHASE.equals(adRequest.getAction())) {
-                                    postParams.put("value", String.valueOf(adRequest.getRevenue()));
-                                    postParams.put("currency_code", String.valueOf(adRequest.getCurrency_code()));
+                                    queryParams.put("value", String.valueOf(adRequest.getRevenue()));
+                                    queryParams.put("currency_code", String.valueOf(adRequest.getCurrency_code()));
                                 }
-
-                                adRequest.setPostback(REQ_URL);
+                                // Construct the final URL
+                                StringBuilder urlBuf = new StringBuilder(200);
+                                urlBuf.append(REQ_URL).append('?');
+                                for (String key : queryParams.keySet() ) {
+                                    String value = queryParams.get(key);
+                                    urlBuf.append(key).append('=').append(URLEncoder.encode(value, "utf8")).append('&');
+                                }
+                                String url = urlBuf.substring(0, urlBuf.length()-1);
+                                adRequest.setPostback(url);
                                 adRequest.setUrlLogger(GOOGLE_LOGGER);
                                 adRequest.setUrlMethod("POST");
                                 adRequest.setUrlContentType(REQ_CT);
-                                adRequest.setUrlPostData(postParams);
                                 URLJobManager jobManager = (URLJobManager)Version.CONTEXT.get(Constants.URL_JOB_MANAGER);
                                 jobManager.submitRequest(adRequest);
                             }

@@ -122,13 +122,13 @@ public class AdRequest implements SQLRequest {
     private String urlUserAgent = "dataserver/" + Version.VERSION;
     private String urlMethod = "GET";
     private String urlContentType = null;
-    private HashMap<String,String> urlPostData = new HashMap<>();
+    private String urlPostData = null;
 
-    public HashMap<String, String> getUrlPostData() {
+    public String getUrlPostData() {
         return urlPostData;
     }
 
-    public void setUrlPostData(HashMap<String, String> urlPostData) {
+    public void setUrlPostData(String urlPostData) {
         this.urlPostData = urlPostData;
     }
 

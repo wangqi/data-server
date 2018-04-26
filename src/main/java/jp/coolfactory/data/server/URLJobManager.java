@@ -155,15 +155,9 @@ public class URLJobManager implements ServletContextListener {
                     conn.setRequestProperty("Content-Type", contentType);
                 }
                 if ( "post".equalsIgnoreCase(httpMethod) ) {
-                    HashMap<String, String> params = req.getUrlPostData();
-                    if ( params != null ) {
-                        StringBuilder buf = new StringBuilder(200);
-                        for ( String key : params.keySet() ) {
-                            String value = params.get(key);
-                            buf.append(key).append('=').append(URLEncoder.encode(value, "utf8")).append('&');
-                        }
-                        String queryString = buf.toString();
-                        byte[] contents = queryString.getBytes("utf8");
+                    String postData = req.getUrlPostData();
+                    if ( StringUtil.isNotEmptyString(postback)) {
+                        byte[] contents = postData.getBytes("utf8");
                         int contentLength = contents.length;
                         conn.setDoOutput(true);
                         BufferedOutputStream os = new BufferedOutputStream(conn.getOutputStream());
