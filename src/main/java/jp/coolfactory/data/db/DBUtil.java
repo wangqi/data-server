@@ -96,20 +96,22 @@ public class DBUtil {
      * @param list
      */
     public static void sqlBatch(ArrayList<String> list) {
+        String lastSql = null;
         try (Connection conn = db.getConnection() ) {
             Statement ps =  conn.createStatement();
             try {
                 for ( String sql : list ) {
+                    lastSql = sql;
                     if (StringUtil.isNotEmptyString(sql) ) {
                         ps.addBatch(sql);
                     }
                 }
                 ps.executeBatch();
             } catch (SQLException e) {
-                LOGGER.error("Failed to execute sql", e);
+                LOGGER.error("Failed to execute sql: " + lastSql, e);
             }
         } catch (SQLException e) {
-            LOGGER.error("Failed to execute sql", e);
+            LOGGER.error("Failed to execute sql: " + lastSql, e);
         }
     }
 

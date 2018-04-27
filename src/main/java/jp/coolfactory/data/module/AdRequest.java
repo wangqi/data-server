@@ -1297,6 +1297,8 @@ public class AdRequest implements SQLRequest {
         sb.append("\t").append('"').append(format_str(postback)).append('"');
         sb.append("\t").append('"').append(format_str(urlMethod)).append('"');
         sb.append("\t").append('"').append(format_str(urlUserAgent)).append('"');
+        sb.append("\t").append('"').append(format_str(postback_code)).append('"');
+        sb.append("\t").append('"').append(format_str(postback_desc)).append('"');
 
         return sb.toString();
     }
