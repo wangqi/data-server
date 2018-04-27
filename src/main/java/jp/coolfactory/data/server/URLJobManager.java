@@ -156,21 +156,22 @@ public class URLJobManager implements ServletContextListener {
                     conn.setRequestProperty("Content-Type", contentType);
                 }
                 if ( "post".equalsIgnoreCase(httpMethod) ) {
+                    conn.setDoOutput(true);
                     String postData = req.getUrlPostData();
-                    if ( StringUtil.isNotEmptyString(postback)) {
+                    if ( StringUtil.isNotEmptyString(postData)) {
                         byte[] contents = postData.getBytes("utf8");
                         int contentLength = contents.length;
-                        conn.setDoOutput(true);
                         BufferedOutputStream os = new BufferedOutputStream(conn.getOutputStream());
                         os.write(contents, 0, contentLength);
+                        os.flush();
+                        os.close();
+                    } else {
+                        DataOutputStream os = new DataOutputStream( conn.getOutputStream() );
+                        os.write( "".getBytes("UTF-8"), 0, 0);
+                        os.flush();
+                        os.close();
                     }
                 }
-//                if ( !req.isTracking() ) {
-//                    conn.setRequestProperty("User-Agent", "antifraud/1.0");
-//                } else {
-//                    conn.setRequestProperty("User-Agent", "dataserver/1.0");
-//                }
-
 
                 int responseCode = conn.getResponseCode();
                 req.setPostback_code(responseCode);

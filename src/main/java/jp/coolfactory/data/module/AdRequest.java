@@ -1783,9 +1783,10 @@ public class AdRequest implements SQLRequest {
             StringBuilder valueBuf = new StringBuilder(200);
             HashMap<String,String> map = new HashMap<>();
             valueBuf.append("(");
-            if (Constants.ACTION_INSTALL.equals(action) ) {
-                buf.append("replace into ").append(DBUtil.getDatabaseSchema()).append(".ad_postback (");
-            }
+//            if (Constants.ACTION_INSTALL.equals(action) ) {
+//                buf.append("replace into ").append(DBUtil.getDatabaseSchema()).append(".ad_postback (");
+//            }
+            buf.append("replace into ").append(DBUtil.getDatabaseSchema()).append(".ad_postback (");
             buf.append("action,");
             valueBuf.append("'{action}',");
             map.put("action", StringUtil.validSQLInput(action));

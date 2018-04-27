@@ -13,3 +13,6 @@ export install_query="action=Purchase&source=mat&app_key=battleship-ios&site_id=
 
 # Test Android MAT Install
 curl "$server?$install_query"
+
+# Test Google Adwords Postback
+# curl -X POST -i --user-agent "AdMob/7.10.1 (Android 6.0; en_US; SM-G900F; Build/MMB29M; Proxy)" --header "X-Forwared-For: 126.94.200.201" "https://www.googleadservices.com/pagead/conversion/app/1.0?app_event_type=first_open&app_version=1.0.0&os_version=11.3&rdid=ff6adafe-1616-4c80-a992-61777abd4a7d&sdk_version=4.12.4&id_type=idfa&dev_token=sxHPIzagxN5RvQ3L-zXGAw&link_id=37967D4551079DE17C9616F525FC5264&lat=1&timestamp=1524812198.128"
