@@ -170,13 +170,9 @@ public class URLJobManager implements ServletContextListener {
 //                    conn.setRequestProperty("User-Agent", "dataserver/1.0");
 //                }
 
-                StringBuffer response = new StringBuffer();
 
                 int responseCode = conn.getResponseCode();
                 req.setPostback_code(responseCode);
-                String responseStr = response.toString();
-                req.setPostback_desc(responseStr);
-
                 if ( responseCode > 200 ) {
                     if ( !req.isTracking() ) {
                         LOGGER.warn("Failed to send postback. Response code: " + responseCode);
@@ -186,6 +182,7 @@ public class URLJobManager implements ServletContextListener {
                 } else {
                     BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                     String inputLine;
+                    StringBuffer response = new StringBuffer();
                     while ((inputLine = in.readLine()) != null) {
                         response.append(inputLine);
                         if ( response.length()>100 ) {
@@ -194,10 +191,13 @@ public class URLJobManager implements ServletContextListener {
                         }
                     }
                     in.close();
+                    String responseStr = response.toString();
+                    req.setPostback_desc(responseStr);
                 }
                 if ( !req.isTracking() ) {
-                    if ( postbackLogger != null )
-                        postbackLogger.info(req + "\tsucceed\t" + responseCode + "\t" + responseStr);
+                    if ( postbackLogger != null ) {
+                        postbackLogger.info(req + "\tsucceed\t" + responseCode + "\t" + req.getPostback_desc());
+                    }
                 }
                 return responseCode;
             } else {
