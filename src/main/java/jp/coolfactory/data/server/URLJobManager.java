@@ -170,8 +170,13 @@ public class URLJobManager implements ServletContextListener {
 //                    conn.setRequestProperty("User-Agent", "dataserver/1.0");
 //                }
 
-                int responseCode = conn.getResponseCode();
                 StringBuffer response = new StringBuffer();
+
+                int responseCode = conn.getResponseCode();
+                req.setPostback_code(responseCode);
+                String responseStr = response.toString();
+                req.setPostback_desc(responseStr);
+
                 if ( responseCode > 200 ) {
                     if ( !req.isTracking() ) {
                         LOGGER.warn("Failed to send postback. Response code: " + responseCode);
@@ -190,25 +195,23 @@ public class URLJobManager implements ServletContextListener {
                     }
                     in.close();
                 }
-                req.setPostback_code(responseCode);
-                req.setPostback_desc(response.toString());
                 if ( !req.isTracking() ) {
                     if ( postbackLogger != null )
-                        postbackLogger.info(req + "\tsucceed");
+                        postbackLogger.info(req + "\tsucceed\t" + responseCode + "\t" + responseStr);
                 }
                 return responseCode;
             } else {
                 if ( !req.isTracking() ) {
                     LOGGER.warn("postback param does not exist");
                     if ( postbackLogger != null )
-                        postbackLogger.info(req + "\turl empty");
+                        postbackLogger.info(req + "\turl empty\t\t");
                 }
             }
         } catch (MalformedURLException e) {
             if ( !req.isTracking() ) {
                 LOGGER.warn("Malformed postback url: " + postback);
                 if ( postbackLogger != null )
-                    postbackLogger.info(req + "\turl malformed");
+                    postbackLogger.info(req + "\turl malformed\t\t");
             } else {
                 LOGGER.warn("Malformed measure url: " + postback);
             }
@@ -216,7 +219,7 @@ public class URLJobManager implements ServletContextListener {
             if ( !req.isTracking() ) {
                 LOGGER.warn("Failed to connect to postback url: " + postback, e);
                 if ( postbackLogger != null )
-                    postbackLogger.info(req + "\t" + e.getMessage());
+                    postbackLogger.info(req + "\t" + e.getMessage()+"\t\t");
             } else {
                 LOGGER.warn("Failed to connect to  measure url: " + postback, e);
             }
