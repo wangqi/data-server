@@ -151,6 +151,7 @@ public class URLJobManager implements ServletContextListener {
                 conn.setRequestMethod(httpMethod);
                 conn.setRequestProperty("User-Agent", userAgent);
                 conn.setRequestProperty("X-Forwared-For", deviceIP);
+                conn.setDoInput(true);
                 if ( StringUtil.isNotEmptyString(contentType) ) {
                     conn.setRequestProperty("Content-Type", contentType);
                 }
