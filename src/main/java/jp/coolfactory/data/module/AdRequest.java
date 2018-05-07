@@ -37,6 +37,7 @@ public class AdRequest implements SQLRequest {
     private String bundle_id;
     private String install_ip;
     private ZonedDateTime install_time;
+    private long conversion_timestamp;
     private String agency_name;
     private String site_id;
     private String site_name;
@@ -313,6 +314,14 @@ public class AdRequest implements SQLRequest {
 
     public void setInstall_time(ZonedDateTime install_time) {
         this.install_time = install_time;
+    }
+
+    public long getConversion_timestamp() {
+        return conversion_timestamp;
+    }
+
+    public void setConversion_timestamp(long conversion_timestamp) {
+        this.conversion_timestamp = conversion_timestamp;
     }
 
     public String getAgency_name() {

@@ -18,14 +18,15 @@ public class DateUtilTest {
 
     @Test
     public void toMilliseconds() throws Exception {
-        String source = "2018-05-07 13:05:00";
+        String source = "2018-05-07 14:59:07";
         String pattern = "yyyy-MM-dd hh:mm:ss";
         DateFormat sdf = new SimpleDateFormat(pattern);
         try {
             Date date = sdf.parse(source);
-            ZonedDateTime zdt = ZonedDateTime.ofInstant(date.toInstant(), ZoneId.of("Asia/Shanghai"));
+            ZonedDateTime zdt = ZonedDateTime.ofInstant(date.toInstant(), ZoneId.of("Asia/Tokyo"));
             System.out.println(zdt.format(DateTimeFormatter.ofPattern(pattern)));
             long actualMillis = DateUtil.toMilliseconds(zdt);
+            // 1525640347
             System.out.println(actualMillis);
         } catch (ParseException e) {
             e.printStackTrace();

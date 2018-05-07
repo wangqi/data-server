@@ -70,6 +70,7 @@ public class PostbackServlet extends HttpServlet {
         req.setAccount_key(account_key);
 
         req.setInstall_time(created);
+        req.setConversion_timestamp(getParamValueAsLong(request, source, "conversion_timestamp"));
         req.setAction(action);
         req.setSource(source);
         req.setAppKey(app_key);

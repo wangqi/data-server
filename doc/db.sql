@@ -121,7 +121,8 @@ values
   (null, 'proxy_type', 'proxy_type'),
   (null, 'install_time', 'install_time'),
   (null, 'sku_id', 'sku_id'),
-  (null, 'order_id', 'order_id');
+  (null, 'order_id', 'order_id'),
+  (null, 'conversion_timestamp', 'conversion_timestamp');
 
 drop table ad_register;
 create table ad_register (

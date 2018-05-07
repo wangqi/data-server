@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URLEncoder;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 
@@ -108,12 +109,13 @@ public class AfGoogleAdwordsPostbackCommand implements Handler<AdRequest> {
                                     queryParams.put("sdk_version", "1.0.0");
                                 }
                                 // Align the time to UTC
-                                ZonedDateTime zdt = adRequest.getClick_time();
-                                double click_time = (double)(System.currentTimeMillis()/1000.0);
-                                if ( zdt!=null ) {
-                                    click_time = (double)(DateUtil.toMilliseconds(adRequest.getClick_time())/1000.0);
+                                ZonedDateTime zdt = adRequest.getInstall_time();
+                                if ( zdt == null ) {
+                                    zdt = ZonedDateTime.now();
                                 }
-                                queryParams.put("timestamp", String.format("%.3f", click_time));
+                                double install_time = (double)(DateUtil.toMilliseconds(zdt)/1000.0);
+                                queryParams.put("timestamp", String.format("%.3f", install_time));
+
                                 if ( Constants.ACTION_PURCHASE.equals(adRequest.getAction())) {
                                     queryParams.put("value", String.valueOf(adRequest.getRevenue()));
                                     queryParams.put("currency_code", String.valueOf(adRequest.getCurrency_code()));
