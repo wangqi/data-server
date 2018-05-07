@@ -8,6 +8,7 @@ import java.time.chrono.IsoChronology;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.ResolverStyle;
+import java.util.TimeZone;
 
 /**
  * Created by wangqi on 1/12/2016.
@@ -205,5 +206,16 @@ public class DateUtil {
             LOGGER.warn("Failed to convert string to sql timestamp: " + dateString, e);
         }
         return null;
+    }
+
+    /**
+     * Convert ZoneDateTime to UTC epoch milliseconds
+     */
+    public static final long toMilliseconds(ZonedDateTime zdt) {
+        int zdtOffset = TimeZone.getTimeZone(zdt.getZone().getId()).getOffset(zdt.toInstant().toEpochMilli());
+        int utcOffset = TimeZone.getTimeZone("UTC").getOffset(zdt.toInstant().toEpochMilli());
+        int diff = utcOffset - zdtOffset;
+        long millis = zdt.toInstant().toEpochMilli() + diff;
+        return millis;
     }
 }

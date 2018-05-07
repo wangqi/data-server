@@ -9,6 +9,7 @@ import jp.coolfactory.data.common.CommandStatus;
 import jp.coolfactory.data.common.Handler;
 import jp.coolfactory.data.module.AdRequest;
 import jp.coolfactory.data.server.URLJobManager;
+import jp.coolfactory.data.util.DateUtil;
 import jp.coolfactory.data.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,7 +90,7 @@ public class AfGoogleAdwordsPostbackCommand implements Handler<AdRequest> {
                                     queryParams.put("lat", "1");
                                     adRequest.setUrlUserAgent(IOS_UA);
                                 } else if ( is_android && StringUtil.isNotEmptyString(google_aid) ) {
-                                    queryParams.put("rdid", ios_ifa);
+                                    queryParams.put("rdid", google_aid);
                                     queryParams.put("id_type", "advertisingid");
                                     queryParams.put("lat", "1");
                                     adRequest.setUrlUserAgent(AND_UA);
@@ -110,7 +111,7 @@ public class AfGoogleAdwordsPostbackCommand implements Handler<AdRequest> {
                                 ZonedDateTime zdt = adRequest.getClick_time();
                                 double click_time = (double)(System.currentTimeMillis()/1000.0);
                                 if ( zdt!=null ) {
-                                    click_time = (double)(adRequest.getClick_time().toInstant().toEpochMilli()/1000.0);
+                                    click_time = (double)(DateUtil.toMilliseconds(adRequest.getClick_time())/1000.0);
                                 }
                                 queryParams.put("timestamp", String.format("%.3f", click_time));
                                 if ( Constants.ACTION_PURCHASE.equals(adRequest.getAction())) {
