@@ -117,9 +117,9 @@ public class PostbackServlet extends HttpServlet {
         req.setStatus(getParamValue(request,source, "status"));
         req.setStatus_code(getParamValue(request,source, "status_code"));
         req.setTracking_id(getParamValue(request,source, "tracking_id"));
-        req.setIos_ifa(getParamValue(request,source, "ios_ifa"));
-        req.setIos_ifv(getParamValue(request,source, "ios_ifv"));
-        req.setGoogle_aid(getParamValue(request,source, "google_aid"));
+        req.setIos_ifa(getParamValue(request,source, "ios_ifa", true));
+        req.setIos_ifv(getParamValue(request,source, "ios_ifv", true));
+        req.setGoogle_aid(getParamValue(request,source, "google_aid", true));
         req.setPub_camp_id(getParamValue(request,source, "pub_camp_id"));
         req.setPub_camp_name(getParamValue(request,source, "pub_camp_name"));
         req.setPub_camp_ref(getParamValue(request,source, "pub_camp_ref"));
