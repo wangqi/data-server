@@ -88,16 +88,16 @@ public class AfGoogleAdwordsPostbackCommand implements Handler<AdRequest> {
                                 if ( is_ios && StringUtil.isNotEmptyString(ios_ifa) ) {
                                     queryParams.put("rdid", ios_ifa);
                                     queryParams.put("id_type", "idfa");
-                                    queryParams.put("lat", "1");
+                                    queryParams.put("lat", "0");
                                     adRequest.setUrlUserAgent(IOS_UA);
                                 } else if ( is_android && StringUtil.isNotEmptyString(google_aid) ) {
                                     queryParams.put("rdid", google_aid);
                                     queryParams.put("id_type", "advertisingid");
-                                    queryParams.put("lat", "1");
+                                    queryParams.put("lat", "0");
                                     adRequest.setUrlUserAgent(AND_UA);
                                 } else {
                                     queryParams.put("rdid", "");
-                                    queryParams.put("lat", "0");
+                                    queryParams.put("lat", "1");
                                 }
                                 queryParams.put("app_version", "1.0.0");
                                 queryParams.put("os_version", adRequest.getOs_version());
