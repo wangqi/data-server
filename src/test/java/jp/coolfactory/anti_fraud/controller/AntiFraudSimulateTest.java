@@ -113,7 +113,7 @@ public class AntiFraudSimulateTest {
         manager.contextInitialized(null);
         {
             System.out.println("--------- Appier -----------");
-            List<AdRequest> records = readRecordsFromCSV("/google_adwords_20180423.csv", "\t");
+            List<AdRequest> records = readRecordsFromCSV("/allinapp_20180428_20180509.csv", "\t");
             Map groupByStatus  = records.stream()
                     .map(record -> handle(record))
                     .collect(
