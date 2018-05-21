@@ -7,6 +7,7 @@ import jp.coolfactory.data.Version;
 import jp.coolfactory.data.db.DBUtil;
 import jp.coolfactory.data.module.AdRequest;
 import jp.coolfactory.data.module.SQLRequest;
+import jp.coolfactory.data.module.URLJob;
 import jp.coolfactory.data.util.StringUtil;
 import jp.coolfactory.data.util.URLUtil;
 import org.slf4j.Logger;
@@ -36,7 +37,7 @@ public class URLJobManager implements ServletContextListener {
 //    private final static org.apache.log4j.Logger POSTBACK_LOGGER = org.apache.log4j.Logger.getLogger("postback_log");
 
     private static final int DEFAULT_DRAIN_SIZE = 20;
-    private BlockingQueue<AdRequest> queue = new LinkedBlockingQueue<>();
+    private BlockingQueue<URLJob> queue = new LinkedBlockingQueue<>();
     private ExecutorService service;
 
     // Public constructor is required by servlet spec
@@ -48,7 +49,7 @@ public class URLJobManager implements ServletContextListener {
      *
      * @param req
      */
-    public void submitRequest(AdRequest req) {
+    public void submitRequest(URLJob req) {
         try {
             if ( req != null )
                 queue.put(req);
@@ -76,12 +77,12 @@ public class URLJobManager implements ServletContextListener {
                             LOGGER.info("URLWorker is shutdown.");
                             break;
                         } else {
-                            ArrayList<AdRequest> list = new ArrayList<>(DEFAULT_DRAIN_SIZE);
+                            ArrayList<URLJob> list = new ArrayList<>(DEFAULT_DRAIN_SIZE);
                             //If no objects avaiable, then wait
                             list.add(queue.take());
                             queue.drainTo(list, DEFAULT_DRAIN_SIZE);
                             ArrayList<String> sqlList = new ArrayList<>(DEFAULT_DRAIN_SIZE);
-                            for ( AdRequest req : list ) {
+                            for ( URLJob req : list ) {
                                 sendPostback(req);
                                 /**
                                  * Check if the AdRequest is a tracking request or postback request.
@@ -125,7 +126,7 @@ public class URLJobManager implements ServletContextListener {
     /**
      * Send back the postback URL
      */
-    public static final int sendPostback(AdRequest req) {
+    public static final int sendPostback(URLJob req) {
         String postback = req.getPostback();
         Logger postbackLogger = req.getUrlLogger();
         String userAgent = req.getUrlUserAgent();

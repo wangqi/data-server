@@ -12,6 +12,16 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 
 /**
+ * There are three types of AdRequest
+ * 1. It's a normal data sychronization request and sent from MAT. Its main purpose is to store the install/event/open
+ *      data into database and used in real-time report. If the requests are from given medias, we have to send postbacks
+ *      to third-party medias like network afflicates for anti-fraud fileration. The response status will be stored in
+ *      database table too.
+ * 2. It's for integrating MAT with native Chinse medias such as 今日头条. Such medias does not support MAT. So I made
+ *      a transmit links which will notify MAT's click API URL if an AD is clicked. The click request will be sent by
+ *      same URL job manager. It's not a postback request.
+ * 3. It's for Google Adwords. For filtering iPad out, I have to take over Google's S2S postback.
+ *
  * Created by wangqi on 22/2/2017.
  */
 public class AdRequest implements SQLRequest {
@@ -1777,6 +1787,34 @@ public class AdRequest implements SQLRequest {
             String sql = StringUtil.replaceKey(buf.append('\n').append(valueBuf.toString()).toString(), map);
             return sql;
         }
+    }
+
+    /**
+     * Copy this request to URLJob
+     *
+     */
+    public URLJob toURLJob(){
+        URLJob job = new URLJob();
+        job.setAccount_key(this.account_key);
+        job.setAction(this.action);
+        job.setStat_id(this.stat_id);
+        job.setOs_version(this.os_version);
+        job.setPlat_id(this.plat_id);
+        job.setAppKey(this.appKey);
+        job.setPublisher_id(this.publisher_id);
+        job.setPublisher_name(this.publisher_name);
+        job.setInstall_ip(this.install_ip);
+        job.setInstall_time(this.install_time);
+        job.setSite_id(this.site_id);
+        job.setSite_name(this.site_name);
+        job.setTracking_id(this.tracking_id);
+        job.setIos_ifa(this.ios_ifa);
+        job.setGoogle_aid(this.google_aid);
+        job.setIp_from(this.ip_from);
+        job.setIp_to(this.ip_to);
+        job.setStatus(this.status);
+        job.setStatus_code(this.status_code);
+        return job;
     }
 
     /**

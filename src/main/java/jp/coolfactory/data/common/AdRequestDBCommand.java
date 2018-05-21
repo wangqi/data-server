@@ -31,15 +31,7 @@ public class AdRequestDBCommand implements Handler<AdRequest> {
     public CommandStatus handle(AdRequest adRequest) {
         try {
             DBJobManager manager = (DBJobManager)Version.CONTEXT.get(Constants.DB_JOB_MANAGER);
-            String postback = adRequest.getPostback();
-            if ( Constants.ACTION_INSTALL.equals(adRequest.getAction()) && StringUtil.isNotEmptyString(postback) ) {
-                // do nothing
-            } else {
-                /**
-                 * Only store the requests to install table if postback is empty.
-                 */
-                manager.submitRequest(adRequest);
-            }
+            manager.submitRequest(adRequest);
         } catch (Exception e) {
             LOGGER.warn("handle is interrupted.");
             return CommandStatus.Fail;

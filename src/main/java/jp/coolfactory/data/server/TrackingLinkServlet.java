@@ -3,6 +3,7 @@ package jp.coolfactory.data.server;
 import jp.coolfactory.data.Constants;
 import jp.coolfactory.data.Version;
 import jp.coolfactory.data.module.AdRequest;
+import jp.coolfactory.data.module.URLJob;
 import jp.coolfactory.data.s2s.TalkingDataTrackingLink;
 import jp.coolfactory.data.s2s.TrackingLink;
 import jp.coolfactory.data.s2s.TrackingLinkRecord;
@@ -129,7 +130,7 @@ public class TrackingLinkServlet extends HttpServlet {
             URLJobManager jobManager = (URLJobManager) Version.CONTEXT.get(Constants.URL_JOB_MANAGER);
             msgBuf.append(record.isRedirect()).append("\t").append(record.getMatS2SUrl()).append("\t").append(record.getThirdPartyS2SUrl());
             // Send MAT message
-            AdRequest adReq = new AdRequest();
+            URLJob adReq = new URLJob();
             adReq.setPostback(record.getMatS2SUrl());
             adReq.setTracking(true);
             jobManager.submitRequest(adReq);
@@ -137,7 +138,7 @@ public class TrackingLinkServlet extends HttpServlet {
                 response.sendRedirect(record.getThirdPartyS2SUrl());
             } else {
                 //Notify third-party server
-                adReq = new AdRequest();
+                adReq = new URLJob();
                 adReq.setPostback(record.getThirdPartyS2SUrl());
                 adReq.setTracking(true);
                 jobManager.submitRequest(adReq);

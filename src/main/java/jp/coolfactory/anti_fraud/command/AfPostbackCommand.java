@@ -6,6 +6,7 @@ import jp.coolfactory.data.Version;
 import jp.coolfactory.data.common.CommandStatus;
 import jp.coolfactory.data.common.Handler;
 import jp.coolfactory.data.module.AdRequest;
+import jp.coolfactory.data.module.URLJob;
 import jp.coolfactory.data.server.URLJobManager;
 import jp.coolfactory.data.util.StringUtil;
 import org.slf4j.Logger;
@@ -38,11 +39,13 @@ public class AfPostbackCommand implements Handler<AdRequest> {
                     return CommandStatus.Continue;
                 }
                 if ( adRequest.getAf_status() == null || adRequest.getAf_status() == Status.OK ) {
+                    URLJob job = adRequest.toURLJob();
                     String postback = adRequest.getPostback();
-                    adRequest.setUrlLogger(POSTBACK_LOGGER);
+                    job.setPostback(postback);
+                    job.setUrlLogger(POSTBACK_LOGGER);
                     if ( StringUtil.isNotEmptyString(postback) ) {
                         URLJobManager jobManager = (URLJobManager)Version.CONTEXT.get(Constants.URL_JOB_MANAGER);
-                        jobManager.submitRequest(adRequest);
+                        jobManager.submitRequest(job);
                     }
                 } else {
                     POSTBACK_LOGGER.info(adRequest + "\taf_status is null or not OK.");

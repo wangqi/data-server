@@ -8,6 +8,7 @@ import jp.coolfactory.data.Version;
 import jp.coolfactory.data.common.CommandStatus;
 import jp.coolfactory.data.common.Handler;
 import jp.coolfactory.data.module.AdRequest;
+import jp.coolfactory.data.module.URLJob;
 import jp.coolfactory.data.server.URLJobManager;
 import jp.coolfactory.data.util.DateUtil;
 import jp.coolfactory.data.util.StringUtil;
@@ -128,12 +129,13 @@ public class AfGoogleAdwordsPostbackCommand implements Handler<AdRequest> {
                                     urlBuf.append(key).append('=').append(URLEncoder.encode(value, "utf8")).append('&');
                                 }
                                 String url = urlBuf.substring(0, urlBuf.length()-1);
-                                adRequest.setPostback(url);
-                                adRequest.setUrlLogger(GOOGLE_LOGGER);
-                                adRequest.setUrlMethod("POST");
-                                adRequest.setUrlContentType(REQ_CT);
+                                URLJob job = adRequest.toURLJob();
+                                job.setPostback(url);
+                                job.setUrlLogger(GOOGLE_LOGGER);
+                                job.setUrlMethod("POST");
+                                job.setUrlContentType(REQ_CT);
                                 URLJobManager jobManager = (URLJobManager)Version.CONTEXT.get(Constants.URL_JOB_MANAGER);
-                                jobManager.submitRequest(adRequest);
+                                jobManager.submitRequest(job);
                             }
                         }
                     } else {
