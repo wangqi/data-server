@@ -266,8 +266,18 @@ public class AdRequest implements SQLRequest {
         return user_agent;
     }
 
+    /**
+     * Set the max length of user_agent
+     * @param user_agent
+     */
     public void setUser_agent(String user_agent) {
-        this.user_agent = user_agent;
+        if (StringUtil.isNotEmptyString(user_agent)) {
+            if (user_agent.length()>150) {
+                this.user_agent = user_agent.substring(0, 150);
+            } else {
+                this.user_agent = user_agent;
+            }
+        }
     }
 
     public String getPublisher_id() {
@@ -1349,7 +1359,13 @@ public class AdRequest implements SQLRequest {
             } else if ( Constants.ACTION_PURCHASE.equals(action) ) {
                 buf.append("replace into ").append(DBUtil.getDatabaseSchema()).append(".ad_purchase (");
             } else {
-                buf.append("replace into ").append(DBUtil.getDatabaseSchema()).append(".ad_event (");
+                /**
+                 * Only store one record for a given user
+                 *   created (date), plat_id, game_user_id
+                 * wangqi modified 2018-05-24
+                 */
+//                buf.append("replace into ").append(DBUtil.getDatabaseSchema()).append(".ad_event (");
+                buf.append("insert ignore into ").append(DBUtil.getDatabaseSchema()).append(".ad_dau (");
             }
             buf.append("action,");
             valueBuf.append("'{action}',");
