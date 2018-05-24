@@ -154,6 +154,18 @@ public class StringUtil {
     }
 
     /**
+     * It is used by URLJob and AdRequest's toString method.
+     * @param value
+     * @return
+     */
+    public static final String format_str(Object value) {
+        if ( value == null ) {
+            return "";
+        }
+        return value.toString();
+    }
+
+    /**
      * Replace the string with given {name} variables
      * O. If escaping '{', you can use '{{'. For example, 'param={{data}}' will be replaced as 'param={data}'.
      *    Note the encoding curly '}', you need to put double curly '}}' too.

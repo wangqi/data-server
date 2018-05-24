@@ -4,6 +4,7 @@ import jp.coolfactory.data.Version;
 import jp.coolfactory.data.db.DBUtil;
 import jp.coolfactory.data.util.DateUtil;
 import jp.coolfactory.data.util.StringUtil;
+import static jp.coolfactory.data.util.StringUtil.format_str;
 import org.slf4j.Logger;
 
 import java.time.ZonedDateTime;
@@ -430,4 +431,42 @@ public class URLJob {
         }
     }
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder(200);
+        sb.append("").append('"').append(format_str(account_key)).append('"');
+        sb.append("\t").append('"').append(format_str(action)).append('"');
+        sb.append("\t").append('"').append(format_str(appKey)).append('"');
+        sb.append("\t").append('"').append(format_str(source)).append('"');
+        sb.append("\t").append('"').append(format_str(stat_id)).append('"');
+        sb.append("\t").append('"').append(format_str(os_version)).append('"');
+        sb.append("\t").append('"').append(format_str(plat_id)).append('"');
+        sb.append("\t").append('"').append(format_str(publisher_id)).append('"');
+        sb.append("\t").append('"').append(format_str(publisher_name)).append('"');
+        sb.append("\t").append('"').append(format_str(install_ip)).append('"');
+        if ( install_time != null ) {
+            sb.append("\t").append('"').append(format_str(DateUtil.formatDateTime(install_time))).append('"');
+        } else {
+            sb.append("\t").append("\"\"");
+        }
+        sb.append("\t").append('"').append(format_str(site_id)).append('"');
+        sb.append("\t").append('"').append(format_str(site_name)).append('"');
+
+        sb.append("\t").append('"').append(format_str(status)).append('"');
+        sb.append("\t").append('"').append(format_str(status_code)).append('"');
+        sb.append("\t").append('"').append(format_str(tracking_id)).append('"');
+        sb.append("\t").append('"').append(format_str(ios_ifa)).append('"');
+        sb.append("\t").append('"').append(format_str(google_aid)).append('"');
+        sb.append("\t").append(ip_from);
+        sb.append("\t").append(ip_to);
+        sb.append("\t").append(postback_code);
+        sb.append("\t").append('"').append(format_str(postback_desc)).append('"');
+        sb.append("\t").append('"').append(format_str(postback)).append('"');
+        sb.append("\t").append('"').append(format_str(urlMethod)).append('"');
+        sb.append("\t").append('"').append(format_str(urlUserAgent)).append('"');
+        sb.append("\t").append('"').append(format_str(postback_code)).append('"');
+        sb.append("\t").append('"').append(format_str(postback_desc)).append('"');
+
+        return sb.toString();
+    }
 }
