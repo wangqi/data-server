@@ -34,7 +34,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!--begin::Web font -->
-    <script src="http://cdn.qikuyx.com/metronic5/assets/ajax/libs/webfont/1.6.16/webfont.js"></script>
+    <script src="http://cdn.qikuyx.com/metronic5/assets/ajax/libs/webfront/1.6.16/webfont.js"></script>
     <script>
         WebFont.load({
             google: {"families": ["Poppins:300,400,500,600,700", "Roboto:300,400,500,600,700"]},
@@ -74,6 +74,7 @@
                 <select class="form-control m-input" name="siteIdField" id="siteIdField">
                     <option value="134022">帝国海战-IOS</option>
                     <option value="138269">帝国海战-Android</option>
+                    <option value="141656">现代海战-IOS</option>
                 </select>
             </div>
             <div class="m-portlet__body">
