@@ -219,7 +219,19 @@ public class TalkingDataTrackingLink implements TrackingLink {
      */
     @Override
     public String translateThirdPartyLink(String prot, String host, String path,
-            String publisher_id, String site_id, String thirdPartyLink) {
+                                          String publisher_id, String site_id, String thirdPartyLink) {
+        return translateThirdPartyLink(prot, host, path, publisher_id, site_id, thirdPartyLink);
+    }
+
+    /**
+     * Translate third-party's link to this server's format.
+     *
+     * @param thirdPartyLink
+     * @return
+     */
+    @Override
+    public String translateThirdPartyLink(String prot, String host, String path,
+            String publisher_id, String site_id, String thirdPartyLink, boolean isEncoded) {
         StringBuilder buf = new StringBuilder(200);
         try {
             URL url = new URL(thirdPartyLink);
@@ -265,7 +277,11 @@ public class TalkingDataTrackingLink implements TrackingLink {
             for ( String key : params.keySet() ) {
                 String[] values = params.get(key);
                 for ( String value : values ) {
-                    buf.append(key).append('=').append(URLEncoder.encode(value, "utf-8")).append('&');
+                    if ( isEncoded ) {
+                        buf.append(key).append('=').append(URLEncoder.encode(value, "utf-8")).append('&');
+                    } else {
+                        buf.append(key).append('=').append(value).append('&');
+                    }
                 }
             }
             if (buf.charAt(buf.length()-1) == '&') {

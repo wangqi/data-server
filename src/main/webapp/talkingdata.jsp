@@ -17,9 +17,11 @@
     String inputURL = request.getParameter("inputURLField");
     String publisher_id = request.getParameter("publisherIdField");
     String site_id = request.getParameter("siteIdField");
+    String isEncoded = request.getParameter("isEncoded");
     String outputURL = "Hello";
     if (inputURL != null) {
-        outputURL = tdLink.translateThirdPartyLink(url.getProtocol(), url.getHost(), new_path, publisher_id, site_id, inputURL);
+        outputURL = tdLink.translateThirdPartyLink(url.getProtocol(), url.getHost(), new_path,
+                publisher_id, site_id, inputURL, isEncoded!=null);
     }
 %>
 <!DOCTYPE html>
@@ -64,7 +66,8 @@
                     选择渠道
                 </label>
                 <select class="form-control m-input" name="publisherIdField" id="publisherIdField">
-                    <option value="351244">今日头条</option>
+                    <option value="351244" <% if ("351244".equals(publisher_id)) out.print("selected"); %> >今日头条</option>
+                    <option value="151184" <% if ("151184".equals(publisher_id)) out.print("selected"); %> >百度</option>
                 </select>
             </div>
             <div class="form-group m-form__group">
@@ -72,16 +75,19 @@
                     选择游戏
                 </label>
                 <select class="form-control m-input" name="siteIdField" id="siteIdField">
-                    <option value="134022">帝国海战-IOS</option>
-                    <option value="138269">帝国海战-Android</option>
-                    <option value="141656">现代海战-IOS</option>
+                    <option value="134022" <% if ("134022".equals(site_id)) out.print("selected"); %> >帝国海战-IOS</option>
+                    <option value="138269" <% if ("138269".equals(site_id)) out.print("selected"); %> >帝国海战-Android</option>
+                    <option value="141656" <% if ("141656".equals(site_id)) out.print("selected"); %> >现代海战-IOS</option>
+                    <option value="141655" <% if ("141655".equals(site_id)) out.print("selected"); %> >现代海战-Android</option>
                 </select>
             </div>
             <div class="m-portlet__body">
                 <div class="form-group m-form__group">
                     <label for="inputURLText"><h3>输入第三方地址</h3></label>
                     <input type="text" class="form-control m-input" name="inputURLField" id="inputURLText"
-                           placeholder="<%=inputURL%>">
+                           value="<%=inputURL%>">
+                    <input type="checkbox" id="isEncoded" name="isEncoded" <% if (isEncoded != null ) out.print("checked"); %> >
+                    <label for="isEncoded">是否格式化URL?</label>
                 </div>
             </div>
             <div class="m-portlet__foot m-portlet__foot--fit">

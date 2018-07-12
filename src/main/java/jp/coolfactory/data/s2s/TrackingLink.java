@@ -125,4 +125,12 @@ public interface TrackingLink {
     public String translateThirdPartyLink(String prot, String host, String path,
                                           String publisherId, String siteId, String thirdPartyLink);
 
+    /**
+     * Translate third-party's link to this server's format.
+     *
+     * @param thirdPartyLink
+     * @return
+     */
+    public String translateThirdPartyLink(String prot, String host, String path,
+                                          String publisherId, String siteId, String thirdPartyLink, boolean isEncoded);
 }
