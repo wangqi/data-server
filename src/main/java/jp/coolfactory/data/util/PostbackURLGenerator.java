@@ -8,13 +8,14 @@ import java.util.Scanner;
 public class PostbackURLGenerator {
 
     private static String[] APP_KEYS = new String[] {
-            "ankora_android",
-            "ankora_ios",
             "battleship-android",
             "battleship-ios",
-            "battleship2cn",
             "digdig2android",
             "digdig2ios",
+            "sengoku-android",
+            "sengoku-ios",
+            "werewolf-ios",
+            "werewolf-android",
     };
 
     /**
@@ -25,7 +26,27 @@ public class PostbackURLGenerator {
      *     battleship-android
      *     battleship-ios
      */
-    private static final String PROD_TPL_1 = "/ds/pb?action={event_name}&source=mat&app_key=";
+    private static final String PROD_TPL_1 = "/ds/pb?action={event_name}&source=adjust&app_key=";
+    private static final String PROD_TPL_2 =
+            "&site_id={site_id}&region_name={region}&sdk_version={sdk_version}&country_code={country_code}&" +
+                    "site_name={site_name}&user_agent={conversion_user_agent}&plat_id={mat_id}&" +
+                    "publisher_name={publisher_name}&device_id={device_id}&device_type={device_type}&" +
+                    "device_carrier={device_carrier}&device_model={device_model}&device_brand={device_brand}&" +
+                    "lang={language}&ip={device_ip}&click_ip={session_device_ip}&click_time={click_datetime}&" +
+                    "match_type={match_type}&ad_name={publisher_sub_ad_name}&currency_code={currency_code}&" +
+                    "pub_camp_id={publisher_sub_campaign}&pub_camp_name={advertiser_sub_campaign_name}&" +
+                    "imp_time={impression_datetime}&payout={payout}&referral_source={conversion_referral}&" +
+    };
+
+    /**
+     * appkey:
+     *     digdig2android
+     *     digdig2ios
+     *     battleship2cn
+     *     battleship-android
+     *     battleship-ios
+     */
+    private static final String PROD_TPL_1 = "/ds/pb?action={event_name}&source=adjust&app_key=";
     private static final String PROD_TPL_2 =
             "&site_id={site_id}&region_name={region}&sdk_version={sdk_version}&country_code={country_code}&" +
                     "site_name={site_name}&user_agent={conversion_user_agent}&plat_id={mat_id}&" +
